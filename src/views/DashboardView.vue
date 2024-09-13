@@ -1,16 +1,18 @@
 <template>
-  <div class="p-4 flex flex-wrap place-content-center absolute left-40 ml-20 mt-20 top-15">
-    <div class="w-full md:w-1/4 p-4">
-      <DashboardCard title="Total Companies" :count="data.totalCompanies" />
-    </div>
-    <div class="w-full md:w-1/4 p-4">
-      <DashboardCard title="Total Transactions" :count="data.totalTransactions" />
-    </div>
-    <div class="w-full md:w-1/4 p-4">
-      <DashboardCard title="Total Products" :count="data.totalProducts" />
-    </div>
-    <div class="w-full md:w-1/4 p-4">
-      <DashboardCard title="Total Users" :count="data.totalUsers" />
+  <div class="min-h-screen mx-auto p-4 ml-20 pt-20 bg-gradient-to-r from-purple-500 to-blue-500">
+    <div class="p-4 flex flex-wrap place-content-center ml-40">
+      <div class="w-full md:w-1/4 p-4">
+        <DashboardCard title="Total Companies" :count="data.totalCompanies" />
+      </div>
+      <div class="w-full md:w-1/4 p-4">
+        <DashboardCard title="Total Transactions" :count="data.totalTransactions" />
+      </div>
+      <div class="w-full md:w-1/4 p-4">
+        <DashboardCard title="Total Products" :count="data.totalProducts" />
+      </div>
+      <div class="w-full md:w-1/4 p-4">
+        <DashboardCard title="Total Users" :count="data.totalUsers" />
+      </div>
     </div>
   </div>
 </template>

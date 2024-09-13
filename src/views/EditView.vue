@@ -108,7 +108,7 @@
         </div>
         <button
           type="submit"
-          class="relative inline-flex items-center m-5 justify-center bg-blue-500 rounded-md p-2 text-white-400 hover:bg-blue-700 hover:text-white"
+          class="relative inline-flex items-center m-5 justify-center bg-blue-500 rounded-md p-2 text-white hover:bg-blue-700"
         >
           {{ isEditing ? 'Update the Company' : 'Add this Company' }}
         </button>

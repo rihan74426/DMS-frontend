@@ -1,35 +1,38 @@
 <template>
-  <div class="w-64 h-screen bg-gray-800 text-white fixed shadow-lg pt-20" v-if="logged">
+  <div
+    class="w-64 h-screen bg-gradient-to-r to-purple-400 from-blue-500 text-white fixed shadow-lg pt-20"
+    v-if="logged"
+  >
     <ul class="mt-4">
-      <li class="p-4 hover:bg-gray-700">
+      <li class="p-4 hover:bg-pink-800">
         <router-link to="/dashboard" class="flex items-center"> Dashboard </router-link>
       </li>
-      <li class="p-4 hover:bg-gray-700">
+      <li class="p-4 hover:bg-pink-800">
         <router-link to="/products" class="flex items-center"> Products </router-link>
       </li>
-      <li class="p-4 hover:bg-gray-700">
+      <li class="p-4 hover:bg-pink-800">
         <router-link to="/companies" class="flex items-center"> Companies </router-link>
       </li>
-      <li class="p-4 hover:bg-gray-700">
+      <li class="p-4 hover:bg-pink-800">
         <router-link to="/transactions" class="flex items-center"> Transactions </router-link>
       </li>
-      <li class="p-4 hover:bg-gray-700">
-        <router-link to="/stores" class="flex items-center"> Stores </router-link>
+      <li class="p-4 hover:bg-pink-800">
+        <router-link to="/stores" class="flex items-center"> My Stores </router-link>
       </li>
-      <li class="p-4 hover:bg-gray-700">
+      <li class="p-4 hover:bg-pink-800">
         <router-link to="/Users" class="flex items-center"> Users </router-link>
       </li>
       <!-- <li class="p-4 hover:bg-gray-700" v-if="!logged">
         <router-link to="/" class="flex items-center"> Login </router-link>
       </li> -->
-      <li class="p-4 hover:bg-gray-700">
+      <li class="p-4 hover:bg-pink-800">
         <button @click="handleLogout" class="flex items-center">logout</button>
       </li>
     </ul>
   </div>
 </template>
 <script setup>
-import { onMounted, onUpdated, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 import { useRouter } from 'vue-router'
 

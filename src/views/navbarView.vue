@@ -36,23 +36,23 @@ watch(
 </script>
 
 <template>
-  <nav class="bg-gray-800 p-1 mt-0 fixed w-full top-0 z-10">
+  <nav
+    class="bg-gray-800 max-h-15 mt-0 fixed w-full top-0 z-10 bg-gradient-to-r from-purple-500 to-blue-500"
+  >
     <div class="mx-auto relative max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4 place-content-center relative">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <RouterLink
-                to="/dashboard"
-                class="rounded-md px-3 py-2 text-lg font-bold text-gray-300"
+              <RouterLink to="/dashboard" class="rounded-md px-3 py-2 text-lg font-bold text-white"
                 >Distribution Management System</RouterLink
               >
             </div>
           </div>
           <div class="right-0 absolute grid grid-cols-4 gap-1">
             <h1
-              class="relative col-span-3 text-right rounded-md px-3 py-2 text-lg font-medium text-gray-300"
+              class="relative col-span-3 text-right rounded-md px-3 py-2 text-lg font-medium text-white"
             >
               Hello {{ user.username ? user.username : 'User' }}, Welcome!
             </h1>

@@ -1,10 +1,12 @@
 <template>
-  <div class="container mx-auto p-4 p-4 ml-20 flex flex-wrap pt-20 left-40 place-content-center">
-    <h1 class="text-2xl font-bold mb-4 absolute block ml-10">Products</h1>
-    <div class="relative inline-flex container flex place-content-center">
+  <div
+    class="container mx-auto p-4 p-4 ml-20 flex flex-wrap pt-20 left-40 place-content-center bg-gradient-to-r from-purple-500 to-blue-500"
+  >
+    <h1 class="text-2xl text-white font-bold m-4 absolute block ml-10">Products</h1>
+    <div class="mt-10 relative inline-flex container flex place-content-center">
       <button
         @click="showAddProduct"
-        class="inline-flex bg-blue-500 mt-10 text-white px-4 py-2 rounded mb-4 hover:bg-blue-300 hover:text-black"
+        class="inline-flex bg-pink-500 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-pink-300 hover:text-black"
       >
         Add New Product
       </button>
@@ -12,12 +14,16 @@
         v-model="searchQuery"
         @input="searchProducts"
         placeholder="Search Products..."
-        class="border px-2 mt-10 py-1 mb-4 w-half"
+        class="ring-2 px-2 mt-10 py-1 mb-4 rounded-r-lg w-half"
       />
     </div>
 
     <div class="mt-30 ml-40 pl-20 grid grid-cols-4 gap-4 relative">
-      <div class="bg-white shadow-md p-6 rounded-lg" v-for="product in products" :key="product._id">
+      <div
+        class="bg-white shadow-md p-6 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-100"
+        v-for="product in products"
+        :key="product._id"
+      >
         <div class="">
           <img :src="product.image" alt="product image" class="object-contain h-48 w-56" />
         </div>
@@ -26,16 +32,24 @@
         <p class="p-2">ID: {{ product.hashtagSerial }}</p>
         <div class="grid grid-cols-3 items-center gap-2">
           <div class="col-span-2">
+            <p class="p-2">Product Group: {{ product.group }}</p>
+            <p class="p-2">Pack Size: {{ product.packSize }}</p>
             <p class="p-2">Available: {{ product.quantityInStore }}</p>
             <p class="p-2">Supplied: {{ product.quantitySupplied }}</p>
           </div>
-          <h1 class="font-bold text-lg">৳ {{ product.price }}</h1>
+          <h1 class="font-bold text-lg">MRP:- ৳ {{ product.price }}</h1>
+        </div>
+        <div>
+          <strong>Additional info:</strong>
+          <p>SDP: {{ product.sdp }}</p>
+          <p>DP: {{ product.dp }}</p>
+          <p>TP: {{ product.tp }}</p>
         </div>
 
         <div class="m-5 flex place-content-bottom">
           <button
             @click="editProduct(product)"
-            class="bg-gray-500 text-white px-2 py-1 rounded ml-4"
+            class="bg-blue-500 text-white px-2 py-1 rounded ml-4"
           >
             <PencilSquareIcon class="size-6 text-white" />
           </button>

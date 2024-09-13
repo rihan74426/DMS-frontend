@@ -1,17 +1,19 @@
 <template>
-  <div class="container mx-auto p-4 flex flex-wrap">
-    <div class="mt-20">
-      <div class="relative flex place-content-center ml-60 mb-10">
-        <h1 class="text-2xl font-bold absolute">Transactions</h1>
+  <div
+    class="container min-h-screen mx-auto p-4 ml-20 pt-20 bg-gradient-to-r from-purple-500 to-blue-500"
+  >
+    <div class="ml-10">
+      <div class="relative flex place-content-center mb-10">
+        <h1 class="text-2xl text-white font-bold absolute">Transactions</h1>
         <button
           @click="showAddTransaction"
-          class="bg-blue-500 text-white px-4 py-2 rounded mt-10 hover:bg-blue-900"
+          class="bg-pink-500 mt-10 text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
         >
           Add a Transaction
         </button>
       </div>
 
-      <table class="w-5/6 bg-white shadow-lg rounded-lg ml-60">
+      <table class="w-5/6 bg-white shadow-lg rounded-lg ml-40">
         <thead>
           <tr class="text-center bg-gray-100 border border-slate-700">
             <th class="p-4 justify-center">Company</th>

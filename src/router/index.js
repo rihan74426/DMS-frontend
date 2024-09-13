@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/authStore'
 import ProductsView from '@/views/ProductsView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import TransactionView from '@/views/TransactionView.vue'
+import StoreView from '@/views/StoreView.vue'
 
 const routes = [
   {
@@ -35,6 +36,11 @@ const routes = [
   {
     path: '/transactions',
     component: TransactionView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/stores',
+    component: StoreView,
     meta: { requiresAuth: true }
   },
   {

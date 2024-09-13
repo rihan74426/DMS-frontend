@@ -33,7 +33,27 @@
             required
           ></textarea>
         </div>
-        <div class="grid grid-cols-2 gap-2">
+        <div class="mb-4">
+          <label for="group" class="block text-gray-700">Group:</label>
+          <input
+            type="text"
+            v-model="productData.group"
+            id="group"
+            class="border px-2 py-1 w-full"
+            required
+          />
+        </div>
+        <div class="mb-4">
+          <label for="packSize" class="block text-gray-700">Pack Size:</label>
+          <input
+            type="text"
+            v-model="productData.packSize"
+            id="packSize"
+            class="border px-2 py-1 w-full"
+            required
+          />
+        </div>
+        <div class="grid grid-cols-3 gap-2">
           <div class="mb-4">
             <label for="available" class="inline-block text-gray-700">Product Available</label>
             <input
@@ -54,18 +74,35 @@
               required
             />
           </div>
+          <div class="mb-4">
+            <label for="sdp" class="inline-block text-gray-700">SDP:</label>
+            <input
+              type="number"
+              v-model="productData.sdp"
+              id="sdp"
+              class="border px-2 py-1 w-full"
+            />
+          </div>
+          <div class="mb-4">
+            <label for="dp" class="inline-block text-gray-700">DP:</label>
+            <input type="number" v-model="productData.dp" id="dp" class="border px-2 py-1 w-full" />
+          </div>
+          <div class="mb-4">
+            <label for="tp" class="inline-block text-gray-700">TP:</label>
+            <input type="number" v-model="productData.tp" id="tp" class="border px-2 py-1 w-full" />
+          </div>
+          <div class="mb-4">
+            <label for="price" class="inline-block text-gray-700">MRP</label>
+            <input
+              type="number"
+              v-model="productData.price"
+              id="price"
+              class="border px-2 py-1 w-full"
+              required
+            />
+          </div>
         </div>
 
-        <div class="mb-4">
-          <label for="price" class="inline-block text-gray-700">Product Price</label>
-          <input
-            type="number"
-            v-model="productData.price"
-            id="price"
-            class="border px-2 py-1 w-full"
-            required
-          />
-        </div>
         <!-- Add more fields as necessary -->
         <div class="flex justify-end">
           <button
@@ -97,7 +134,12 @@ const productData = ref({
   description: '',
   quantityInStore: '',
   quantitySupplied: '',
-  price: ''
+  price: '',
+  group: '',
+  packSize: '',
+  sdp: '',
+  dp: '',
+  tp: ''
   // Add more fields as necessary
 })
 
@@ -113,7 +155,12 @@ watch(
         description: '',
         quantityInStore: '',
         quantitySupplied: '',
-        price: ''
+        price: '',
+        group: '',
+        packSize: '',
+        sdp: '',
+        dp: '',
+        tp: ''
         // Reset other fields as necessary
       }
     }
@@ -131,7 +178,12 @@ const submitForm = () => {
     description: '',
     quantityInStore: '',
     quantitySupplied: '',
-    price: ''
+    price: '',
+    group: '',
+    packSize: '',
+    sdp: '',
+    dp: '',
+    tp: ''
   }
 }
 </script>
