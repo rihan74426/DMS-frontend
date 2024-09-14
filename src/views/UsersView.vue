@@ -1,6 +1,10 @@
 <template>
-  <div class="p-4 ml-20 flex flex-wrap pt-20 left-40 place-content-center">
-    <h1 class="text-2xl font-bold mb-4 absolute block ml-10">Users Management</h1>
+  <div
+    class="p-4 ml-20 min-h-screen bg-gradient-to-r from-purple-500 to-blue-500 flex flex-wrap pt-20 place-content-center"
+  >
+    <h1 class="absolute block ml-10 text-4xl font-bold text-white text-center mb-6">
+      Users Management
+    </h1>
     <!-- Users Table -->
     <div class="overflow-x-auto mt-20">
       <table class="min-w-full bg-white border border-gray-200">

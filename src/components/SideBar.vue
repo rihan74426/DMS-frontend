@@ -3,41 +3,53 @@
     class="w-64 h-screen bg-gradient-to-r to-purple-400 from-blue-500 text-white fixed shadow-lg pt-20"
     v-if="logged"
   >
-    <ul class="mt-4">
-      <li class="p-4 hover:bg-pink-800">
-        <router-link to="/dashboard" class="flex items-center"> Dashboard </router-link>
-      </li>
-      <li class="p-4 hover:bg-pink-800">
-        <router-link to="/products" class="flex items-center"> Products </router-link>
-      </li>
-      <li class="p-4 hover:bg-pink-800">
-        <router-link to="/companies" class="flex items-center"> Companies </router-link>
-      </li>
-      <li class="p-4 hover:bg-pink-800">
-        <router-link to="/transactions" class="flex items-center"> Transactions </router-link>
-      </li>
-      <li class="p-4 hover:bg-pink-800">
-        <router-link to="/stores" class="flex items-center"> My Stores </router-link>
-      </li>
-      <li class="p-4 hover:bg-pink-800">
-        <router-link to="/Users" class="flex items-center"> Users </router-link>
-      </li>
-      <!-- <li class="p-4 hover:bg-gray-700" v-if="!logged">
-        <router-link to="/" class="flex items-center"> Login </router-link>
-      </li> -->
-      <li class="p-4 hover:bg-pink-800">
-        <button @click="handleLogout" class="flex items-center">logout</button>
-      </li>
-    </ul>
+    <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+      <router-link
+        v-for="item in navItems"
+        :key="item.path"
+        :to="item.path"
+        class="flex items-center px-4 py-2 transition-colors duration-200 rounded-lg group hover:bg-white/10"
+        :class="{ 'bg-white/20': isActive(item.path) }"
+      >
+        <component :is="item.icon" class="h-6 w-6" />
+        <span class="transition-opacity duration-200 py-2 ml-2">
+          {{ item.name }}
+        </span>
+      </router-link>
+      <button
+        @click="handleLogout"
+        class="w-full flex items-center px-4 py-2 transition-colors duration-200 rounded-lg group hover:bg-white/10"
+      >
+        <component :is="LogOutIcon" class="h-6 w-6" />
+        <span class="transition-opacity duration-200 py-2 ml-2">logout</span>
+      </button>
+    </nav>
   </div>
 </template>
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '../stores/authStore'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  HomeIcon,
+  UsersIcon,
+  CompassIcon,
+  PyramidIcon,
+  TerminalSquareIcon,
+  LogOutIcon
+} from 'lucide-vue-next'
 
 const authStore = useAuthStore()
 const router = useRouter()
+
+const navItems = [
+  { name: 'Dashboard', path: '/dashboard', icon: HomeIcon },
+  { name: 'Users', path: '/users', icon: UsersIcon },
+  { name: 'Companies', path: '/companies', icon: CompassIcon },
+  { name: 'Products', path: '/products', icon: PyramidIcon },
+  { name: 'Transactions', path: '/transactions', icon: TerminalSquareIcon },
+  { name: 'My Store', path: '/stores', icon: TerminalSquareIcon }
+]
 
 const logged = ref(true)
 onMounted(() => {
@@ -52,10 +64,37 @@ const handleLogout = () => {
   router.push('/')
   logged.value = false
 }
+const route = useRoute()
+const isActive = (path) => {
+  return route.path === path
+}
 </script>
 
 <style scoped>
-.material-icons {
-  font-size: 18px;
+.router-link-active {
+  @apply bg-white/20;
+}
+
+/* Animation for expanding/collapsing sidebar */
+.sidebar-enter-active,
+.sidebar-leave-active {
+  transition: width 0.3s ease-in-out;
+}
+
+.sidebar-enter-from,
+.sidebar-leave-to {
+  width: 5rem;
+}
+
+/* Animation for nav items */
+.router-link-enter-active,
+.router-link-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.router-link-enter-from,
+.router-link-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 </style>

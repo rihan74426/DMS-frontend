@@ -4,10 +4,10 @@
   >
     <div class="ml-10">
       <div class="relative flex place-content-center mb-10">
-        <h1 class="text-2xl text-white font-bold absolute">Transactions</h1>
+        <h1 class="text-4xl text-white font-bold absolute">Transactions</h1>
         <button
           @click="showAddTransaction"
-          class="bg-pink-500 mt-10 text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
+          class="bg-pink-500 mt-20 text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
         >
           Add a Transaction
         </button>

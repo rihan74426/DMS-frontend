@@ -24,14 +24,14 @@
           </transition>
         </div>
         <button
-          class="inline-flex bg-pink-500 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-pink-300 hover:text-black"
+          class="inline-flex bg-pink-600 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-green-500 overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700 transition duration-500"
           @click="togglefunc"
           v-if="!isVisible"
         >
           Add a Company
         </button>
         <button
-          class="inline-flex bg-pink-500 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-pink-300 hover:text-black"
+          class="inline-flex bg-purple-500 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-pink-500 hover:text-black"
           @click="togglefunc"
           v-if="isVisible"
         >

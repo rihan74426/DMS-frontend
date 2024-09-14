@@ -2,7 +2,7 @@
   <div
     class="container mx-auto p-4 p-4 ml-20 flex flex-wrap pt-20 left-40 place-content-center bg-gradient-to-r from-purple-500 to-blue-500"
   >
-    <h1 class="text-2xl text-white font-bold m-4 absolute block ml-10">Products</h1>
+    <h1 class="text-4xl text-white font-bold m-4 absolute block ml-10">Products</h1>
     <div class="mt-10 relative inline-flex container flex place-content-center">
       <button
         @click="showAddProduct"
@@ -18,7 +18,7 @@
       />
     </div>
 
-    <div class="mt-30 ml-40 pl-20 grid grid-cols-4 gap-4 relative">
+    <div class="mt-30 ml-40 p-5 grid grid-cols-4 gap-4 relative">
       <div
         class="bg-white shadow-md p-6 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-100"
         v-for="product in products"

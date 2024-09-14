@@ -5,10 +5,14 @@
       <label class="block mb-2">Store Name:</label>
       <input v-model="store.name" type="text" class="w-full p-2 border rounded-md mb-4" />
 
-      <label class="block mb-2">Owner:</label>
-      <input v-model="store.owner" type="text" class="w-full p-2 border rounded-md mb-4" />
+      <label class="block mb-2">Store Proprietor:</label>
+      <input v-model="store.manager" type="text" class="w-full p-2 border rounded-md mb-4" />
 
-      <label class="block mb-2">Location:</label>
+      <label class="block mb-2">Store Email:</label>
+      <input v-model="store.email" type="text" class="w-full p-2 border rounded-md mb-4" />
+      <label class="block mb-2">Store Number:</label>
+      <input v-model="store.number" type="text" class="w-full p-2 border rounded-md mb-4" />
+      <label class="block mb-2">Store Location:</label>
       <input v-model="store.location" type="text" class="w-full p-2 border rounded-md mb-4" />
 
       <div class="flex justify-end">
@@ -26,7 +30,13 @@
 <script setup>
 import { ref } from 'vue'
 const props = defineProps({ store: Object })
-const store = ref({ ...props.store })
+const store = ref({
+  name: props.store.name,
+  manager: props.store.manager,
+  email: props.store.email,
+  number: props.store.number,
+  location: props.store.location
+})
 
 const emit = defineEmits(['save'])
 const saveChanges = () => {

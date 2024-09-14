@@ -1,27 +1,27 @@
 <template>
-  <div class="container mx-auto p-4 flex flex-wrap pt-20 ml-40 place-content-center">
-    <h1 class="text-2xl font-bold mb-4 absolute block mr-20">User Profile</h1>
-    <div class="grid grid-cols-2 gap-4 mb-4 mt-20">
+  <div
+    class="min-h-screen container mx-auto p-4 flex flex-wrap pt-20 ml-40 place-content-center bg-gradient-to-r from-purple-500 to-blue-500"
+  >
+    <h1 class="text-2xl font-bold mb-4 text-white absolute block mt-10">User Profile</h1>
+    <div class="grid grid-cols-2 gap-4 mb-4">
       <div>
         <img :src="profileImagePreview" class="m-4 w-48 h-48 rounded-full object-cover" />
         <label
-          class="block text-gray-700 flex place-content-center mr-40 font-bold text-center"
+          class="block text-white flex place-content-center mr-40 font-bold text-center"
           for="profileImage"
           >Profile Image</label
         >
       </div>
       <div class="mt-10">
-        <h2 class="block text-gray-700 text-lg font-bold mb-4">Name: {{ profileData.name }}</h2>
-        <h2 class="block text-gray-700 text-lg font-bold mb-4">Email: {{ profileData.email }}</h2>
-        <h2 class="block text-gray-700 text-lg font-bold mb-4">
-          Address: {{ profileData.address }}
-        </h2>
-        <h2 class="block text-gray-700 text-lg font-bold mb-4">Phone: {{ profileData.phone }}</h2>
+        <h2 class="block text-white text-lg font-bold mb-4">Name: {{ profileData.name }}</h2>
+        <h2 class="block text-white text-lg font-bold mb-4">Email: {{ profileData.email }}</h2>
+        <h2 class="block text-white text-lg font-bold mb-4">Address: {{ profileData.address }}</h2>
+        <h2 class="block text-white text-lg font-bold mb-4">Phone: {{ profileData.phone }}</h2>
       </div>
     </div>
     <button
       @click="showModal = true"
-      class="absolute block items-center mr-40 m-10 top-35 mt-80 bg-blue-500 rounded-md p-2 text-white hover:bg-blue-700 hover:text-white"
+      class="absolute block items-center mr-40 m-10 top-40 mt-80 bg-pink-500 rounded-md p-2 text-white hover:bg-pink-700 hover:text-white"
     >
       Edit Profile
     </button>
