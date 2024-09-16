@@ -1,17 +1,17 @@
 <template>
   <div class="min-h-screen mx-auto p-4 pt-20 bg-gradient-to-r from-purple-500 to-blue-500">
     <div class="ml-60">
-      <h1 class="text-4xl font-bold text-white text-center mb-6">{{ storeDetails.name }}</h1>
+      <h1 class="text-4xl font-bold text-white text-center mb-6">{{ storeDetails.storeName }}</h1>
 
       <!-- Store Details Section -->
 
       <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10">
         <h2 class="text-2xl font-semibold mb-4">Store Details</h2>
-        <p class="p-2"><strong>Store Name:</strong> {{ storeDetails.name }}</p>
-        <p class="p-2"><strong>Store Proprietor:</strong> {{ storeDetails.manager }}</p>
-        <p class="p-2"><strong>Store Email:</strong> {{ storeDetails.email }}</p>
-        <p class="p-2"><strong>Store Contact:</strong> {{ storeDetails.number }}</p>
-        <p class="p-2"><strong>Store Location:</strong> {{ storeDetails.location }}</p>
+        <p class="p-2"><strong>Store Name:</strong> {{ storeDetails.storeName }}</p>
+        <p class="p-2"><strong>Store Proprietor:</strong> {{ storeDetails.storeManager }}</p>
+        <p class="p-2"><strong>Store Email:</strong> {{ storeDetails.storeEmail }}</p>
+        <p class="p-2"><strong>Store Contact:</strong> {{ storeDetails.storePhone }}</p>
+        <p class="p-2"><strong>Store Location:</strong> {{ storeDetails.storeAddress }}</p>
         <button
           @click="openStoreDetailsModal"
           class="mt-4 px-4 py-2 bg-purple-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100"
@@ -67,24 +67,66 @@
       </Transition>
     </div>
   </div>
+  <div
+    v-if="loading"
+    class="fixed inset-0 flex items-center justify-center bg-black z-50 bg-opacity-50"
+  >
+    <l-grid size="80" speed="2" color="purple"></l-grid>
+  </div>
+  <ModalComp
+    :show="showModal"
+    :title="modalTitle"
+    :message="modalMessage"
+    @close="showModal = false"
+  />
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUpdated, ref } from 'vue'
 import StoreComp from '@/components/StoreComp.vue'
 import OrderComp from '@/components/OrderComp.vue'
 import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
+import { grid } from 'ldrs'
+import ModalComp from '@/components/ModalComp.vue'
 
+grid.register()
+onMounted(async () => {
+  // loading.value = true
+  await authStore.fetchStore()
+  // if (storeDetails.value.storeName !== '') loading.value = false
+  storeDetails.value = authStore.store
+
+  // loading.value = false
+})
+onUpdated(async () => {
+  // loading.value = true
+
+  await authStore.fetchStore()
+  storeDetails.value = authStore.store
+  // if (storeDetails.value.storeName !== '') loading.value = false
+  // loading.value = false
+})
 const authStore = useAuthStore()
 // Sample store details, products, and orders for demonstration
-const storeDetails = ref([])
+const storeDetails = ref({
+  storeName: '',
+  storeManager: '',
+  storeEmail: '',
+  storePhone: '',
+  storeAddress: ''
+})
 
 const orders = ref([])
 
 const showStoreDetailsModal = ref(false)
 const showOrderModal = ref(false)
 const selectedOrder = ref(null)
+
+const loading = ref(false)
+const showModal = ref(false)
+const modalTitle = ref('')
+const modalMessage = ref('')
 
 // Store modal controls
 const openStoreDetailsModal = () => {
@@ -95,15 +137,22 @@ const closeStoreDetailsModal = () => {
   showStoreDetailsModal.value = false
 }
 const token = localStorage.getItem('token')
+
 const updateStoreDetails = async (newDetails) => {
   try {
-    await axios.put('http://localhost:5000/api/auth/profile/store', newDetails, {
+    await axios.put('http://localhost:5000/api/auth/store', newDetails, {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}` // Bearer token for authentication
       }
     })
-    storeDetails.value = newDetails
+    showModal.value = true
+    modalTitle.value = 'Success'
+    modalMessage.value = 'Store Updated Successfully'
   } catch (error) {
+    showModal.value = true
+    modalTitle.value = 'Failure'
+    modalMessage.value = 'Failed to update the Store!'
     console.log(error)
     console.log(newDetails)
   }
@@ -144,12 +193,6 @@ const deleteOrder = async (id) => {
   await axios.delete('http://localhost:5000/api/auth/profile/order', id)
   orders.value = orders.value.filter((order) => order.id !== id)
 }
-
-onMounted(() => {
-  orders.value = authStore.user.orders
-  storeDetails.value = authStore.user.store
-  console.log(orders.value, storeDetails.value)
-})
 </script>
 
 <style scoped>

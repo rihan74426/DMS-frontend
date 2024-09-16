@@ -2,13 +2,14 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: localStorage.getItem('token') || null,
+    token: localStorage.getItem('token'),
     logged: localStorage.getItem('token') ? true : false,
     user: null,
     users: [],
     companies: [],
     products: [],
     transactions: [],
+    store: null,
     userUpdated: false
   }),
   actions: {
@@ -73,6 +74,19 @@ export const useAuthStore = defineStore('auth', {
         this.transactions.value = response.data
       } catch (error) {
         console.error('Error fetching transactions:', error)
+      }
+    },
+    async fetchStore() {
+      try {
+        const response = await axios.get('http://localhost:5000/api/auth/store', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.token}`
+          }
+        })
+        this.store = { ...response.data }
+      } catch (err) {
+        console.log('Error fetching Store:', err)
       }
     }
   },
