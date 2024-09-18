@@ -91,15 +91,15 @@
                 <td class="py-2 px-2 text-center flex">
                   <button
                     @click="openOrderModal(order)"
-                    class="ml-4 px-3 py-1 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700 transition duration-500"
+                    class="ml-4 px-3 py-1 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
                   >
-                    Edit
+                    <EditIcon />
                   </button>
                   <button
-                    @click="deleteOrder(order.id)"
-                    class="ml-2 px-3 py-1 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700 transition duration-500"
+                    @click="deleteOrder(order._id)"
+                    class="ml-2 px-3 py-1 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
                   >
-                    Delete
+                    <Trash2Icon />
                   </button>
                 </td>
               </tr>
@@ -154,6 +154,7 @@ import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
 import { grid } from 'ldrs'
 import ModalComp from '@/components/ModalComp.vue'
+import { DeleteIcon, EditIcon, Trash2Icon } from 'lucide-vue-next'
 
 grid.register()
 onMounted(async () => {
@@ -253,16 +254,7 @@ const closeOrderModal = () => {
 const saveOrder = async (order) => {
   if (order._id) {
     try {
-      const response = await axios.put(
-        `http://localhost:5000/api/auth/orders/${order._id}`,
-        order,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}` // Bearer token for authentication
-          }
-        }
-      )
+      const response = await axios.put(`http://localhost:5000/api/auth/orders/${order._id}`, order)
       const index = orders.value.findIndex((o) => o._id === order._id)
       orders.value[index] = response.data
     } catch (err) {
@@ -285,6 +277,7 @@ const saveOrder = async (order) => {
 }
 
 const deleteOrder = async (id) => {
+  confirm('Are you Sure?')
   await axios.delete(`http://localhost:5000/api/auth/orders/${id}`)
   orders.value = orders.value.filter((order) => order.id !== id)
 }

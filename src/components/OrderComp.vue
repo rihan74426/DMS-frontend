@@ -1,7 +1,9 @@
 <template>
   <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
     <div class="bg-white p-8 rounded-lg h-5/6 shadow-lg overflow-auto w-1/3 mb-5 mt-5">
-      <h2 class="text-2xl font-semibold mb-4">{{ order ? 'Edit Order' : 'Add Order' }}</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-center">
+        {{ order ? 'Edit Order' : 'Add Order' }}
+      </h2>
       <p class="font-semibold mb-4">Invoice no: {{ orderData.invoice }}</p>
       <p class="font-semibold mb-4">Store: {{ authStore.store.storeName }}</p>
 
@@ -54,8 +56,7 @@ const orderData = reactive(
         invoice: '',
         productId: '',
         quantity: 1,
-        price: 0,
-        status: ''
+        price: 0
       }
 )
 
@@ -64,7 +65,6 @@ watch(orderData, () => {
   if (selected[0]) {
     orderData.price = selected[0].price * orderData.quantity
   }
-  console.log(selected, products.value)
 })
 
 const emit = defineEmits(['save'])
