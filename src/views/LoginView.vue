@@ -78,7 +78,7 @@ const handleLogin = async () => {
       showModal.value = true
       modalTitle.value = 'Success'
       modalMessage.value = 'Logged In Successfully'
-      router.push('/dashboard')
+      router.push('/')
     } else {
       resMessage.value = 'Wrong credintials'
       showModal.value = true

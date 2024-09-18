@@ -10,6 +10,7 @@ export const useAuthStore = defineStore('auth', {
     products: [],
     transactions: [],
     store: null,
+    orders: [],
     userUpdated: false
   }),
   actions: {
@@ -85,6 +86,19 @@ export const useAuthStore = defineStore('auth', {
           }
         })
         this.store = { ...response.data }
+      } catch (err) {
+        console.log('Error fetching Store:', err)
+      }
+    },
+    async fetchOrders() {
+      try {
+        const response = await axios.get('http://localhost:5000/api/auth/orders', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.token}`
+          }
+        })
+        this.orders = response.data
       } catch (err) {
         console.log('Error fetching Store:', err)
       }

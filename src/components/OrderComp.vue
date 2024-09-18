@@ -1,18 +1,32 @@
 <template>
-  <div class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-1/3">
+  <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-8 rounded-lg h-5/6 shadow-lg overflow-auto w-1/3 mb-5 mt-5">
       <h2 class="text-2xl font-semibold mb-4">{{ order ? 'Edit Order' : 'Add Order' }}</h2>
-      <h4 class="text-2xl font-semibold mb-4">{{ orderData.invoice }}</h4>
-      <label class="block mb-2">Order Details:</label>
-      <input v-model="orderData.details" type="text" class="w-full p-2 border rounded-md mb-4" />
+      <p class="font-semibold mb-4">Invoice no: {{ orderData.invoice }}</p>
+      <p class="font-semibold mb-4">Store: {{ authStore.store.storeName }}</p>
+
       <label class="block mb-2">Select Product</label>
       <select v-model="orderData.productId" class="w-full mb-4 p-2 border rounded">
-        <option v-for="product in products" :key="product._id" :value="product._id">
+        <option v-for="product in authStore.products.value" :key="product._id" :value="product._id">
           {{ product.name }}
         </option>
       </select>
       <label class="block mb-2">Quantity:</label>
       <input v-model="orderData.quantity" type="number" class="w-full p-2 border rounded-md mb-4" />
+      <label v-if="order" class="block mb-2">Status:</label>
+      <select
+        v-if="order"
+        v-model="orderData.status"
+        type="text"
+        class="w-full p-2 border rounded-md mb-4"
+      >
+        <option>pending</option>
+        <option>completed</option>
+      </select>
+      <p class="font-semibold mb-4">
+        Total Amount:
+        {{ orderData.price }}
+      </p>
 
       <div class="flex justify-end">
         <button @click="$emit('close')" class="px-4 py-2 mr-2 bg-gray-400 text-white rounded-md">
@@ -28,35 +42,59 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/authStore'
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
+
 const props = defineProps({ order: Object })
-const products = []
-const orderData = ref(
+const products = ref([]) // Correcting to make 'products' reactive
+const orderData = reactive(
   props.order
     ? { ...props.order }
     : {
         userId: '',
-        invoice: invoice,
+        invoice: '',
         productId: '',
-        quantity: ''
+        quantity: 1,
+        price: 0,
+        status: ''
       }
 )
-const invoice = generateInvoiceNumber(orderData.value.userId)
+
+watch(orderData, () => {
+  const selected = products.value.filter((el) => el._id == orderData.productId)
+  if (selected[0]) {
+    orderData.price = selected[0].price * orderData.quantity
+  }
+  console.log(selected, products.value)
+})
+
+const emit = defineEmits(['save'])
+
+// Moved the function definition above the usage
 const generateInvoiceNumber = (userId) => {
   const currentTime = new Date().getTime() // Current time in milliseconds
   const userIdPart = userId.toString().slice(-4) // Take the last 4 digits of the user ID
   const timePart = currentTime.toString().slice(-6) // Take the last 6 digits of the current time
-
-  const invoiceNumber = `${userIdPart}${timePart}` // Combine both parts to form a 10-digit number
-  return invoiceNumber
+  return `${userIdPart}${timePart}` // Combine both parts to form a 10-digit number
 }
 
-const emit = defineEmits(['save'])
-const saveChanges = () => {
-  emit('save', orderData.value)
+// Set the initial order data if it exists
+if (props.order) {
+  orderData.value = props.order
 }
+
+// Initialize invoice only after orderData.value.userId is available
+const authStore = useAuthStore()
 onMounted(() => {
-  products.value = useAuthStore().products
-  orderData.value.userId = useAuthStore().user._id
+  authStore.fetchProducts()
+  products.value = authStore.products.value
+  orderData.userId = authStore.user._id
+
+  // Generate the invoice number once userId is available
+  orderData.invoice = generateInvoiceNumber(orderData.userId)
 })
+
+// Emit the save event
+const saveChanges = () => {
+  emit('save', orderData)
+}
 </script>

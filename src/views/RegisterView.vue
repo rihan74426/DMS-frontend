@@ -94,7 +94,7 @@ const register = async () => {
     modalMessage.value = 'Registration Success'
     loading.value = true
     await authStore.login({ email: email.value, password: password.value })
-    router.push('/dashboard')
+    router.push('/')
     console.log('Registration successful:', response.data)
     resMessage.value = 'Registration Successful!'
   } catch (error) {

@@ -11,12 +11,8 @@ import StoreView from '@/views/StoreView.vue'
 
 const routes = [
   {
-    path: '/dashboard',
-    component: DashboardView
-  },
-  {
     path: '/',
-    component: LoginView
+    component: DashboardView
   },
   {
     path: '/companies',

@@ -43,7 +43,7 @@ const authStore = useAuthStore()
 const router = useRouter()
 
 const navItems = [
-  { name: 'Dashboard', path: '/dashboard', icon: HomeIcon },
+  { name: 'Dashboard', path: '/', icon: HomeIcon },
   { name: 'Users', path: '/users', icon: UsersIcon },
   { name: 'Companies', path: '/companies', icon: CompassIcon },
   { name: 'Products', path: '/products', icon: PyramidIcon },
@@ -52,16 +52,10 @@ const navItems = [
 ]
 
 const logged = ref(true)
-onMounted(() => {
-  const logged = localStorage.getItem('token') ? true : false
-  if (logged) {
-    router.push('/dashboard')
-  }
-})
+onMounted(() => {})
 
 const handleLogout = () => {
   authStore.logout()
-  router.push('/')
   logged.value = false
 }
 const route = useRoute()
