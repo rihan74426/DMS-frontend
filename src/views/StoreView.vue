@@ -66,6 +66,7 @@
                 <th class="py-2 px-2 text-center">No.</th>
                 <th class="py-2 px-2 text-center">Invoice</th>
                 <th class="py-2 px-2 text-center">Product</th>
+                <th class="py-2 px-2 text-center">Pack Size</th>
                 <th class="py-2 px-2 text-center">Quantity</th>
                 <th class="py-2 px-2 text-center">Ordered On</th>
                 <th class="py-2 px-2 text-center">Status</th>
@@ -82,22 +83,23 @@
                 <td class="py-2 px-2 text-center">
                   {{ orders.indexOf(order) + 1 }}
                 </td>
-                <td class="py-2 px-2 text-center">{{ order.invoice }}</td>
-                <td class="py-2 px-2 text-center">{{ findThings(order.productId) }}</td>
-                <td class="py-2 px-2 text-center">{{ order.quantity }}</td>
-                <td class="py-2 px-2 text-center">{{ timeCon(order.orderDate) }}</td>
-                <td class="py-2 px-2 text-center">{{ order.status }}</td>
-                <td class="py-2 px-2 text-center">{{ order.price }}</td>
-                <td class="py-2 px-2 text-center flex">
+                <td class="p-2 text-center">{{ order.invoice }}</td>
+                <td class="p-2 text-center">{{ findThings(order.productId).name }}</td>
+                <td class="p-2 text-center">{{ findThings(order.productId).packSize }}</td>
+                <td class="p-2 text-center">{{ order.quantity }}</td>
+                <td class="p-2 text-center">{{ timeCon(order.orderDate) }}</td>
+                <td class="p-2 text-center">{{ order.status }}</td>
+                <td class="p-2 text-center">{{ order.price }}</td>
+                <td class="p-2 text-center flex">
                   <button
                     @click="openOrderModal(order)"
-                    class="ml-4 px-3 py-1 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
+                    class="ml-4 p-2 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
                   >
                     <EditIcon />
                   </button>
                   <button
                     @click="deleteOrder(order._id)"
-                    class="ml-2 px-3 py-1 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
+                    class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
                   >
                     <Trash2Icon />
                   </button>
@@ -116,7 +118,7 @@
       </div>
 
       <!-- Modals -->
-      <Transition name="fade">
+      <Transition name="modal">
         <StoreComp
           v-if="showStoreDetailsModal"
           @close="closeStoreDetailsModal"
@@ -124,12 +126,14 @@
           :store="storeDetails"
         />
       </Transition>
-      <OrderComp
-        v-if="showOrderModal"
-        :order="selectedOrder"
-        @close="closeOrderModal"
-        @save="saveOrder"
-      />
+      <Transition name="modal">
+        <OrderComp
+          v-if="showOrderModal"
+          :order="selectedOrder"
+          @close="closeOrderModal"
+          @save="saveOrder"
+        />
+      </Transition>
     </div>
   </div>
   <div
@@ -199,7 +203,7 @@ const timeCon = (time) => {
 
 const findThings = (productId) => {
   const product = products.value.filter((el) => el._id == productId)
-  if (product[0]) return product[0].name
+  if (product[0]) return product[0]
 }
 const showStoreDetailsModal = ref(false)
 const showOrderModal = ref(false)
@@ -284,5 +288,30 @@ const deleteOrder = async (id) => {
 </script>
 
 <style scoped>
-/* Customize styles for smooth animations, transitions, and buttons here */
+.modal-enter-active,
+.modal-leave-active {
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+}
+
+.modal-enter-from {
+  transform: scale(0.5);
+  opacity: 0;
+}
+
+.modal-enter-to {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-leave-from {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-leave-to {
+  transform: scale(0.5);
+  opacity: 0;
+}
 </style>

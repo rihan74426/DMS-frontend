@@ -32,7 +32,7 @@
         <p class="p-2">ID: {{ product.hashtagSerial }}</p>
         <div class="grid grid-cols-3 items-center gap-2">
           <div class="col-span-2">
-            <p class="p-2">Product Group: {{ product.group }}</p>
+            <p class="p-2">Group: {{ product.group }}</p>
             <p class="p-2">Pack Size: {{ product.packSize }}</p>
             <p class="p-2">Available: {{ product.quantityInStore }}</p>
             <p class="p-2">Supplied: {{ product.quantitySupplied }}</p>
