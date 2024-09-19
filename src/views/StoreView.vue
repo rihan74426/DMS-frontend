@@ -142,12 +142,14 @@
   >
     <l-grid size="80" speed="2" color="purple"></l-grid>
   </div>
-  <ModalComp
-    :show="showModal"
-    :title="modalTitle"
-    :message="modalMessage"
-    @close="showModal = false"
-  />
+  <Transition name="modal">
+    <ModalComp
+      :show="showModal"
+      :title="modalTitle"
+      :message="modalMessage"
+      @close="showModal = false"
+    />
+  </Transition>
 </template>
 
 <script setup>

@@ -62,7 +62,13 @@
                 @click="printVoucher(transaction)"
                 class="bg-green-500 text-white px-2 py-2 rounded block m-1"
               >
-                Print
+                PDF
+              </button>
+              <button
+                @click="printExcel(transaction)"
+                class="bg-green-500 text-white px-2 py-2 rounded block m-1"
+              >
+                Exel
               </button>
             </td>
           </tr>
@@ -81,9 +87,9 @@
       />
       <div
         v-if="loading"
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
       >
-        <l-grid size="60" speed="1.5" color="black"></l-grid>
+        <l-grid size="80" speed="2" color="purple"></l-grid>
       </div>
       <ModalComp
         :show="showResModal"
@@ -105,6 +111,7 @@ import ModalComp from '@/components/ModalComp.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { grid } from 'ldrs'
 import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import * as XLSX from 'xlsx'
 
 grid.register()
 
@@ -308,6 +315,39 @@ const printVoucher = (transaction) => {
     `voucher_for_${companies.value.filter((el) => el._id == transaction.companyId)[0].name}.pdf`
   )
 }
+
+const printExcel = (transaction) => {
+  // Define your transactions in an array of objects
+  // const companyName = companies.value.filter((el) => el._id == transaction.companyId)[0].name
+  // const productName = products.value.filter((el) => el._id == transaction.productId)[0].name
+  const data = {
+    'Transaction ID': transaction._id,
+    Client: transaction.person,
+    Company: showCompany(transaction.companyId),
+    Product: showProduct(transaction.productId),
+    Quantity: transaction.quantity,
+    Price: transaction.price,
+    Total: transaction.quantity * transaction.price,
+    Date: new Date(transaction.createdAt).toLocaleDateString()
+  }
+
+  // Create a new workbook and a new sheet
+  const ws = XLSX.utils.json_to_sheet([data])
+  const wb = XLSX.utils.book_new()
+
+  // Add the sheet to the workbook
+  XLSX.utils.book_append_sheet(wb, ws, 'Transactions')
+
+  // Generate Excel file and trigger download
+  XLSX.writeFile(wb, `Transaction_of_${showCompany(transaction.companyId)}.xlsx`)
+}
+
+// const printExcel = (transaction) => {
+//   const ws = XLSX.utils.json_to_sheet([transaction]) // Export the single transaction as an array of one object
+//   const wb = XLSX.utils.book_new()
+//   XLSX.utils.book_append_sheet(wb, ws, 'Transaction')
+//   XLSX.writeFile(wb, `Transaction_${transaction._id}.xlsx`) // File named with transaction ID
+// }
 
 const showCompany = (Id) => {
   if (companies.value.filter((el) => el._id == Id)[0]) {

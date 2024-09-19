@@ -37,8 +37,11 @@
       </p>
     </div>
   </div>
-  <div v-if="loading" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <l-grid size="60" speed="1.5" color="black"></l-grid>
+  <div
+    v-if="loading"
+    class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
+  >
+    <l-grid size="80" speed="2" color="purple"></l-grid>
   </div>
   <RegisterView v-if="showReg" @show="showReg = false" />
   <ModalComp

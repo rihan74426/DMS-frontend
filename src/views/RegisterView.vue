@@ -48,9 +48,9 @@
     </div>
     <div
       v-if="loading"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
     >
-      <l-grid size="60" speed="1.5" color="black"></l-grid>
+      <l-grid size="80" speed="2" color="purple"></l-grid>
     </div>
     <ModalComp
       :show="showModal"
