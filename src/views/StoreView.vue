@@ -30,22 +30,28 @@
                   <th class="py-2 px-2 text-center">group</th>
                   <th class="py-2 px-2 text-center">MRP</th>
                   <th class="py-2 px-2 text-center">Name</th>
-                  <th class="py-2 px-2 text-center">No.</th>
+                  <th class="py-2 px-2 text-center">Img</th>
                 </tr>
               </thead>
               <tbody class="text-dark font-light">
                 <tr
-                  v-for="product in storeDetails.products"
-                  :key="product._id"
+                  v-for="product in storeProducts"
+                  :key="storeProducts.indexOf(product)"
                   class="border-b border-gray-200 hover:bg-gray-100"
                 >
+                  <td class="px-2 text-center">
+                    <div class="flex">
+                      <img
+                        :src="product.image"
+                        alt="product image"
+                        class="object-contain h-10 w-10 justify-center place-content-center"
+                      />
+                    </div>
+                  </td>
+                  <td class="py-2 px-2 text-center">{{ product.name }}</td>
                   <td class="py-2 px-2 text-center">{{ product.packSize }}</td>
                   <td class="py-2 px-2 text-center">{{ product.group }}</td>
                   <td class="py-2 px-2 text-center">{{ product.price }}</td>
-                  <td class="py-2 px-2 text-center">{{ product.name }}</td>
-                  <td class="py-2 px-2 text-center">
-                    {{ storeDetails.products.indexOf(product) + 1 }}
-                  </td>
                 </tr>
               </tbody>
             </table>
@@ -176,6 +182,7 @@ onMounted(async () => {
     console.error('Failed to fetch store data:', error)
   } finally {
     loading.value = false // Make sure loader is turned off after fetching completes
+    storeProd()
   }
 })
 onUpdated(async () => {
@@ -183,6 +190,7 @@ onUpdated(async () => {
   await authStore.fetchOrders()
   storeDetails.value = authStore.store
   orders.value = authStore.orders
+  storeProd()
 })
 const authStore = useAuthStore()
 const products = ref([])
@@ -196,6 +204,7 @@ const storeDetails = ref({
   products: []
 })
 
+const storeProducts = ref([])
 const orders = ref([])
 const timeCon = (time) => {
   const date = new Date(time).toLocaleDateString()
@@ -206,6 +215,14 @@ const timeCon = (time) => {
 const findThings = (productId) => {
   const product = products.value.filter((el) => el._id == productId)
   if (product[0]) return product[0]
+}
+
+const storeProd = () => {
+  if (storeDetails.value.products) {
+    storeDetails.value.products.forEach((productId, index) => {
+      storeProducts.value[index] = products.value.filter((el) => el._id == productId)[0]
+    })
+  }
 }
 const showStoreDetailsModal = ref(false)
 const showOrderModal = ref(false)
