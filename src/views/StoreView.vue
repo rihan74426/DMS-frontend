@@ -166,7 +166,7 @@ import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
 import { grid } from 'ldrs'
 import ModalComp from '@/components/ModalComp.vue'
-import { DeleteIcon, EditIcon, Trash2Icon } from 'lucide-vue-next'
+import { EditIcon, Trash2Icon } from 'lucide-vue-next'
 
 grid.register()
 onMounted(async () => {
@@ -280,8 +280,14 @@ const saveOrder = async (order) => {
       const response = await axios.put(`http://localhost:5000/api/auth/orders/${order._id}`, order)
       const index = orders.value.findIndex((o) => o._id === order._id)
       orders.value[index] = response.data
-    } catch (err) {
-      console.log('Error updating Order', err)
+      showModal.value = true
+      modalTitle.value = 'Success'
+      modalMessage.value = 'Order Placed Successfully! You will be contacted soon'
+    } catch (error) {
+      showModal.value = true
+      modalTitle.value = 'Failure'
+      modalMessage.value = 'Failed to place the Order! please try again'
+      console.log('Error updating Order', error)
     }
   } else {
     try {
@@ -292,8 +298,14 @@ const saveOrder = async (order) => {
         }
       })
       orders.value.push(data)
-    } catch (err) {
-      console.log('Error Creating order', err)
+      showModal.value = true
+      modalTitle.value = 'Success'
+      modalMessage.value = 'Order Created Successfully'
+    } catch (error) {
+      showModal.value = true
+      modalTitle.value = 'Failure'
+      modalMessage.value = 'Failed to create the order! please try again'
+      console.log('Error Creating order', error)
     }
   }
   closeOrderModal()
@@ -301,8 +313,18 @@ const saveOrder = async (order) => {
 
 const deleteOrder = async (id) => {
   confirm('Are you Sure?')
-  await axios.delete(`http://localhost:5000/api/auth/orders/${id}`)
-  orders.value = orders.value.filter((order) => order.id !== id)
+  try {
+    await axios.delete(`http://localhost:5000/api/auth/orders/${id}`)
+    orders.value = orders.value.filter((order) => order.id !== id)
+    showModal.value = true
+    modalTitle.value = 'Success'
+    modalMessage.value = 'Order deleted Successfully'
+  } catch (error) {
+    showModal.value = true
+    modalTitle.value = 'Failure'
+    modalMessage.value = 'Failed to delete the order!'
+    console.log('error deleting the order', error)
+  }
 }
 </script>
 
