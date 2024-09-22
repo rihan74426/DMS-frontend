@@ -8,13 +8,18 @@
       <p class="font-semibold mb-4">Store: {{ authStore.store.storeName }}</p>
 
       <label class="block mb-2">Select Product</label>
-      <select v-model="orderData.productId" class="w-full mb-4 p-2 border rounded">
+      <select required v-model="orderData.productId" class="w-full mb-4 p-2 border rounded">
         <option v-for="product in authStore.products.value" :key="product._id" :value="product._id">
           {{ product.name }}
         </option>
       </select>
       <label class="block mb-2">Quantity:</label>
-      <input v-model="orderData.quantity" type="number" class="w-full p-2 border rounded-md mb-4" />
+      <input
+        required
+        v-model="orderData.quantity"
+        type="number"
+        class="w-full p-2 border rounded-md mb-4"
+      />
       <label v-if="order" class="block mb-2">Status:</label>
       <select
         v-if="order"
@@ -35,7 +40,7 @@
           Cancel
         </button>
         <button @click="saveChanges" class="px-4 py-2 bg-green-600 text-white rounded-md">
-          Save
+          {{ order ? 'Save' : 'Place an Order' }}
         </button>
       </div>
     </div>

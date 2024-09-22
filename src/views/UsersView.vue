@@ -1,62 +1,68 @@
 <template>
-  <div
-    class="p-4 ml-20 min-h-screen bg-gradient-to-r from-purple-500 to-blue-500 flex flex-wrap pt-20 place-content-center"
-  >
-    <h1 class="absolute block ml-10 text-4xl font-bold text-white text-center mb-6">
-      Users Management
-    </h1>
-    <!-- Users Table -->
-    <div class="overflow-x-auto mt-20">
-      <table class="min-w-full bg-white border border-gray-200">
-        <thead>
-          <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">
-            <th class="py-3 px-6 text-left">Name</th>
-            <th class="py-3 px-6 text-left">Email</th>
-            <th class="py-3 px-6 text-center">Role</th>
-            <th class="py-3 px-6 text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="text-dark font-light">
-          <tr
-            v-for="user in users"
-            :key="user._id"
-            class="border-b border-gray-200 hover:bg-gray-100"
-          >
-            <td class="py-3 px-6 text-left">{{ user.username }}</td>
-            <td class="py-3 px-6 text-left">{{ user.email }}</td>
-            <td class="py-3 px-6 text-center">{{ user.role }}</td>
-            <td class="py-3 px-6 text-center">
-              <button @click="editUser(user)" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">
-                Edit
-              </button>
-              <button @click="deleteUser(user._id)" class="bg-red-500 text-white px-4 py-2 rounded">
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div>
+    <div class="p-4 ml-20 min-h-screen flex flex-wrap pt-20 place-content-center">
+      <h1 class="absolute block ml-10 text-4xl font-bold text-white text-center mb-6">
+        Users Management
+      </h1>
+      <!-- Users Table -->
+      <div class="overflow-x-auto mt-20">
+        <table class="min-w-full bg-white border border-gray-200">
+          <thead>
+            <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">
+              <th class="py-3 px-6 text-left">Name</th>
+              <th class="py-3 px-6 text-left">Email</th>
+              <th class="py-3 px-6 text-center">Role</th>
+              <th class="py-3 px-6 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="text-dark font-light">
+            <tr
+              v-for="user in users"
+              :key="user._id"
+              class="border-b border-gray-200 hover:bg-gray-100"
+            >
+              <td class="py-3 px-6 text-left">{{ user.username }}</td>
+              <td class="py-3 px-6 text-left">{{ user.email }}</td>
+              <td class="py-3 px-6 text-center">{{ user.role }}</td>
+              <td class="py-3 px-6 text-center">
+                <button
+                  @click="editUser(user)"
+                  class="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  @click="deleteUser(user._id)"
+                  class="bg-red-500 text-white px-4 py-2 rounded"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <!-- Modal for Editing User -->
-    <UserModal
-      v-if="showModal"
-      :user="selectedUser"
-      @close="showModal = false"
-      @update="updateUser"
-    />
-    <div
-      v-if="loading"
-      class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
-    >
-      <l-grid size="80" speed="2" color="purple"></l-grid>
+      <!-- Modal for Editing User -->
+      <UserModal
+        v-if="showModal"
+        :user="selectedUser"
+        @close="showModal = false"
+        @update="updateUser"
+      />
+      <div
+        v-if="loading"
+        class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
+      >
+        <l-grid size="80" speed="2" color="purple"></l-grid>
+      </div>
+      <ModalComp
+        :show="showResModal"
+        :title="modalTitle"
+        :message="modalMessage"
+        @close="showResModal = false"
+      />
     </div>
-    <ModalComp
-      :show="showResModal"
-      :title="modalTitle"
-      :message="modalMessage"
-      @close="showResModal = false"
-    />
   </div>
 </template>
 

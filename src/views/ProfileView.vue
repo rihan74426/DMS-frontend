@@ -1,119 +1,124 @@
 <template>
-  <div
-    class="min-h-screen container mx-auto p-4 flex flex-wrap pt-20 ml-40 place-content-center bg-gradient-to-r from-purple-500 to-blue-500"
-  >
-    <h1 class="text-2xl font-bold mb-4 text-white absolute block mt-10">User Profile</h1>
-    <div class="grid grid-cols-2 gap-4 mb-4">
-      <div>
-        <img :src="profileImagePreview" class="m-4 w-48 h-48 rounded-full object-cover" />
-        <label
-          class="block text-white flex place-content-center mr-40 font-bold text-center"
-          for="profileImage"
-          >Profile Image</label
-        >
+  <div>
+    <div class="min-h-screen container mx-auto p-4 flex flex-wrap pt-20 ml-40 place-content-center">
+      <h1 class="text-2xl font-bold mb-4 text-white absolute block mt-10">User Profile</h1>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <img :src="profileImagePreview" class="m-4 w-48 h-48 rounded-full object-cover" />
+          <label
+            class="block text-white flex place-content-center mr-40 font-bold text-center"
+            for="profileImage"
+            >Profile Image</label
+          >
+        </div>
+        <div class="mt-10">
+          <h2 class="block text-white text-lg font-bold mb-4">Name: {{ profileData.name }}</h2>
+          <h2 class="block text-white text-lg font-bold mb-4">Email: {{ profileData.email }}</h2>
+          <h2 class="block text-white text-lg font-bold mb-4">
+            Address: {{ profileData.address }}
+          </h2>
+          <h2 class="block text-white text-lg font-bold mb-4">Phone: {{ profileData.phone }}</h2>
+        </div>
       </div>
-      <div class="mt-10">
-        <h2 class="block text-white text-lg font-bold mb-4">Name: {{ profileData.name }}</h2>
-        <h2 class="block text-white text-lg font-bold mb-4">Email: {{ profileData.email }}</h2>
-        <h2 class="block text-white text-lg font-bold mb-4">Address: {{ profileData.address }}</h2>
-        <h2 class="block text-white text-lg font-bold mb-4">Phone: {{ profileData.phone }}</h2>
-      </div>
+      <button
+        @click="showModal = true"
+        class="absolute block items-center mr-40 m-10 top-40 mt-80 bg-pink-500 rounded-md p-2 text-white hover:bg-pink-700 hover:text-white"
+      >
+        Edit Profile
+      </button>
     </div>
-    <button
-      @click="showModal = true"
-      class="absolute block items-center mr-40 m-10 top-40 mt-80 bg-pink-500 rounded-md p-2 text-white hover:bg-pink-700 hover:text-white"
-    >
-      Edit Profile
-    </button>
-  </div>
-  <div v-if="showModal" class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-4 mt-10 rounded shadow-md w-1/2 overflow-auto mb-5 mt-5">
-      <h2 class="text-2xl font-bold mb-4 absolute block ml-10">Profile Update</h2>
+    <div v-if="showModal" class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
+      <div class="bg-white p-4 mt-10 rounded shadow-md w-1/2 overflow-auto mb-5 mt-5">
+        <h2 class="text-2xl font-bold mb-4 absolute block ml-10">Profile Update</h2>
 
-      <form @submit.prevent="updateProfile">
-        <div class="mb-4">
-          <div class="mb-4 m-5 w-1/2 ml-40">
-            <label
-              class="block flex place-content-center text-gray-700 text-sm font-bold"
-              for="profileImage"
-              >Profile Image</label
-            >
-            <img :src="profileImagePreview" class="m-4 w-32 h-32 rounded-full object-cover ml-20" />
-            <input
-              type="file"
-              @change="onFileChange"
-              class="block w-full text-sm text-gray-900 border border-gray-300 rounded cursor-pointer bg-gray-50 focus:outline-none"
-              title="File size must be less than 1MB"
-            />
-          </div>
-          <div class="grid grid-cols-2">
-            <div class="m-5">
-              <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
-              <input
-                v-model="profileData.name"
-                type="text"
-                id="name"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-
-            <div class="m-5">
-              <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
-              <input
-                v-model="profileData.email"
-                type="email"
-                id="email"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-
-            <div class="m-5">
-              <label class="block text-gray-700 text-sm font-bold mb-2" for="address"
-                >Address</label
+        <form @submit.prevent="updateProfile">
+          <div class="mb-4">
+            <div class="mb-4 m-5 w-1/2 ml-40">
+              <label
+                class="block flex place-content-center text-gray-700 text-sm font-bold"
+                for="profileImage"
+                >Profile Image</label
               >
-              <textarea
-                v-model="profileData.address"
-                type="text"
-                id="address"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              ></textarea>
-            </div>
-
-            <div class="m-5">
-              <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone</label>
+              <img
+                :src="profileImagePreview"
+                class="m-4 w-32 h-32 rounded-full object-cover ml-20"
+              />
               <input
-                v-model="profileData.phone"
-                type="text"
-                id="phone"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="file"
+                @change="onFileChange"
+                class="block w-full text-sm text-gray-900 border border-gray-300 rounded cursor-pointer bg-gray-50 focus:outline-none"
+                title="File size must be less than 1MB"
               />
             </div>
-          </div>
-        </div>
+            <div class="grid grid-cols-2">
+              <div class="m-5">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
+                <input
+                  v-model="profileData.name"
+                  type="text"
+                  id="name"
+                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
 
-        <div class="flex items-center flex place-content-right">
-          <button
-            class="bg-blue-500 m-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            @click="showModal = false"
-          >
-            Cancel
-          </button>
-          <button
-            class="bg-blue-500 m-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Update Profile
-          </button>
-        </div>
-      </form>
+              <div class="m-5">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+                <input
+                  v-model="profileData.email"
+                  type="email"
+                  id="email"
+                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+
+              <div class="m-5">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="address"
+                  >Address</label
+                >
+                <textarea
+                  v-model="profileData.address"
+                  type="text"
+                  id="address"
+                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                ></textarea>
+              </div>
+
+              <div class="m-5">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone</label>
+                <input
+                  v-model="profileData.phone"
+                  type="text"
+                  id="phone"
+                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center flex place-content-right">
+            <button
+              class="bg-blue-500 m-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              @click="showModal = false"
+            >
+              Cancel
+            </button>
+            <button
+              class="bg-blue-500 m-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              Update Profile
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+    <ModalComp
+      :show="showResModal"
+      :title="modalTitle"
+      :message="modalMessage"
+      @close="showResModal = false"
+    />
   </div>
-  <ModalComp
-    :show="showResModal"
-    :title="modalTitle"
-    :message="modalMessage"
-    @close="showResModal = false"
-  />
 </template>
 
 <script setup>

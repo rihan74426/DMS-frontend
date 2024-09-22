@@ -1,161 +1,163 @@
 <template>
-  <div class="min-h-screen mx-auto p-4 pt-20 bg-gradient-to-r from-purple-500 to-blue-500">
-    <div class="ml-60">
-      <h1 class="text-4xl font-bold text-white text-center mb-6">{{ storeDetails.storeName }}</h1>
+  <div>
+    <div class="min-h-screen mx-auto p-4 pt-20">
+      <div class="ml-60">
+        <h1 class="text-4xl font-bold text-white text-center mb-6">{{ storeDetails.storeName }}</h1>
 
-      <!-- Store Details Section -->
+        <!-- Store Details Section -->
 
-      <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10 grid grid-cols-2 gap-6">
-        <div>
-          <h2 class="text-2xl font-semibold mb-4">Store Details</h2>
-          <p class="p-2"><strong>Store Name:</strong> {{ storeDetails.storeName }}</p>
-          <p class="p-2"><strong>Store Proprietor:</strong> {{ storeDetails.storeManager }}</p>
-          <p class="p-2"><strong>Store Email:</strong> {{ storeDetails.storeEmail }}</p>
-          <p class="p-2"><strong>Store Contact:</strong> {{ storeDetails.storePhone }}</p>
-          <p class="p-2"><strong>Store Location:</strong> {{ storeDetails.storeAddress }}</p>
-          <button
-            @click="openStoreDetailsModal"
-            class="mt-4 px-4 py-2 bg-purple-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100"
-          >
-            Edit Store Details
-          </button>
+        <div class="bg-white shadow-md rounded-lg flex p-6 mb-8 m-10 grid grid-cols-2 gap-6">
+          <div>
+            <h2 class="text-2xl font-semibold mb-4">Store Details</h2>
+            <p class="p-2"><strong>Store Name:</strong> {{ storeDetails.storeName }}</p>
+            <p class="p-2"><strong>Store Proprietor:</strong> {{ storeDetails.storeManager }}</p>
+            <p class="p-2"><strong>Store Email:</strong> {{ storeDetails.storeEmail }}</p>
+            <p class="p-2"><strong>Store Contact:</strong> {{ storeDetails.storePhone }}</p>
+            <p class="p-2"><strong>Store Location:</strong> {{ storeDetails.storeAddress }}</p>
+            <button
+              @click="openStoreDetailsModal"
+              class="mt-4 px-4 py-2 bg-purple-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100"
+            >
+              Edit Store Details
+            </button>
+          </div>
+          <div class="">
+            <h2 class="text-2xl font-semibold mb-4 text-end">Products in the store</h2>
+            <div v-if="storeProducts.length > 0" class="flex place-content-end">
+              <table class="min-w-4/5 bg-white border border-gray-200">
+                <thead>
+                  <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">
+                    <th class="py-2 px-2 text-center">Img</th>
+                    <th class="py-2 px-2 text-center">Name</th>
+                    <th class="py-2 px-2 text-center">Pack</th>
+                    <th class="py-2 px-2 text-center">group</th>
+                    <th class="py-2 px-2 text-center">MRP</th>
+                  </tr>
+                </thead>
+                <tbody class="text-dark font-light">
+                  <tr
+                    v-for="product in storeProducts"
+                    :key="storeProducts.indexOf(product)"
+                    class="border-b border-gray-200 hover:bg-gray-100"
+                  >
+                    <td class="px-2 text-center flex place-content-center">
+                      <div class="items-center">
+                        <img
+                          :src="product ? product.image : ''"
+                          alt="product image"
+                          class="object-contain relative h-12 w-12"
+                        />
+                      </div>
+                    </td>
+                    <td class="py-2 px-2 text-center">{{ product.name }}</td>
+                    <td class="py-2 px-2 text-center">{{ product.packSize }}</td>
+                    <td class="py-2 px-2 text-center">{{ product.group }}</td>
+                    <td class="py-2 px-2 text-center">{{ product.price }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h4 v-else class="text-end">
+              Your products will be listed here after completing an order
+            </h4>
+          </div>
         </div>
-        <div>
-          <h2 class="text-2xl font-semibold mb-4 text-end">Products in the store</h2>
-          <div v-if="storeDetails.products.length > 0">
+
+        <!-- Orders Section -->
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10">
+          <h2 class="text-2xl font-semibold mb-4">Orders</h2>
+          <div v-if="orders.length > 0">
             <table class="min-w-full bg-white border border-gray-200">
               <thead>
                 <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">
-                  <th class="py-2 px-2 text-center">Pack</th>
-                  <th class="py-2 px-2 text-center">group</th>
-                  <th class="py-2 px-2 text-center">MRP</th>
-                  <th class="py-2 px-2 text-center">Name</th>
-                  <th class="py-2 px-2 text-center">Img</th>
+                  <th class="py-2 px-2 text-center">No.</th>
+                  <th class="py-2 px-2 text-center">Invoice</th>
+                  <th class="py-2 px-2 text-center">Product</th>
+                  <th class="py-2 px-2 text-center">Pack Size</th>
+                  <th class="py-2 px-2 text-center">Quantity</th>
+                  <th class="py-2 px-2 text-center">Ordered On</th>
+                  <th class="py-2 px-2 text-center">Status</th>
+                  <th class="py-2 px-2 text-center">Total bill</th>
+                  <th class="py-2 px-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody class="text-dark font-light">
                 <tr
-                  v-for="product in storeProducts"
-                  :key="storeProducts.indexOf(product)"
+                  v-for="order in orders"
+                  :key="order._id"
                   class="border-b border-gray-200 hover:bg-gray-100"
                 >
-                  <td class="px-2 text-center">
-                    <div class="flex">
-                      <img
-                        :src="product.image"
-                        alt="product image"
-                        class="object-contain h-10 w-10 justify-center place-content-center"
-                      />
-                    </div>
+                  <td class="py-2 px-2 text-center">
+                    {{ orders.indexOf(order) + 1 }}
                   </td>
-                  <td class="py-2 px-2 text-center">{{ product.name }}</td>
-                  <td class="py-2 px-2 text-center">{{ product.packSize }}</td>
-                  <td class="py-2 px-2 text-center">{{ product.group }}</td>
-                  <td class="py-2 px-2 text-center">{{ product.price }}</td>
+                  <td class="p-2 text-center">#{{ order.invoice }}</td>
+                  <td class="p-2 text-center">{{ findThings(order.productId).name }}</td>
+                  <td class="p-2 text-center">{{ findThings(order.productId).packSize }}</td>
+                  <td class="p-2 text-center">{{ order.quantity }}</td>
+                  <td class="p-2 text-center">{{ timeCon(order.orderDate) }}</td>
+                  <td class="p-2 text-center">{{ order.status }}</td>
+                  <td class="p-2 text-center">{{ order.price }}</td>
+                  <td class="p-2 text-center flex">
+                    <button
+                      @click="openOrderModal(order)"
+                      class="ml-4 p-2 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
+                    >
+                      <EditIcon />
+                    </button>
+                    <button
+                      @click="deleteOrder(order._id)"
+                      class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
+                    >
+                      <Trash2Icon />
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <h4 v-else class="text-end">
-            Your products will be listed here after completing an order
-          </h4>
+          <h4 v-else>You don't have any Orders yet!</h4>
+          <button
+            @click="openOrderModal()"
+            class="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-green-700 transition duration-500 ease-in-out"
+          >
+            Add New Order
+          </button>
         </div>
-      </div>
 
-      <!-- Orders Section -->
-      <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10">
-        <h2 class="text-2xl font-semibold mb-4">Orders</h2>
-        <div v-if="orders.length > 0">
-          <table class="min-w-full bg-white border border-gray-200">
-            <thead>
-              <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">
-                <th class="py-2 px-2 text-center">No.</th>
-                <th class="py-2 px-2 text-center">Invoice</th>
-                <th class="py-2 px-2 text-center">Product</th>
-                <th class="py-2 px-2 text-center">Pack Size</th>
-                <th class="py-2 px-2 text-center">Quantity</th>
-                <th class="py-2 px-2 text-center">Ordered On</th>
-                <th class="py-2 px-2 text-center">Status</th>
-                <th class="py-2 px-2 text-center">Total bill</th>
-                <th class="py-2 px-2 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="text-dark font-light">
-              <tr
-                v-for="order in orders"
-                :key="order._id"
-                class="border-b border-gray-200 hover:bg-gray-100"
-              >
-                <td class="py-2 px-2 text-center">
-                  {{ orders.indexOf(order) + 1 }}
-                </td>
-                <td class="p-2 text-center">{{ order.invoice }}</td>
-                <td class="p-2 text-center">{{ findThings(order.productId).name }}</td>
-                <td class="p-2 text-center">{{ findThings(order.productId).packSize }}</td>
-                <td class="p-2 text-center">{{ order.quantity }}</td>
-                <td class="p-2 text-center">{{ timeCon(order.orderDate) }}</td>
-                <td class="p-2 text-center">{{ order.status }}</td>
-                <td class="p-2 text-center">{{ order.price }}</td>
-                <td class="p-2 text-center flex">
-                  <button
-                    @click="openOrderModal(order)"
-                    class="ml-4 p-2 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
-                  >
-                    <EditIcon />
-                  </button>
-                  <button
-                    @click="deleteOrder(order._id)"
-                    class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
-                  >
-                    <Trash2Icon />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <h4 v-else>You don't have any Orders yet!</h4>
-        <button
-          @click="openOrderModal()"
-          class="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-green-700 transition duration-500 ease-in-out"
-        >
-          Add New Order
-        </button>
+        <!-- Modals -->
+        <Transition name="modal">
+          <StoreComp
+            v-if="showStoreDetailsModal"
+            @close="closeStoreDetailsModal"
+            @save="updateStoreDetails"
+            :store="storeDetails"
+          />
+        </Transition>
+        <Transition name="modal">
+          <OrderComp
+            v-if="showOrderModal"
+            :order="selectedOrder"
+            @close="closeOrderModal"
+            @save="saveOrder"
+          />
+        </Transition>
       </div>
-
-      <!-- Modals -->
-      <Transition name="modal">
-        <StoreComp
-          v-if="showStoreDetailsModal"
-          @close="closeStoreDetailsModal"
-          @save="updateStoreDetails"
-          :store="storeDetails"
-        />
-      </Transition>
-      <Transition name="modal">
-        <OrderComp
-          v-if="showOrderModal"
-          :order="selectedOrder"
-          @close="closeOrderModal"
-          @save="saveOrder"
-        />
-      </Transition>
     </div>
+    <div
+      v-if="loading"
+      class="fixed inset-0 flex items-center justify-center bg-black z-50 bg-opacity-50"
+    >
+      <l-grid size="80" speed="2" color="purple"></l-grid>
+    </div>
+    <Transition name="modal">
+      <ModalComp
+        :show="showModal"
+        :title="modalTitle"
+        :message="modalMessage"
+        @close="showModal = false"
+      />
+    </Transition>
   </div>
-  <div
-    v-if="loading"
-    class="fixed inset-0 flex items-center justify-center bg-black z-50 bg-opacity-50"
-  >
-    <l-grid size="80" speed="2" color="purple"></l-grid>
-  </div>
-  <Transition name="modal">
-    <ModalComp
-      :show="showModal"
-      :title="modalTitle"
-      :message="modalMessage"
-      @close="showModal = false"
-    />
-  </Transition>
 </template>
 
 <script setup>
@@ -170,8 +172,8 @@ import { EditIcon, Trash2Icon } from 'lucide-vue-next'
 
 grid.register()
 onMounted(async () => {
-  loading.value = true // Set loader to true when data fetching starts
   try {
+    loading.value = true // Set loader to true when data fetching starts
     await authStore.fetchStore()
     await authStore.fetchOrders()
     await authStore.fetchProducts()
@@ -282,7 +284,7 @@ const saveOrder = async (order) => {
       orders.value[index] = response.data
       showModal.value = true
       modalTitle.value = 'Success'
-      modalMessage.value = 'Order Placed Successfully! You will be contacted soon'
+      modalMessage.value = 'Order updated Successfully! will be transfered to the store'
     } catch (error) {
       showModal.value = true
       modalTitle.value = 'Failure'

@@ -1,14 +1,12 @@
 <template>
-  <div
-    class="min-h-screen ml-20 flex flex-wrap place-content-center bg-gradient-to-r from-purple-500 to-blue-500"
-  >
+  <div class="min-h-screen ml-60 flex flex-wrap place-content-center">
     <h1 class="text-4xl text-white font-bold m-5">Dashboard</h1>
-    <div class="p-10 w-full bg-black ml-40">
+    <div class="p-10 w-full bg-black ml-5">
       <h1 class="text-2xl text-white font-bold">
         Welcome to -> <strong>Distribution Management System</strong>
       </h1>
     </div>
-    <div class="p-4 flex flex-wrap w-full ml-40">
+    <div class="p-4 flex flex-wrap w-full">
       <div class="w-full md:w-1/4 p-4">
         <DashboardCard title="Total Companies" :count="data.totalCompanies" />
       </div>

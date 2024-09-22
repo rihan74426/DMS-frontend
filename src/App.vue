@@ -18,7 +18,14 @@ onMounted(() => {
   <div v-else>
     <navbarView />
     <SideBar />
-    <RouterView />
+
+    <router-view v-slot="{ Component }">
+      <transition name="scroll" mode="out-in">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </transition>
+    </router-view>
   </div>
 </template>
 

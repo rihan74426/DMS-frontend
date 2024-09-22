@@ -1,102 +1,104 @@
 <template>
-  <div
-    class="container min-h-screen mx-auto p-4 ml-20 pt-20 bg-gradient-to-r from-purple-500 to-blue-500"
-  >
-    <div class="ml-10">
-      <div class="relative flex place-content-center mb-10">
-        <h1 class="text-4xl text-white font-bold absolute">Transactions</h1>
-        <button
-          @click="showAddTransaction"
-          class="bg-pink-500 mt-20 text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
-        >
-          Add a Transaction
-        </button>
-      </div>
-
-      <table class="w-5/6 bg-white shadow-lg rounded-lg ml-40">
-        <thead>
-          <tr class="text-center bg-gray-100 border border-slate-700">
-            <th class="p-4 justify-center">Company</th>
-            <th class="p-4 justify-center">Product</th>
-            <th class="p-4 justify-center">Quantity</th>
-            <th class="p-4 justify-center">Item Price</th>
-            <th class="p-4 justify-center">Total</th>
-            <th class="p-4 justify-center">Person</th>
-            <th class="p-4 justify-center">Created</th>
-            <th class="p-4 justify-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="transaction in transactions"
-            :key="transaction._id"
-            class="border border-slate-700 text-center"
+  <div>
+    <div
+      class="container min-h-screen mx-auto p-4 ml-20 pt-20"
+    >
+      <div class="ml-10">
+        <div class="relative flex place-content-center mb-10">
+          <h1 class="text-4xl text-white font-bold absolute">Transactions</h1>
+          <button
+            @click="showAddTransaction"
+            class="bg-pink-500 mt-20 text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
           >
-            <td class="p-2">
-              {{ showCompany(transaction.companyId) }}
-            </td>
-            <td class="p-2">
-              {{ showProduct(transaction.productId) }}
-            </td>
-            <td class="p-2">{{ transaction.quantity }}</td>
-            <td class="p-2">{{ transaction.price }} /-</td>
-            <td class="p-2">{{ transaction.quantity * transaction.price }} /-</td>
-            <td class="p-2">{{ transaction.person }}</td>
-            <td class="p-2">
-              {{ timeCon(transaction.createdAt) }}
-            </td>
-            <td class="p-2 justify-between flex">
-              <button
-                @click="editTransaction(transaction)"
-                class="bg-blue-500 text-white px-2 py-2 rounded m-1"
-              >
-                <PencilSquareIcon class="size-6 text-white" />
-              </button>
-              <button
-                @click="deleteTransaction(transaction._id)"
-                class="bg-red-500 text-white p-2 rounded m-1"
-              >
-                <TrashIcon class="size-6 text-white" />
-              </button>
-              <button
-                @click="printVoucher(transaction)"
-                class="bg-green-500 text-white px-2 py-2 rounded block m-1"
-              >
-                PDF
-              </button>
-              <button
-                @click="printExcel(transaction)"
-                class="bg-green-500 text-white px-2 py-2 rounded block m-1"
-              >
-                Exel
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            Add a Transaction
+          </button>
+        </div>
 
-      <!-- Add/Edit Transaction Modal -->
-      <EditTransModal
-        :show-modal="showModal"
-        :is-edit-mode="isEditMode"
-        :transactionData="selectedTransaction"
-        :companies="companies"
-        :products="products"
-        @close="showModal = false"
-        @save="handleSaveTransaction"
-      />
-      <div
-        v-if="loading"
-        class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
-      >
-        <l-grid size="80" speed="2" color="purple"></l-grid>
+        <table class="w-5/6 bg-white shadow-lg rounded-lg ml-40">
+          <thead>
+            <tr class="text-center bg-gray-100 border border-slate-700">
+              <th class="p-4 justify-center">Company</th>
+              <th class="p-4 justify-center">Product</th>
+              <th class="p-4 justify-center">Quantity</th>
+              <th class="p-4 justify-center">Item Price</th>
+              <th class="p-4 justify-center">Total</th>
+              <th class="p-4 justify-center">Person</th>
+              <th class="p-4 justify-center">Created</th>
+              <th class="p-4 justify-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="transaction in transactions"
+              :key="transaction._id"
+              class="border border-slate-700 text-center"
+            >
+              <td class="p-2">
+                {{ showCompany(transaction.companyId) }}
+              </td>
+              <td class="p-2">
+                {{ showProduct(transaction.productId) }}
+              </td>
+              <td class="p-2">{{ transaction.quantity }}</td>
+              <td class="p-2">{{ transaction.price }} /-</td>
+              <td class="p-2">{{ transaction.quantity * transaction.price }} /-</td>
+              <td class="p-2">{{ transaction.person }}</td>
+              <td class="p-2">
+                {{ timeCon(transaction.createdAt) }}
+              </td>
+              <td class="p-2 justify-between flex">
+                <button
+                  @click="editTransaction(transaction)"
+                  class="bg-blue-500 text-white px-2 py-2 rounded m-1"
+                >
+                  <PencilSquareIcon class="size-6 text-white" />
+                </button>
+                <button
+                  @click="deleteTransaction(transaction._id)"
+                  class="bg-red-500 text-white p-2 rounded m-1"
+                >
+                  <TrashIcon class="size-6 text-white" />
+                </button>
+                <button
+                  @click="printVoucher(transaction)"
+                  class="bg-green-500 text-white px-2 py-2 rounded block m-1"
+                >
+                  PDF
+                </button>
+                <button
+                  @click="printExcel(transaction)"
+                  class="bg-green-500 text-white px-2 py-2 rounded block m-1"
+                >
+                  Exel
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Add/Edit Transaction Modal -->
+        <EditTransModal
+          :show-modal="showModal"
+          :is-edit-mode="isEditMode"
+          :transactionData="selectedTransaction"
+          :companies="companies"
+          :products="products"
+          @close="showModal = false"
+          @save="handleSaveTransaction"
+        />
+        <div
+          v-if="loading"
+          class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
+        >
+          <l-grid size="80" speed="2" color="purple"></l-grid>
+        </div>
+        <ModalComp
+          :show="showResModal"
+          :title="modalTitle"
+          :message="modalMessage"
+          @close="showResModal = false"
+        />
       </div>
-      <ModalComp
-        :show="showResModal"
-        :title="modalTitle"
-        :message="modalMessage"
-        @close="showResModal = false"
-      />
     </div>
   </div>
 </template>
