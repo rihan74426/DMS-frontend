@@ -14,9 +14,9 @@ onMounted(() => {
 </script>
 
 <template>
+  <navbarView />
   <div v-if="!authStore.logged"><LoginView /></div>
   <div v-else>
-    <navbarView />
     <SideBar />
 
     <router-view v-slot="{ Component }">

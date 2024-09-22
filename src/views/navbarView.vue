@@ -27,7 +27,6 @@ watch(
   (newVal) => {
     if (newVal == true) {
       fetchUser()
-      console.log(newVal)
     }
   }
 )
@@ -50,7 +49,7 @@ watch(
               >
             </div>
           </div>
-          <div class="right-0 absolute grid grid-cols-4 gap-1">
+          <div v-if="user" class="right-0 absolute grid grid-cols-4 gap-1">
             <h1
               class="relative col-span-3 text-right rounded-md px-3 py-2 text-lg font-medium text-white"
             >
