@@ -81,7 +81,7 @@
                   <th class="py-2 px-2 text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody class="text-dark font-light">
+              <TransitionGroup name="order" tag="tbody">
                 <tr
                   v-for="order in orders"
                   :key="order._id"
@@ -112,7 +112,7 @@
                     </button>
                   </td>
                 </tr>
-              </tbody>
+              </TransitionGroup>
             </table>
           </div>
           <h4 v-else>You don't have any Orders yet!</h4>
@@ -356,5 +356,20 @@ const deleteOrder = async (id) => {
 .modal-leave-to {
   transform: scale(0.5);
   opacity: 0;
+}
+
+.order-enter-active,
+.order-leave-active {
+  transition: all 0.5s ease;
+}
+
+.order-enter-from {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.order-leave-to {
+  opacity: 0;
+  transform: translateY(40px);
 }
 </style>

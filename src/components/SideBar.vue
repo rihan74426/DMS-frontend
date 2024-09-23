@@ -36,7 +36,8 @@ import {
   CompassIcon,
   PyramidIcon,
   TerminalSquareIcon,
-  LogOutIcon
+  LogOutIcon,
+  StoreIcon
 } from 'lucide-vue-next'
 
 const authStore = useAuthStore()
@@ -48,7 +49,7 @@ const navItems = [
   { name: 'Companies', path: '/companies', icon: CompassIcon },
   { name: 'Products', path: '/products', icon: PyramidIcon },
   { name: 'Transactions', path: '/transactions', icon: TerminalSquareIcon },
-  { name: 'My Store', path: '/stores', icon: TerminalSquareIcon }
+  { name: 'My Store', path: '/stores', icon: StoreIcon }
 ]
 
 const logged = ref(true)

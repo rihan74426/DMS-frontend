@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!showReg" class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div v-if="!showReg" class="min-h-screen flex items-center justify-center">
       <transition name="login">
         <div v-if="trans" class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
           <h2 class="text-2xl font-bold mb-6 text-gray-800">Login</h2>
@@ -121,13 +121,13 @@ const handleLogin = async () => {
 <style scoped>
 .login-enter-active,
 .login-leave-active {
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.5s ease-in-out;
 }
 
 .login-enter-from {
-  transform: translateY(100%); /* Slide from bottom */
+  transform: translateY(-150%); /* Slide from bottom */
 }
 .login-leave-to {
-  transform: translateY(-100%); /* Slide to top when leaving */
+  transform: translateY(100%); /* Slide to top when leaving */
 }
 </style>

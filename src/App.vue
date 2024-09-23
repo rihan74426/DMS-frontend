@@ -18,7 +18,6 @@ onMounted(() => {
   <div v-if="!authStore.logged"><LoginView /></div>
   <div v-else>
     <SideBar />
-
     <router-view v-slot="{ Component }">
       <transition name="scroll" mode="out-in">
         <keep-alive>

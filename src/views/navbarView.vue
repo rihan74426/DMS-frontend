@@ -4,7 +4,7 @@ import axios from 'axios'
 import { onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 
-const user = ref([])
+const user = ref(null)
 const profileImagePreview = ref('')
 
 onMounted(() => {
@@ -16,6 +16,7 @@ const fetchUser = async () => {
     const userMail = localStorage.getItem('email')
     user.value = data.filter((user) => user.email.includes(userMail))[0]
     profileImagePreview.value = `http://localhost:5000/${user.value.profileImage}`
+    console.log(profileImagePreview.value)
   } catch (error) {
     // this.logout()
     console.log('error fetching data: ', error)
@@ -49,11 +50,11 @@ watch(
               >
             </div>
           </div>
-          <div v-if="user" class="right-0 absolute grid grid-cols-4 gap-1">
+          <div v-if="useAuthStore().logged" class="right-0 absolute grid grid-cols-4 gap-1">
             <h1
               class="relative col-span-3 text-right rounded-md px-3 py-2 text-lg font-medium text-white"
             >
-              Hello {{ user.username ? user.username : 'User' }}, Welcome!
+              Hello {{ user ? user.username : 'User' }}, Welcome!
             </h1>
             <RouterLink
               to="/profile"
