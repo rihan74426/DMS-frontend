@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div
-      class="container min-h-screen mx-auto p-4 ml-20 pt-20"
-    >
+    <div class="container min-h-screen mx-auto p-4 ml-20 pt-20">
       <div class="ml-10">
         <div class="relative flex place-content-center mb-10">
           <h1 class="text-4xl text-white font-bold absolute">Transactions</h1>
@@ -14,7 +12,7 @@
           </button>
         </div>
 
-        <table class="w-5/6 bg-white shadow-lg rounded-lg ml-40">
+        <table v-if="!loading" class="w-5/6 bg-white shadow-lg rounded-lg ml-40">
           <thead>
             <tr class="text-center bg-gray-100 border border-slate-700">
               <th class="p-4 justify-center">Company</th>
@@ -76,6 +74,9 @@
           </tbody>
         </table>
 
+        <div v-else class="inset-0 flex items-center z-50 justify-center">
+          <l-grid size="80" speed="2" color="purple"></l-grid>
+        </div>
         <!-- Add/Edit Transaction Modal -->
         <EditTransModal
           :show-modal="showModal"
@@ -86,12 +87,6 @@
           @close="showModal = false"
           @save="handleSaveTransaction"
         />
-        <div
-          v-if="loading"
-          class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
-        >
-          <l-grid size="80" speed="2" color="purple"></l-grid>
-        </div>
         <ModalComp
           :show="showResModal"
           :title="modalTitle"

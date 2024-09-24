@@ -99,7 +99,7 @@
                   <td class="p-2 text-center">{{ order.price }}</td>
                   <td class="p-2 text-center flex">
                     <button
-                      @click="openOrderModal(order)"
+                      @click="openOrderModal({ ...order, storeName: storeDetails.storeName })"
                       class="ml-4 p-2 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
                     >
                       <EditIcon />

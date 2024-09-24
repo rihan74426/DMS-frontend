@@ -5,10 +5,13 @@
         {{ order ? 'Edit Order' : 'Add Order' }}
       </h2>
       <p class="font-semibold mb-4">Invoice no: {{ orderData.invoice }}</p>
-      <p class="font-semibold mb-4">Store: {{ authStore.store.storeName }}</p>
+      <p class="font-semibold mb-4">
+        Store:
+        {{ orderData.storeName }}
+      </p>
 
       <label class="block mb-2">Select Product</label>
-      <select required v-model="orderData.productId" class="w-full mb-4 p-2 border rounded">
+      <select v-model="orderData.productId" class="w-full mb-4 p-2 border rounded">
         <option v-for="product in authStore.products.value" :key="product._id" :value="product._id">
           {{ product.name }}
         </option>
@@ -36,7 +39,7 @@
       </p>
 
       <div class="flex justify-end">
-        <button @click="$emit('close')" class="px-4 py-2 mr-2 bg-gray-400 text-white rounded-md">
+        <button @click="closeModal" class="px-4 py-2 mr-2 bg-gray-400 text-white rounded-md">
           Cancel
         </button>
         <button @click="saveChanges" class="px-4 py-2 bg-green-600 text-white rounded-md">
@@ -57,6 +60,7 @@ const orderData = reactive(
   props.order
     ? { ...props.order }
     : {
+        storeName: '',
         userId: '',
         invoice: '',
         productId: '',
@@ -64,7 +68,6 @@ const orderData = reactive(
         price: 0
       }
 )
-
 watch(orderData, () => {
   const selected = products.value.filter((el) => el._id == orderData.productId)
   if (selected[0]) {
@@ -72,7 +75,7 @@ watch(orderData, () => {
   }
 })
 
-const emit = defineEmits(['save'])
+const emit = defineEmits(['save', 'close'])
 
 // Moved the function definition above the usage
 const generateInvoiceNumber = (userId) => {
@@ -91,15 +94,27 @@ if (props.order) {
 const authStore = useAuthStore()
 onMounted(() => {
   authStore.fetchProducts()
+  authStore.fetchAllStores()
   products.value = authStore.products.value
   orderData.userId = authStore.user._id
 
   // Generate the invoice number once userId is available
-  orderData.invoice = generateInvoiceNumber(orderData.userId)
+  !props.order
+    ? (orderData.invoice = generateInvoiceNumber(orderData.userId))
+    : (orderData.invoice = props.order.invoice)
 })
 
 // Emit the save event
 const saveChanges = () => {
   emit('save', orderData)
+}
+const closeModal = () => {
+  emit('close')
+  ;(orderData.storeName = ''),
+    (orderData.userId = ''),
+    (orderData.invoice = ''),
+    (orderData.productId = ''),
+    (orderData.quantity = 1),
+    (orderData.price = 0)
 }
 </script>

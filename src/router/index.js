@@ -7,6 +7,7 @@ import ProductsView from '@/views/ProductsView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import TransactionView from '@/views/TransactionView.vue'
 import StoreView from '@/views/StoreView.vue'
+import OrdersView from '@/views/OrdersView.vue'
 
 const routes = [
   {
@@ -41,6 +42,11 @@ const routes = [
   {
     path: '/profile',
     component: ProfileView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/orders',
+    component: OrdersView,
     meta: { requiresAuth: true }
   }
   // More routes here

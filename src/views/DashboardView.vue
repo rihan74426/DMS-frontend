@@ -8,16 +8,29 @@
     </div>
     <div class="p-4 flex flex-wrap w-full">
       <div class="w-full md:w-1/4 p-4">
-        <DashboardCard title="Total Companies" :count="data.totalCompanies" />
+        <router-link to="/companies">
+          <DashboardCard title="Total Companies" :count="data.totalCompanies" />
+        </router-link>
       </div>
       <div class="w-full md:w-1/4 p-4">
-        <DashboardCard title="Total Transactions" :count="data.totalTransactions" />
+        <router-link to="/transactions">
+          <DashboardCard title="Total Transactions" :count="data.totalTransactions" />
+        </router-link>
       </div>
       <div class="w-full md:w-1/4 p-4">
-        <DashboardCard title="Total Products" :count="data.totalProducts" />
+        <router-link to="/products">
+          <DashboardCard title="Total Products" :count="data.totalProducts" />
+        </router-link>
       </div>
       <div class="w-full md:w-1/4 p-4">
-        <DashboardCard title="Total Users" :count="data.totalUsers" />
+        <router-link to="/users">
+          <DashboardCard title="Total Users" :count="data.totalUsers" />
+        </router-link>
+      </div>
+      <div class="w-full md:w-1/4 p-4">
+        <router-link to="/orders">
+          <DashboardCard title="Total Orders" :count="data.orders" />
+        </router-link>
       </div>
     </div>
   </div>
@@ -34,13 +47,17 @@ const data = reactive({
   totalCompanies: 0,
   totalTransactions: 0,
   totalProducts: 0,
-  totalUsers: 0
+  totalUsers: 0,
+  orders: 0
 })
+
 onMounted(async () => {
   await authStore.fetchCompanies()
   await authStore.fetchUser()
   await authStore.fetchProducts()
   await authStore.fetchTransactions()
+  await authStore.fetchAllOrders()
+  console.log(authStore.allOrders.length)
   if (authStore.companies) {
     const length = authStore.companies.value.length
     data.totalCompanies = length
@@ -56,6 +73,10 @@ onMounted(async () => {
   if (authStore.transactions) {
     const length = authStore.transactions.value.length
     data.totalTransactions = length
+  }
+  if (authStore.allOrders) {
+    const length = authStore.allOrders.length
+    data.orders = length
   }
 })
 </script>

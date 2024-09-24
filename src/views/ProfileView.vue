@@ -145,13 +145,17 @@ const profileImageChanged = ref(false)
 const authStore = useAuthStore()
 // const user = authStore.user
 const userMail = localStorage.getItem('email')
-const user = authStore.users.filter((user) => user.email.includes(userMail))
-onMounted(() => {
-  profileData.name = user[0].username
-  profileData.email = user[0].email
-  profileData.address = user[0].address
-  profileData.phone = user[0].phone
-  profileData.profileImage = user[0].profileImage
+onMounted(async () => {
+  await authStore.fetchUser()
+  const user = authStore.users.filter((user) => user.email.includes(userMail))[0]
+  if (user) {
+    profileData.name = user.username
+    profileData.email = user.email
+    profileData.address = user.address
+    profileData.phone = user.phone
+    profileData.profileImage = user.profileImage
+  }
+  console.log(user)
 
   profileImagePreview.value = `http://localhost:5000/${profileImageUrl.value}`
 })

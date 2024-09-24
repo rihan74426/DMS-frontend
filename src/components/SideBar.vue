@@ -29,7 +29,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '../stores/authStore'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import {
   HomeIcon,
   UsersIcon,
@@ -37,15 +37,16 @@ import {
   PyramidIcon,
   TerminalSquareIcon,
   LogOutIcon,
-  StoreIcon
+  StoreIcon,
+  ListCheck
 } from 'lucide-vue-next'
 
 const authStore = useAuthStore()
-const router = useRouter()
 
 const navItems = [
   { name: 'Dashboard', path: '/', icon: HomeIcon },
   { name: 'Users', path: '/users', icon: UsersIcon },
+  { name: 'Orders', path: '/orders', icon: ListCheck },
   { name: 'Companies', path: '/companies', icon: CompassIcon },
   { name: 'Products', path: '/products', icon: PyramidIcon },
   { name: 'Transactions', path: '/transactions', icon: TerminalSquareIcon },
