@@ -52,7 +52,7 @@
                     <td class="py-2 px-2 text-center">{{ product.name }}</td>
                     <td class="py-2 px-2 text-center">{{ product.packSize }}</td>
                     <td class="py-2 px-2 text-center">{{ product.group }}</td>
-                    <td class="py-2 px-2 text-center">{{ product.price }}</td>
+                    <td class="py-2 px-2 text-center">{{ product.price }}/-</td>
                   </tr>
                 </tbody>
               </table>
@@ -96,7 +96,7 @@
                   <td class="p-2 text-center">{{ order.quantity }}</td>
                   <td class="p-2 text-center">{{ timeCon(order.orderDate) }}</td>
                   <td class="p-2 text-center">{{ order.status }}</td>
-                  <td class="p-2 text-center">{{ order.price }}</td>
+                  <td class="p-2 text-center">{{ order.price }}/-</td>
                   <td class="p-2 text-center flex">
                     <button
                       @click="openOrderModal({ ...order, storeName: storeDetails.storeName })"

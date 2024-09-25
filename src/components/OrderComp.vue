@@ -107,6 +107,7 @@ onMounted(() => {
 // Emit the save event
 const saveChanges = () => {
   emit('save', orderData)
+  closeModal()
 }
 const closeModal = () => {
   emit('close')
