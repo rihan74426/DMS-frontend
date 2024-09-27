@@ -66,56 +66,89 @@
         <!-- Orders Section -->
         <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10">
           <h2 class="text-2xl font-semibold mb-4">Orders</h2>
-          <div v-if="orders.length > 0">
-            <table class="min-w-full bg-white border border-gray-200">
-              <thead>
-                <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">
-                  <th class="py-2 px-2 text-center">No.</th>
-                  <th class="py-2 px-2 text-center">Invoice</th>
+          <div
+            v-for="order in orders"
+            :key="order._id"
+            class="border border-gray-200 rounded-lg mb-4 shadow-md p-4"
+          >
+            <div class="flex justify-between">
+              <div>
+                <h3 class="text-lg font-semibold">Order Invoice #{{ order.invoice }}</h3>
+                <p>Order Date: {{ timeCon(order.orderDate) }}</p>
+                <p>Status: {{ order.status }}</p>
+              </div>
+              <div class="text-right pt-5">
+                <p><strong>Total Bill:</strong> {{ order.price }}/-</p>
+              </div>
+            </div>
+
+            <!-- Products Table -->
+            <table class="min-w-full bg-white mt-4 border border-gray-300">
+              <thead class="bg-gray-100">
+                <tr>
                   <th class="py-2 px-2 text-center">Product</th>
                   <th class="py-2 px-2 text-center">Pack Size</th>
+                  <th class="py-2 px-2 text-center">Group</th>
                   <th class="py-2 px-2 text-center">Quantity</th>
-                  <th class="py-2 px-2 text-center">Ordered On</th>
-                  <th class="py-2 px-2 text-center">Status</th>
-                  <th class="py-2 px-2 text-center">Total bill</th>
-                  <th class="py-2 px-2 text-center">Actions</th>
+                  <th class="py-2 px-2 text-center">Total price</th>
                 </tr>
               </thead>
-              <TransitionGroup name="order" tag="tbody">
+              <tbody>
                 <tr
-                  v-for="order in orders"
-                  :key="order._id"
-                  class="border-b border-gray-200 hover:bg-gray-100"
+                  v-for="product in order.products"
+                  :key="product._id"
+                  class="border-b border-gray-200"
                 >
                   <td class="py-2 px-2 text-center">
-                    {{ orders.indexOf(order) + 1 }}
+                    {{
+                      findThings(product.productId)[0]
+                        ? findThings(product.productId)[0].name
+                        : 'loading...'
+                    }}
                   </td>
-                  <td class="p-2 text-center">#{{ order.invoice }}</td>
-                  <td class="p-2 text-center">{{ findThings(order.productId).name }}</td>
-                  <td class="p-2 text-center">{{ findThings(order.productId).packSize }}</td>
-                  <td class="p-2 text-center">{{ order.quantity }}</td>
-                  <td class="p-2 text-center">{{ timeCon(order.orderDate) }}</td>
-                  <td class="p-2 text-center">{{ order.status }}</td>
-                  <td class="p-2 text-center">{{ order.price }}/-</td>
-                  <td class="p-2 text-center flex">
-                    <button
-                      @click="openOrderModal({ ...order, storeName: storeDetails.storeName })"
-                      class="ml-4 p-2 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
-                    >
-                      <EditIcon />
-                    </button>
-                    <button
-                      @click="deleteOrder(order._id)"
-                      class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
-                    >
-                      <Trash2Icon />
-                    </button>
+                  <td class="py-2 px-2 text-center">
+                    {{
+                      findThings(product.productId)[0]
+                        ? findThings(product.productId)[0].packSize
+                        : 'Not set'
+                    }}
+                  </td>
+                  <td class="py-2 px-2 text-center">
+                    {{
+                      findThings(product.productId)[0]
+                        ? findThings(product.productId)[0].group
+                        : 'Not set'
+                    }}
+                  </td>
+                  <td class="py-2 px-2 text-center">{{ product.quantity }}</td>
+                  <td class="py-2 px-2 text-center">
+                    {{
+                      findThings(product.productId)[0]
+                        ? findThings(product.productId)[0].price * product.quantity
+                        : 'loading...'
+                    }}
                   </td>
                 </tr>
-              </TransitionGroup>
+              </tbody>
             </table>
+
+            <div class="flex justify-end mt-4">
+              <button
+                @click="openOrderModal({ ...order, storeName: storeDetails.storeName })"
+                class="ml-4 p-2 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
+              >
+                <EditIcon />
+              </button>
+              <button
+                @click="deleteOrder(order._id)"
+                class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
+              >
+                <Trash2Icon />
+              </button>
+            </div>
           </div>
-          <h4 v-else>You don't have any Orders yet!</h4>
+
+          <!-- <h4 v-else>You don't have any Orders yet!</h4> -->
           <button
             @click="openOrderModal()"
             class="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-green-700 transition duration-500 ease-in-out"
@@ -185,6 +218,8 @@ onMounted(async () => {
   } finally {
     loading.value = false // Make sure loader is turned off after fetching completes
     storeProd()
+    console.log(orders.value)
+    console.log(authStore.orders)
   }
 })
 onUpdated(async () => {
@@ -216,7 +251,12 @@ const timeCon = (time) => {
 
 const findThings = (productId) => {
   const product = products.value.filter((el) => el._id == productId)
-  if (product[0]) return product[0]
+  if (orders.value && product) return product
+  console.log(product)
+
+  // productId.map((val, index) => {
+  //   return product
+  // })
 }
 
 const storeProd = () => {
@@ -299,6 +339,7 @@ const saveOrder = async (order) => {
           Authorization: `Bearer ${token}` // Bearer token for authentication
         }
       })
+      console.log(data)
       orders.value.push(data)
       showModal.value = true
       modalTitle.value = 'Success'

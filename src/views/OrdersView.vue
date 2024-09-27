@@ -143,6 +143,8 @@ onMounted(async () => {
   orders.value = authStore.allOrders.toReversed()
   products.value = authStore.products.value
   stores.value = authStore.allStores
+
+  console.log(orders.value)
 })
 
 watch(

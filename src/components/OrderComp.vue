@@ -7,22 +7,47 @@
       <p class="font-semibold mb-4">Invoice no: {{ orderData.invoice }}</p>
       <p class="font-semibold mb-4">
         Store:
-        {{ orderData.storeName }}
+        {{ order ? orderData.storeName : authStore.store.storeName }}
       </p>
-
+      <div>
+        <ul>
+          <li
+            v-for="product in orderData.products"
+            :key="product.productId"
+            class="flex grid grid-cols-3 w-full p-2 border border-gray-200"
+          >
+            <p>
+              <strong>Name:</strong>
+              {{ filterProduct(product.productId).name }}
+            </p>
+            <p><strong>Quantity:</strong> {{ product.quantity }}</p>
+            <p>
+              <strong>Total:</strong>
+              {{ filterProduct(product.productId).price * product.quantity }}
+              <button class="ml-5" @click="removeItem(product)">x</button>
+            </p>
+          </li>
+        </ul>
+      </div>
       <label class="block mb-2">Select Product</label>
-      <select v-model="orderData.productId" class="w-full mb-4 p-2 border rounded">
-        <option v-for="product in authStore.products.value" :key="product._id" :value="product._id">
+      <select v-model="selectedProduct.productId" class="w-full mb-4 p-2 border rounded">
+        <option v-for="product in products.value" :key="product._id" :value="product._id">
           {{ product.name }}
         </option>
       </select>
       <label class="block mb-2">Quantity:</label>
       <input
         required
-        v-model="orderData.quantity"
+        v-model="selectedProduct.quantity"
         type="number"
         class="w-full p-2 border rounded-md mb-4"
       />
+      <button
+        @click="addProduct(selectedProduct.productId, selectedProduct.quantity)"
+        class="px-4 py-2 bg-green-600 text-white rounded-md"
+      >
+        Add this product
+      </button>
       <label v-if="order" class="block mb-2">Status:</label>
       <select
         v-if="order"
@@ -56,6 +81,10 @@ import { onMounted, reactive, ref, watch } from 'vue'
 
 const props = defineProps({ order: Object })
 const products = ref([]) // Correcting to make 'products' reactive
+const selectedProduct = ref({
+  productId: '',
+  quantity: 1
+})
 const orderData = reactive(
   props.order
     ? { ...props.order }
@@ -63,17 +92,28 @@ const orderData = reactive(
         storeName: '',
         userId: '',
         invoice: '',
-        productId: '',
-        quantity: 1,
+        products: [],
         price: 0
       }
 )
+const filterProduct = (id) => {
+  return authStore.products.value.filter((el) => el._id == id)[0]
+}
 watch(orderData, () => {
-  const selected = products.value.filter((el) => el._id == orderData.productId)
-  if (selected[0]) {
-    orderData.price = selected[0].price * orderData.quantity
-  }
+  const tablePrice = orderData.products.map((val, arr) => {
+    return filterProduct(val.productId).price * val.quantity
+  })
+  // const selected = products.value.filter((el) => el._id == orderData.products.productId)
+  // if (selected[0] && orderData.products.length > 0) {
+  //   orderData.price =  selected[0].price * orderData.products.quantity
+  // }
+  if (tablePrice[0]) orderData.price = tablePrice.reduce((partialSum, a) => partialSum + a, 0)
+  console.log(tablePrice, orderData.price)
 })
+
+const removeItem = (item) => {
+  orderData.products = orderData.products.filter((el) => el.productId != item.productId)
+}
 
 const emit = defineEmits(['save', 'close'])
 
@@ -90,12 +130,16 @@ if (props.order) {
   orderData.value = props.order
 }
 
+const addProduct = (product, quantity) => {
+  orderData.products.push({ productId: product, quantity: quantity })
+  ;(selectedProduct.value.productId = ''), (selectedProduct.value.quantity = 1)
+}
 // Initialize invoice only after orderData.value.userId is available
 const authStore = useAuthStore()
-onMounted(() => {
-  authStore.fetchProducts()
-  authStore.fetchAllStores()
-  products.value = authStore.products.value
+onMounted(async () => {
+  await authStore.fetchProducts()
+  await authStore.fetchAllStores()
+  products.value = authStore.products
   orderData.userId = authStore.user._id
 
   // Generate the invoice number once userId is available
@@ -114,7 +158,7 @@ const closeModal = () => {
   ;(orderData.storeName = ''),
     (orderData.userId = ''),
     (orderData.invoice = ''),
-    (orderData.productId = ''),
+    (orderData.products = []),
     (orderData.quantity = 1),
     (orderData.price = 0)
 }
