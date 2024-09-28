@@ -215,6 +215,7 @@ onMounted(async () => {
     await authStore.fetchStore()
     await authStore.fetchOrders()
     await authStore.fetchProducts()
+    await authStore.fetchUser()
     storeDetails.value = authStore.store
     orders.value = authStore.orders.toReversed()
     products.value = authStore.products.value
@@ -228,10 +229,12 @@ onMounted(async () => {
 onUpdated(async () => {
   await authStore.fetchStore()
   await authStore.fetchOrders()
+  await authStore.fetchUser()
   storeDetails.value = authStore.store
   orders.value = authStore.orders.toReversed()
   storeProd()
 })
+
 const authStore = useAuthStore()
 const products = ref([])
 // Sample store details, products, and orders for demonstration
@@ -306,6 +309,25 @@ const updateStoreDetails = async (newDetails) => {
   }
   closeStoreDetailsModal()
 }
+const storeCheck = () => {
+  if (
+    storeDetails.value.storeName === 'Your Store' &&
+    storeDetails.value.storeAddress === 'Ex: Bahaddarhat, Chattogram' &&
+    storeDetails.value.storePhone === '01xxx-xxxxxx' &&
+    storeDetails.value.storeManager === 'Your Store Manager'
+  ) {
+    return false // Invalid store details
+  }
+  return true // Valid store details
+}
+
+const userCheck = () => {
+  const user = authStore.user
+  if (!user.phone || !user.address) {
+    return false // Invalid user details
+  }
+  return true // Valid user details
+}
 
 // Order modal controls
 const openOrderModal = (order = null) => {
@@ -334,16 +356,24 @@ const saveOrder = async (order) => {
     }
   } else {
     try {
-      const { data } = await axios.post('http://localhost:5000/api/auth/orders', order, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` // Bearer token for authentication
-        }
-      })
-      orders.value.push(data)
-      showModal.value = true
-      modalTitle.value = 'Success'
-      modalMessage.value = 'Order Created Successfully'
+      if (storeCheck() && userCheck()) {
+        const { data } = await axios.post('http://localhost:5000/api/auth/orders', order, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}` // Bearer token for authentication
+          }
+        })
+        orders.value.push(data)
+        showModal.value = true
+        modalTitle.value = 'Success'
+        modalMessage.value = 'Order Created Successfully'
+      } else {
+        console.log(storeCheck())
+        console.log(userCheck())
+        showModal.value = true
+        modalTitle.value = 'Warning!'
+        modalMessage.value = 'Please set up your profile and store details before placing an order'
+      }
     } catch (error) {
       showModal.value = true
       modalTitle.value = 'Failure'
