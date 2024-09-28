@@ -44,11 +44,11 @@
       />
       <button
         @click="addProduct(selectedProduct.productId, selectedProduct.quantity)"
-        class="px-4 py-2 bg-green-600 text-white rounded-md"
+        class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-blue-700"
       >
-        Add this product
+        Add product
       </button>
-      <label v-if="order" class="block mb-2">Status:</label>
+      <label v-if="order" class="block mb-2">Order Status:</label>
       <select
         v-if="order"
         v-model="orderData.status"
@@ -57,6 +57,16 @@
       >
         <option>pending</option>
         <option>completed</option>
+      </select>
+      <label v-if="order" class="block mb-2">Payment Status:</label>
+      <select
+        v-if="order"
+        v-model="orderData.payment"
+        type="text"
+        class="w-full p-2 border rounded-md mb-4"
+      >
+        <option>Paid</option>
+        <option>Unpaid</option>
       </select>
       <p class="font-semibold mb-4">
         Total Amount:
@@ -93,7 +103,9 @@ const orderData = reactive(
         userId: '',
         invoice: '',
         products: [],
-        price: 0
+        price: 0,
+        status: 'pending',
+        payment: 'Unpaid'
       }
 )
 const filterProduct = (id) => {
@@ -108,7 +120,6 @@ watch(orderData, () => {
   //   orderData.price =  selected[0].price * orderData.products.quantity
   // }
   if (tablePrice[0]) orderData.price = tablePrice.reduce((partialSum, a) => partialSum + a, 0)
-  console.log(tablePrice, orderData.price)
 })
 
 const removeItem = (item) => {

@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, onMounted, onUpdated } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 
 const props = defineProps(['showModal', 'isEditMode', 'transactionData', 'companies', 'products'])
 const emit = defineEmits(['close', 'save'])
@@ -84,7 +84,6 @@ const closeModal = () => {
 }
 
 const submitTransaction = () => {
-  console.log(transaction.value)
   emit('save', transaction.value)
   transaction.value = {
     company: '',

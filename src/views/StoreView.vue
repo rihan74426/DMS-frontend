@@ -65,7 +65,13 @@
 
         <!-- Orders Section -->
         <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10">
-          <h2 class="text-2xl font-semibold mb-4">Orders</h2>
+          <h2 class="text-2xl text-center font-semibold mb-4">Your Orders</h2>
+          <button
+            @click="openOrderModal()"
+            class="m-4 p-2 bg-green-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-green-700 transition duration-500 ease-in-out"
+          >
+            Order Something
+          </button>
           <div
             v-for="order in orders"
             :key="order._id"
@@ -73,12 +79,17 @@
           >
             <div class="flex justify-between">
               <div>
-                <h3 class="text-lg font-semibold">Order Invoice #{{ order.invoice }}</h3>
-                <p>Order Date: {{ timeCon(order.orderDate) }}</p>
-                <p>Status: {{ order.status }}</p>
+                <h3 class="text-lg font-semibold"><strong>Invoice</strong> #{{ order.invoice }}</h3>
+                <p><strong>Order Date:</strong> {{ timeCon(order.orderDate) }}</p>
+                <p><strong>Order Status:</strong> {{ order.status }}</p>
               </div>
               <div class="text-right pt-5">
-                <p><strong>Total Bill:</strong> {{ order.price }}/-</p>
+                <p>
+                  Total Bill: <strong>{{ order.price }}/-</strong>
+                </p>
+                <p>
+                  Payment Status: <strong>{{ order.payment }}</strong>
+                </p>
               </div>
             </div>
 
@@ -149,12 +160,6 @@
           </div>
 
           <!-- <h4 v-else>You don't have any Orders yet!</h4> -->
-          <button
-            @click="openOrderModal()"
-            class="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-green-700 transition duration-500 ease-in-out"
-          >
-            Add New Order
-          </button>
         </div>
 
         <!-- Modals -->
@@ -211,22 +216,20 @@ onMounted(async () => {
     await authStore.fetchOrders()
     await authStore.fetchProducts()
     storeDetails.value = authStore.store
-    orders.value = authStore.orders
+    orders.value = authStore.orders.toReversed()
     products.value = authStore.products.value
   } catch (error) {
     console.error('Failed to fetch store data:', error)
   } finally {
     loading.value = false // Make sure loader is turned off after fetching completes
     storeProd()
-    console.log(orders.value)
-    console.log(authStore.orders)
   }
 })
 onUpdated(async () => {
   await authStore.fetchStore()
   await authStore.fetchOrders()
   storeDetails.value = authStore.store
-  orders.value = authStore.orders
+  orders.value = authStore.orders.toReversed()
   storeProd()
 })
 const authStore = useAuthStore()
@@ -252,7 +255,6 @@ const timeCon = (time) => {
 const findThings = (productId) => {
   const product = products.value.filter((el) => el._id == productId)
   if (orders.value && product) return product
-  console.log(product)
 
   // productId.map((val, index) => {
   //   return product
@@ -301,7 +303,6 @@ const updateStoreDetails = async (newDetails) => {
     modalTitle.value = 'Failure'
     modalMessage.value = 'Failed to update the Store!'
     console.log(error)
-    console.log(newDetails)
   }
   closeStoreDetailsModal()
 }
@@ -339,7 +340,6 @@ const saveOrder = async (order) => {
           Authorization: `Bearer ${token}` // Bearer token for authentication
         }
       })
-      console.log(data)
       orders.value.push(data)
       showModal.value = true
       modalTitle.value = 'Success'

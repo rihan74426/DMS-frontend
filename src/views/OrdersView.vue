@@ -27,9 +27,9 @@
             <h2 class="font-bold text-xl">Status: {{ order.status }}</h2>
             <p class="text-gray-600">Customer: {{ filterUser(order.userId).username }}</p>
             <p class="text-gray-600">Customer contact: {{ filterUser(order.userId).phone }}</p>
-            <p class="text-gray-600">Product: {{ filterProduct(order.productId).name }}</p>
-            <p class="text-gray-600">Quantity: {{ order.quantity }}</p>
-            <p class="text-gray-600">Total Price: ৳ {{ order.price }}/-</p>
+            <p class="text-gray-600">Customer email: {{ filterUser(order.userId).email }}</p>
+            <!-- <p class="text-gray-600">Product: {{ filterProduct(order.productId).name }}</p> -->
+
             <p class="text-gray-500">
               Order Date: {{ new Date(order.orderDate).toLocaleDateString() }}
             </p>
@@ -45,36 +45,100 @@
             </p>
             <p class="text-gray-600">Phone Number: {{ filterStore(order.userId).storePhone }}</p>
             <p class="text-gray-600">Email address: {{ filterUser(order.userId).email }}</p>
-            <p class="text-gray-600">Pack Size: {{ filterProduct(order.productId).packSize }}</p>
-            <p class="text-gray-600">Product MRP: {{ filterProduct(order.productId).price }}</p>
+            <!-- <p class="text-gray-600">Pack Size: {{ filterProduct(order.productId).packSize }}</p>
+            <p class="text-gray-600">Product MRP: {{ filterProduct(order.productId).price }}</p> -->
+          </div>
+          <div>
+            <p class="text-gray-600">
+              Total bill: <strong>৳ {{ order.price }}/-</strong>
+            </p>
+            <p class="text-gray-600">
+              Payment status: <strong>৳ {{ order.payment }}</strong>
+            </p>
           </div>
           <div class="flex space-x-2 grid grid-cols-2">
             <button
-              class="bg-blue-500 m-2 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              class="bg-blue-500 m-2 text-white p-2 rounded-md hover:bg-blue-600"
               @click="viewOrder(order)"
             >
               View
             </button>
             <button
-              class="bg-yellow-500 m-2 text-white py-2 px-4 rounded-md hover:bg-yellow-600"
+              class="bg-yellow-500 m-2 text-white p-2 rounded-md hover:bg-yellow-600"
               @click="openOrderModal({ ...order, storeName: filterStore(order.userId).storeName })"
             >
               Edit
             </button>
             <button
-              class="bg-red-500 m-2 text-white py-2 px-4 rounded-md hover:bg-red-600"
+              class="bg-red-500 m-2 text-white p-2 rounded-md hover:bg-red-600"
               @click="deleteOrder(order._id)"
             >
               Delete
             </button>
             <button
-              class="bg-red-500 m-2 text-white py-2 px-4 rounded-md hover:bg-red-600"
+              class="bg-green-500 m-2 text-white p-2 rounded-md hover:bg-green-600"
               @click="generatePDF(filterStore(order.userId), order, authStore.user)"
             >
-              Print Voucher
+              Print Invoice
             </button>
           </div>
         </div>
+        <table class="min-w-full bg-white mt-4 border border-gray-300">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="py-2 px-2 text-center">Product</th>
+              <th class="py-2 px-2 text-center">Pack Size</th>
+              <th class="py-2 px-2 text-center">Group</th>
+              <th class="py-2 px-2 text-center">MRP</th>
+              <th class="py-2 px-2 text-center">Quantity</th>
+              <th class="py-2 px-2 text-center">Total price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="product in order.products"
+              :key="product._id"
+              class="border-b border-gray-200"
+            >
+              <td class="py-2 px-2 text-center">
+                {{
+                  filterProduct(product.productId)[0]
+                    ? filterProduct(product.productId)[0].name
+                    : 'loading...'
+                }}
+              </td>
+              <td class="py-2 px-2 text-center">
+                {{
+                  filterProduct(product.productId)[0]
+                    ? filterProduct(product.productId)[0].packSize
+                    : 'Not set'
+                }}
+              </td>
+              <td class="py-2 px-2 text-center">
+                {{
+                  filterProduct(product.productId)[0]
+                    ? filterProduct(product.productId)[0].group
+                    : 'Not set'
+                }}
+              </td>
+              <td class="py-2 px-2 text-center">
+                {{
+                  filterProduct(product.productId)[0]
+                    ? filterProduct(product.productId)[0].price
+                    : 'MRP'
+                }}/-
+              </td>
+              <td class="py-2 px-2 text-center">{{ product.quantity }}</td>
+              <td class="py-2 px-2 text-center">
+                {{
+                  filterProduct(product.productId)[0]
+                    ? filterProduct(product.productId)[0].price * product.quantity
+                    : 'loading...'
+                }}/-
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </li>
     </transition-group>
     <Transition name="modal">
@@ -143,8 +207,6 @@ onMounted(async () => {
   orders.value = authStore.allOrders.toReversed()
   products.value = authStore.products.value
   stores.value = authStore.allStores
-
-  console.log(orders.value)
 })
 
 watch(
@@ -180,9 +242,8 @@ const filterUser = (id) => {
   return users.value.filter((el) => el._id == id)[0]
 }
 const filterProduct = (id) => {
-  if (products.value) {
-    return products.value.filter((el) => el._id == id)[0]
-  }
+  const product = products.value.filter((el) => el._id == id)
+  if (orders.value && product) return product
 }
 const filterStore = (id) => {
   const store = stores.value.filter((el) => el.userId == id)[0]
@@ -264,57 +325,65 @@ function generatePDF(store, order, user) {
 
   // // Set white text color for better readability on gradient
   // doc.setTextColor('#ffffff')
+  doc.setFontSize(20)
+  doc.text('Distribution Management Software', 50, 20)
 
   // Store Details (left column)
-  doc.setFontSize(14)
-  doc.text('Store Details', 15, 20)
   doc.setFontSize(12)
-  doc.text(`Store Name: ${store.storeName}`, 15, 30)
-  doc.text(`Location: ${store.storeAddress}`, 15, 40)
-  doc.text(`Contact: ${store.storePhone}`, 15, 50)
+  doc.text('Store Details', 15, 40)
+  doc.setFontSize(10)
+  doc.text(`Store Name: ${store.storeName}`, 15, 50)
+  doc.text(`Proprietor: ${store.storeManager}`, 15, 60)
+  doc.text(`Location: ${store.storeAddress}`, 15, 70)
+  doc.text(`Contact: ${store.storePhone}`, 15, 80)
 
   // Order and User Details (right column)
-  doc.setFontSize(14)
-  doc.text(`Invoice #: ${order.invoice}`, 110, 20)
-  doc.setFontSize(12)
-  doc.text(`Order Date: ${new Date(order.orderDate).toLocaleDateString()}`, 110, 30)
-  doc.text(`Prepared by: ${user.username}`, 110, 40)
-  doc.text(`Order ID: ${order._id}`, 110, 50)
-  doc.text(`Order Status: ${order.status}`, 110, 60)
+  doc.setFontSize(15)
+  doc.text(`Invoice #: ${order.invoice}`, 110, 40)
+  doc.setFontSize(10)
+  doc.text(`Invoice Date: ${new Date(order.orderDate).toLocaleDateString()}`, 110, 47)
+  doc.text(`Prepared by: ${user.username}`, 110, 54)
+  doc.text(`Order ID: ${order._id}`, 110, 61)
+  doc.text(`Order Status: ${order.status}`, 110, 68)
+  doc.text(`Order Bill: ${order.price}`, 110, 74)
+  doc.text(`Payment Status: ${order.payment}`, 110, 80)
 
-  // Fetch product details
-  const orderItems = filterProduct(order.productId)
-  const product = [
-    orderItems.name,
-    `${order.quantity} pcs`,
-    `${orderItems.price.toFixed(2)}/- tk`,
-    `${orderItems.packSize}`,
-    `${order.price}/- tk`
-  ]
+  // Fetch product details for each product in the order
+  const productsData = order.products.map((productItem) => {
+    const orderItem = filterProduct(productItem.productId)[0]
+    return [
+      orderItem.name, // Product name
+      `${productItem.quantity} pcs`, // Quantity
+      `${orderItem.packSize}`, // Pack size
+      `${orderItem.group}`, // Pack size
+      `${orderItem.price.toFixed(2)}/- tk`, // Price per unit
+      `${(orderItem.price * productItem.quantity).toFixed(2)}/- tk` // Total for that product
+    ]
+  })
 
-  // The key fix: Wrap the product array inside another array to create a row
+  // Generate the product table with multiple products
   doc.autoTable({
-    startY: 70, // Position after header content
-    head: [['Product', 'Quantity', 'Price', 'Pack Size', 'Total']],
-    body: [product], // This should be a 2D array
+    startY: 90, // Position after header content
+    head: [['Product', 'Quantity', 'Pack Size', 'group', 'MRP', 'Total']],
+    body: productsData, // 2D array containing product details
     styles: {
-      fillColor: [34, 34, 34], // Dark background for table rows
-      textColor: [255, 255, 255] // White text color for table content
+      textColor: [34, 34, 34] // White text color for table content
     },
     headStyles: {
-      fillColor: [29, 78, 216],
-      textColor: [255, 255, 255] // Blue for table header
-    },
-    alternateRowStyles: {
-      // Disable alternating row styles
-      fillColor: false,
-      textColor: false
+      fillColor: [29, 78, 216], // Blue for table header
+      textColor: [255, 255, 255]
     }
   })
 
+  // Calculate the total amount for the entire order
+  const totalAmount = order.products.reduce((total, productItem) => {
+    const orderItem = filterProduct(productItem.productId)[0]
+    return total + orderItem.price * productItem.quantity
+  }, 0)
+
   // Display total at the bottom of the table
-  doc.setFontSize(14)
-  doc.text(`Total: ${order.price.toFixed(2)}/- tk`, 150, doc.lastAutoTable.finalY + 10)
+  doc.setFontSize(12)
+  doc.text(`Total: ${totalAmount.toFixed(2)}/- tk`, 150, doc.lastAutoTable.finalY + 10)
 
   // Save the PDF
   doc.save(`Order_${order.invoice}.pdf`)
