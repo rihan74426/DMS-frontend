@@ -8,6 +8,7 @@ import ProfileView from '@/views/ProfileView.vue'
 import TransactionView from '@/views/TransactionView.vue'
 import StoreView from '@/views/StoreView.vue'
 import OrdersView from '@/views/OrdersView.vue'
+import { onMounted, ref } from 'vue'
 
 const routes = [
   {
@@ -65,6 +66,27 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+const isAdmin = ref(false)
 
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+
+  // Fetch the user (if not already fetched)
+  await authStore.fetchUser()
+
+  // Check the user role
+  if (authStore.user && authStore.user.role === 'admin') {
+    isAdmin.value = true
+  } else {
+    isAdmin.value = false
+  }
+
+  // If the user is not an admin and trying to access a restricted route
+  if (!isAdmin.value && to.path == '/orders') {
+    next('/')
+  } else {
+    next()
+  }
+})
 // Vue.use(router)
 export default router

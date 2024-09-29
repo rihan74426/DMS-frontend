@@ -1,16 +1,16 @@
 <template>
   <div class="min-h-screen mx-auto p-4 pt-20 ml-60 pl-10">
     <h1 class="text-4xl font-bold text-white text-center mb-6">Orders ({{ orders.length }})</h1>
-    <h4 class="text-2xl font-bold text-white text-center mb-6">
+    <h4 class="text-xl font-bold text-white text-center mb-6">
       Completed: {{ authStore.allOrders.filter((el) => el.status == 'completed').length }} pending:
       {{ authStore.allOrders.filter((el) => el.status !== 'completed').length }}
     </h4>
     <div class="flex place-content-center">
-      <div class="text-2xl font-bold text-white text-center mb-6">
+      <div class="text-xl font-bold text-white text-center mb-6 mr-6">
         <input type="checkbox" class="h-5 w-5 m-2" id="checkbox" v-model="showPending" />
-        <label for="checkbox">Show only pending ||</label>
+        <label for="checkbox">Show only pending </label>
       </div>
-      <div class="text-2xl font-bold text-white text-center mb-6">
+      <div class="text-xl font-bold text-white text-center mb-6">
         <input type="checkbox" class="h-5 w-5 m-2" id="checkbox" v-model="showCompleted" />
         <label for="checkbox">Show only completed</label>
       </div>

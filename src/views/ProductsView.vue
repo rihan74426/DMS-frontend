@@ -5,11 +5,13 @@
       <div class="mt-10 relative inline-flex container flex place-content-center">
         <button
           @click="showAddProduct"
+          v-if="roleBind()"
           class="inline-flex bg-pink-500 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-pink-300 hover:text-black"
         >
           Add New Product
         </button>
         <input
+          :class="!roleBind() ? 'rounded-l-lg w-2/5 border-purple-500' : ''"
           v-model="searchQuery"
           @input="searchProducts"
           placeholder="Search Products..."
@@ -45,7 +47,7 @@
             <p>TP: {{ product.tp }}</p>
           </div>
 
-          <div class="m-5 flex place-content-bottom">
+          <div class="m-5 flex place-content-bottom" v-if="roleBind()">
             <button
               @click="editProduct(product)"
               class="bg-blue-500 text-white px-2 py-1 rounded ml-4"
@@ -59,11 +61,16 @@
               <TrashIcon class="size-6 text-white" />
             </button>
           </div>
+          <div v-else class="m-5 flex place-content-bottom">
+            <RouterLink to="/stores" class="bg-blue-500 text-white px-2 py-1 rounded ml-4"
+              >Order Now!</RouterLink
+            >
+          </div>
         </div>
       </div>
     </div>
     <productModal
-      v-show="isModalVisible"
+      v-show="isModalVisible && roleBind()"
       :product="selectedProduct"
       @close="isModalVisible = false"
       @save="saveProduct"
@@ -109,6 +116,7 @@ const authStore = useAuthStore()
 onMounted(async () => {
   loading.value = true
   await authStore.fetchProducts()
+  await authStore.fetchUser()
   if (authStore.products) {
     products.value = authStore.products.value
     loading.value = false
@@ -118,6 +126,13 @@ const showAddProduct = () => {
   selectedProduct.value = null
   isModalVisible.value = true
   console.log('showing')
+}
+const roleBind = () => {
+  if (authStore.user) {
+    if (authStore.user.role == 'admin') return true
+  } else {
+    return false
+  }
 }
 
 const editProduct = (product) => {

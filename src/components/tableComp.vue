@@ -10,7 +10,7 @@
           <th class="py-3 px-3">Contact</th>
           <th class="py-3 px-3">Company mail</th>
           <th class="py-3 px-3">Special Note</th>
-          <th class="py-3 px-3">Actions</th>
+          <th class="py-3 px-3" v-if="roleBind()">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -22,7 +22,7 @@
           <td class="py-3 px-3">{{ item.number }}</td>
           <td class="py-3 px-3">{{ item.email }}</td>
           <td class="py-3 px-3">{{ item.notes }}</td>
-          <td class="py-3 px-3 flex">
+          <td class="py-3 px-3 flex" v-if="roleBind()">
             <button
               @click="$emit('editItem', index)"
               class="bg-blue-500 text-white px-1 py-1 rounded mr-2"
@@ -43,7 +43,18 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/authStore'
 import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline'
+
+const authStore = useAuthStore()
+
+const roleBind = () => {
+  if (authStore.user) {
+    if (authStore.user.role == 'admin') return true
+  } else {
+    return false
+  }
+}
 
 const props = defineProps(['items'])
 

@@ -20,6 +20,22 @@
           />
         </div>
         <div class="mb-4">
+          <label class="block text-gray-700">Phone</label>
+          <input
+            type="email"
+            v-model="user.phone"
+            class="w-full p-2 border border-gray-300 rounded mt-2"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Address</label>
+          <input
+            type="email"
+            v-model="user.address"
+            class="w-full p-2 border border-gray-300 rounded mt-2"
+          />
+        </div>
+        <div class="mb-4">
           <label class="block text-gray-700">Role</label>
           <select v-model="user.role" class="w-full p-2 border border-gray-300 rounded mt-2">
             <option value="user">User</option>

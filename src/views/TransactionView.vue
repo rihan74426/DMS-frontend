@@ -6,15 +6,17 @@
           <h1 class="text-4xl text-white font-bold absolute">Transactions</h1>
           <button
             @click="showAddTransaction"
+            v-if="roleBind()"
             class="bg-pink-500 mt-20 text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
           >
             Add a Transaction
           </button>
         </div>
 
-        <table v-if="!loading" class="w-5/6 bg-white shadow-lg rounded-lg ml-40">
+        <table v-if="!loading" class="w-5/6 bg-white shadow-lg rounded-lg ml-40 m-20">
           <thead>
             <tr class="text-center bg-gray-100 border border-slate-700">
+              <th class="p-4 justify-center">Trans Id</th>
               <th class="p-4 justify-center">Company</th>
               <th class="p-4 justify-center">Product</th>
               <th class="p-4 justify-center">Quantity</th>
@@ -22,7 +24,7 @@
               <th class="p-4 justify-center">Total</th>
               <th class="p-4 justify-center">Person</th>
               <th class="p-4 justify-center">Created</th>
-              <th class="p-4 justify-center">Actions</th>
+              <th class="p-4 justify-center" v-if="roleBind()">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -31,6 +33,7 @@
               :key="transaction._id"
               class="border border-slate-700 text-center"
             >
+              <td class="p-2">tx{{ transaction._id }}</td>
               <td class="p-2">
                 {{ showCompany(transaction.companyId) }}
               </td>
@@ -44,7 +47,7 @@
               <td class="p-2">
                 {{ timeCon(transaction.createdAt) }}
               </td>
-              <td class="p-2 justify-between flex">
+              <td class="p-2 justify-between flex" v-if="roleBind()">
                 <button
                   @click="editTransaction(transaction)"
                   class="bg-blue-500 text-white px-2 py-2 rounded m-1"
@@ -125,13 +128,14 @@ const loading = ref(false)
 const showResModal = ref(false)
 const modalTitle = ref('')
 const modalMessage = ref('')
-// Fetch companies and products
-const fetchCompaniesAndProducts = () => {
-  authStore.fetchCompanies()
-  authStore.fetchProducts()
-  companies.value = authStore.companies.value
-  products.value = authStore.products.value
+const roleBind = () => {
+  if (authStore.user) {
+    if (authStore.user.role == 'admin') return true
+  } else {
+    return false
+  }
 }
+// Fetch companies and products
 const timeCon = (time) => {
   const date = new Date(time).toLocaleDateString()
   const yyyyMMdd = date.slice(0, 10)
@@ -347,7 +351,7 @@ const printExcel = (transaction) => {
 // }
 
 const showCompany = (Id) => {
-  if (companies.value.filter((el) => el._id == Id)[0]) {
+  if (companies.value) {
     return companies.value.filter((el) => el._id == Id)[0].name
   } else {
     return 'Company not found'
@@ -363,14 +367,15 @@ const showProduct = (Id) => {
 
 onMounted(async () => {
   loading.value = true
-  fetchCompaniesAndProducts()
+  await authStore.fetchCompanies()
+  await authStore.fetchProducts()
   await authStore.fetchTransactions()
   if (authStore.transactions) {
     transactions.value = authStore.transactions.value
     loading.value = false
   }
-  showCompany()
-  showProduct()
+  companies.value = authStore.companies.value
+  products.value = authStore.products.value
 })
 
 onUpdated(() => {

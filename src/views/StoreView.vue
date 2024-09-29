@@ -21,10 +21,10 @@
               Edit Store Details
             </button>
           </div>
-          <div class="">
+          <div class=" ">
             <h2 class="text-2xl font-semibold mb-4 text-end">Products in the store</h2>
             <div v-if="storeProducts.length > 0" class="flex place-content-end">
-              <table class="min-w-4/5 bg-white border border-gray-200">
+              <table v-if="!loading" class="min-w-4/5 bg-white border border-gray-200">
                 <thead>
                   <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">
                     <th class="py-2 px-2 text-center">Img</th>
@@ -37,7 +37,7 @@
                 <tbody class="text-dark font-light">
                   <tr
                     v-for="product in storeProducts"
-                    :key="storeProducts.indexOf(product)"
+                    :key="storeProducts.indexOf(product) + Math.random()"
                     class="border-b border-gray-200 hover:bg-gray-100"
                   >
                     <td class="px-2 text-center flex place-content-center">
@@ -49,10 +49,10 @@
                         />
                       </div>
                     </td>
-                    <td class="py-2 px-2 text-center">{{ product.name }}</td>
-                    <td class="py-2 px-2 text-center">{{ product.packSize }}</td>
-                    <td class="py-2 px-2 text-center">{{ product.group }}</td>
-                    <td class="py-2 px-2 text-center">{{ product.price }}/-</td>
+                    <td v-if="product" class="py-2 px-2 text-center">{{ product.name }}</td>
+                    <td v-if="product" class="py-2 px-2 text-center">{{ product.packSize }}</td>
+                    <td v-if="product" class="py-2 px-2 text-center">{{ product.group }}</td>
+                    <td v-if="product" class="py-2 px-2 text-center">{{ product.price }}/-</td>
                   </tr>
                 </tbody>
               </table>
@@ -66,6 +66,9 @@
         <!-- Orders Section -->
         <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10">
           <h2 class="text-2xl text-center font-semibold mb-4">Your Orders</h2>
+          <p class="text-center font-semibold m-2 text-red-500">
+            You need to set your profile and store completely to make an order!
+          </p>
           <button
             @click="openOrderModal()"
             class="m-4 p-2 bg-green-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-green-700 transition duration-500 ease-in-out"
@@ -145,16 +148,25 @@
 
             <div class="flex justify-end mt-4">
               <button
+                v-if="roleBind()"
                 @click="openOrderModal({ ...order, storeName: storeDetails.storeName })"
                 class="ml-4 p-2 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
               >
                 <EditIcon />
               </button>
               <button
+                v-if="roleBind()"
                 @click="deleteOrder(order._id)"
                 class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
               >
                 <Trash2Icon />
+              </button>
+              <button
+                v-if="!roleBind()"
+                @click="deleteOrder(order._id)"
+                class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
+              >
+                Cancel Order
               </button>
             </div>
           </div>
@@ -204,11 +216,13 @@ import StoreComp from '@/components/StoreComp.vue'
 import OrderComp from '@/components/OrderComp.vue'
 import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
-import { grid } from 'ldrs'
 import ModalComp from '@/components/ModalComp.vue'
 import { EditIcon, Trash2Icon } from 'lucide-vue-next'
+import { grid } from 'ldrs'
 
 grid.register()
+
+// Default values shown
 onMounted(async () => {
   try {
     loading.value = true // Set loader to true when data fetching starts
@@ -217,13 +231,13 @@ onMounted(async () => {
     await authStore.fetchProducts()
     await authStore.fetchUser()
     storeDetails.value = authStore.store
+    storeProd()
     orders.value = authStore.orders.toReversed()
     products.value = authStore.products.value
   } catch (error) {
     console.error('Failed to fetch store data:', error)
   } finally {
     loading.value = false // Make sure loader is turned off after fetching completes
-    storeProd()
   }
 })
 onUpdated(async () => {
@@ -234,7 +248,6 @@ onUpdated(async () => {
   orders.value = authStore.orders.toReversed()
   storeProd()
 })
-
 const authStore = useAuthStore()
 const products = ref([])
 // Sample store details, products, and orders for demonstration
@@ -246,7 +259,13 @@ const storeDetails = ref({
   storeAddress: '',
   products: []
 })
-
+const roleBind = () => {
+  if (authStore.user) {
+    if (authStore.user.role == 'admin') return true
+  } else {
+    return false
+  }
+}
 const storeProducts = ref([])
 const orders = ref([])
 const timeCon = (time) => {
@@ -391,11 +410,11 @@ const deleteOrder = async (id) => {
     orders.value = orders.value.filter((order) => order.id !== id)
     showModal.value = true
     modalTitle.value = 'Success'
-    modalMessage.value = 'Order deleted Successfully'
+    modalMessage.value = 'Order canceled Successfully'
   } catch (error) {
     showModal.value = true
     modalTitle.value = 'Failure'
-    modalMessage.value = 'Failed to delete the order!'
+    modalMessage.value = 'Failed to cancel the order!'
     console.log('error deleting the order', error)
   }
 }

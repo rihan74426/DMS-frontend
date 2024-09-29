@@ -43,19 +43,34 @@ import {
 
 const authStore = useAuthStore()
 
-const navItems = [
+const navItems = ref([
   { name: 'Dashboard', path: '/', icon: HomeIcon },
   { name: 'Users', path: '/users', icon: UsersIcon },
-  { name: 'Orders', path: '/orders', icon: ListCheck },
   { name: 'Companies', path: '/companies', icon: CompassIcon },
   { name: 'Products', path: '/products', icon: PyramidIcon },
   { name: 'Transactions', path: '/transactions', icon: TerminalSquareIcon },
   { name: 'My Store', path: '/stores', icon: StoreIcon }
-]
+])
+
+const roleBind = () => {
+  if (authStore.user && authStore.user.role == 'admin') {
+    return true
+  } else {
+    return false
+  }
+}
+
+onMounted(async () => {
+  await authStore.fetchUser()
+
+  if (roleBind()) {
+    const newItem = { name: 'Orders', path: '/orders', icon: ListCheck }
+
+    navItems.value.splice(2, 0, newItem) // Ensure reactivity with `.value`
+  }
+})
 
 const logged = ref(true)
-onMounted(() => {})
-
 const handleLogout = () => {
   authStore.logout()
   logged.value = false

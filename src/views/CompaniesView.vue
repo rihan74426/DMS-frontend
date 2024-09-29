@@ -15,7 +15,7 @@
             name="fade"
           >
             <EditView
-              v-if="isVisible"
+              v-if="isVisible && roleBind()"
               :company="selectedCompany"
               :isEditing="isEditing"
               @add-company="addCompany"
@@ -26,7 +26,7 @@
         <button
           class="inline-flex bg-pink-600 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-green-500 overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700 transition duration-500"
           @click="togglefunc"
-          v-if="!isVisible"
+          v-if="!isVisible && roleBind()"
         >
           Add a Company
         </button>
@@ -74,6 +74,13 @@ const companies = ref([
 const isVisible = ref(false)
 const togglefunc = () => {
   isVisible.value = !isVisible.value
+}
+const roleBind = () => {
+  if (authStore.user) {
+    if (authStore.user.role == 'admin') return true
+  } else {
+    return false
+  }
 }
 
 const loading = ref(false)
