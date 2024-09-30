@@ -49,27 +49,32 @@ const navItems = ref([
   { name: 'Companies', path: '/companies', icon: CompassIcon },
   { name: 'Products', path: '/products', icon: PyramidIcon },
   { name: 'Transactions', path: '/transactions', icon: TerminalSquareIcon },
-  { name: 'My Store', path: '/stores', icon: StoreIcon }
+  { name: 'My Store', path: '/stores', icon: StoreIcon } // My Store item to be removed for admin
 ])
 
 const roleBind = () => {
-  if (authStore.user && authStore.user.role == 'admin') {
-    return true
-  } else {
-    return false
-  }
+  return authStore.user && authStore.user.role === 'admin'
 }
 
 onMounted(async () => {
   await authStore.fetchUser()
 
   if (roleBind()) {
+    // Add the "Orders" item for admins
     const newItem = { name: 'Orders', path: '/orders', icon: ListCheck }
-
     navItems.value.splice(2, 0, newItem) // Ensure reactivity with `.value`
+
+    // Remove the "My Store" item (based on path or name) for admins
+    const storeIndex = navItems.value.findIndex((item) => item.name === 'My Store')
+    if (storeIndex !== -1) {
+      navItems.value.splice(storeIndex, 1) // Remove "My Store"
+    }
+  } else {
+    navItems.value = navItems.value.filter((item) =>
+      ['Products', 'My Store', 'Logout'].includes(item.name)
+    )
   }
 })
-
 const logged = ref(true)
 const handleLogout = () => {
   authStore.logout()

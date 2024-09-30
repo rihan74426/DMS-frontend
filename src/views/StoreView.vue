@@ -66,7 +66,7 @@
         <!-- Orders Section -->
         <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10">
           <h2 class="text-2xl text-center font-semibold mb-4">Your Orders</h2>
-          <p class="text-center font-semibold m-2 text-red-500">
+          <p v-if="!storeCheck() && userCheck()" class="text-center font-semibold m-2 text-red-500">
             You need to set your profile and store completely to make an order!
           </p>
           <button
@@ -387,8 +387,6 @@ const saveOrder = async (order) => {
         modalTitle.value = 'Success'
         modalMessage.value = 'Order Created Successfully'
       } else {
-        console.log(storeCheck())
-        console.log(userCheck())
         showModal.value = true
         modalTitle.value = 'Warning!'
         modalMessage.value = 'Please set up your profile and store details before placing an order'

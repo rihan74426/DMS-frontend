@@ -5,142 +5,149 @@
       Completed: {{ authStore.allOrders.filter((el) => el.status == 'completed').length }} pending:
       {{ authStore.allOrders.filter((el) => el.status !== 'completed').length }}
     </h4>
-    <div class="flex place-content-center">
-      <div class="text-xl font-bold text-white text-center mb-6 mr-6">
-        <input type="checkbox" class="h-5 w-5 m-2" id="checkbox" v-model="showPending" />
-        <label for="checkbox">Show only pending </label>
-      </div>
-      <div class="text-xl font-bold text-white text-center mb-6">
-        <input type="checkbox" class="h-5 w-5 m-2" id="checkbox" v-model="showCompleted" />
-        <label for="checkbox">Show only completed</label>
-      </div>
-    </div>
-    <transition-group name="fade" tag="ul" class="space-y-4">
-      <li
-        v-for="order in orders"
-        :key="order._id"
-        class="p-4 bg-white shadow rounded-md hover:bg-gray-50 transition-all duration-300"
-      >
-        <div class="flex justify-between items-center">
-          <div>
-            <h2 class="font-semibold text-xl">Invoice: {{ order.invoice }}</h2>
-            <h2 class="font-bold text-xl">Status: {{ order.status }}</h2>
-            <p class="text-gray-600">Customer: {{ filterUser(order.userId).username }}</p>
-            <p class="text-gray-600">Customer contact: {{ filterUser(order.userId).phone }}</p>
-            <p class="text-gray-600">Customer email: {{ filterUser(order.userId).email }}</p>
-            <!-- <p class="text-gray-600">Product: {{ filterProduct(order.productId).name }}</p> -->
-
-            <p class="text-gray-500">
-              Order Date: {{ new Date(order.orderDate).toLocaleDateString() }}
-            </p>
-          </div>
-          <div>
-            <h2 class="font-bold text-xl">Store Details:</h2>
-            <p class="text-gray-600">Store Name: {{ filterStore(order.userId).storeName }}</p>
-            <p class="text-gray-600">
-              Delivery Address: {{ filterStore(order.userId).storeAddress }}
-            </p>
-            <p class="text-gray-600">
-              Store proprietor: {{ filterStore(order.userId).storeManager }}
-            </p>
-            <p class="text-gray-600">Phone Number: {{ filterStore(order.userId).storePhone }}</p>
-            <p class="text-gray-600">Email address: {{ filterUser(order.userId).email }}</p>
-            <!-- <p class="text-gray-600">Pack Size: {{ filterProduct(order.productId).packSize }}</p>
-            <p class="text-gray-600">Product MRP: {{ filterProduct(order.productId).price }}</p> -->
-          </div>
-          <div>
-            <p class="text-gray-600">
-              Total bill: <strong>৳ {{ order.price }}/-</strong>
-            </p>
-            <p class="text-gray-600">
-              Payment status: <strong>৳ {{ order.payment }}</strong>
-            </p>
-          </div>
-          <div class="flex space-x-2 grid grid-cols-2">
-            <button
-              class="bg-blue-500 m-2 text-white p-2 rounded-md hover:bg-blue-600"
-              @click="viewOrder(order)"
-            >
-              View
-            </button>
-            <button
-              class="bg-yellow-500 m-2 text-white p-2 rounded-md hover:bg-yellow-600"
-              @click="openOrderModal({ ...order, storeName: filterStore(order.userId).storeName })"
-            >
-              Edit
-            </button>
-            <button
-              class="bg-red-500 m-2 text-white p-2 rounded-md hover:bg-red-600"
-              @click="deleteOrder(order._id)"
-            >
-              Delete
-            </button>
-            <button
-              class="bg-green-500 m-2 text-white p-2 rounded-md hover:bg-green-600"
-              @click="generatePDF(filterStore(order.userId), order, authStore.user)"
-            >
-              Print Invoice
-            </button>
-          </div>
+    <div v-if="!loading">
+      <div class="flex place-content-center">
+        <div class="text-xl font-bold text-white text-center mb-6 mr-6">
+          <input type="checkbox" class="h-5 w-5 m-2" id="checkbox" v-model="showPending" />
+          <label for="checkbox">Show only pending </label>
         </div>
-        <table class="min-w-full bg-white mt-4 border border-gray-300">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="py-2 px-2 text-center">Product</th>
-              <th class="py-2 px-2 text-center">Pack Size</th>
-              <th class="py-2 px-2 text-center">Group</th>
-              <th class="py-2 px-2 text-center">MRP</th>
-              <th class="py-2 px-2 text-center">Quantity</th>
-              <th class="py-2 px-2 text-center">Total price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="product in order.products"
-              :key="product._id"
-              class="border-b border-gray-200"
-            >
-              <td class="py-2 px-2 text-center">
-                {{
-                  filterProduct(product.productId)[0]
-                    ? filterProduct(product.productId)[0].name
-                    : 'loading...'
-                }}
-              </td>
-              <td class="py-2 px-2 text-center">
-                {{
-                  filterProduct(product.productId)[0]
-                    ? filterProduct(product.productId)[0].packSize
-                    : 'Not set'
-                }}
-              </td>
-              <td class="py-2 px-2 text-center">
-                {{
-                  filterProduct(product.productId)[0]
-                    ? filterProduct(product.productId)[0].group
-                    : 'Not set'
-                }}
-              </td>
-              <td class="py-2 px-2 text-center">
-                {{
-                  filterProduct(product.productId)[0]
-                    ? filterProduct(product.productId)[0].price
-                    : 'MRP'
-                }}/-
-              </td>
-              <td class="py-2 px-2 text-center">{{ product.quantity }}</td>
-              <td class="py-2 px-2 text-center">
-                {{
-                  filterProduct(product.productId)[0]
-                    ? filterProduct(product.productId)[0].price * product.quantity
-                    : 'loading...'
-                }}/-
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </li>
-    </transition-group>
+        <div class="text-xl font-bold text-white text-center mb-6">
+          <input type="checkbox" class="h-5 w-5 m-2" id="checkbox" v-model="showCompleted" />
+          <label for="checkbox">Show only completed</label>
+        </div>
+      </div>
+      <transition-group name="fade" tag="ul" class="space-y-4">
+        <li
+          v-for="order in orders"
+          :key="order._id"
+          class="p-4 bg-white shadow rounded-md hover:bg-gray-50 transition-all duration-300"
+        >
+          <div class="flex justify-between items-center">
+            <div>
+              <h2 class="font-semibold text-xl">Invoice: {{ order.invoice }}</h2>
+              <h2 class="font-bold text-xl">Status: {{ order.status }}</h2>
+              <p class="text-gray-600">Customer: {{ filterUser(order.userId).username }}</p>
+              <p class="text-gray-600">Customer contact: {{ filterUser(order.userId).phone }}</p>
+              <p class="text-gray-600">Customer email: {{ filterUser(order.userId).email }}</p>
+              <!-- <p class="text-gray-600">Product: {{ filterProduct(order.productId).name }}</p> -->
+
+              <p class="text-gray-500">
+                Order Date: {{ new Date(order.orderDate).toLocaleDateString() }}
+              </p>
+            </div>
+            <div>
+              <h2 class="font-bold text-xl">Store Details:</h2>
+              <p class="text-gray-600">Store Name: {{ filterStore(order.userId).storeName }}</p>
+              <p class="text-gray-600">
+                Delivery Address: {{ filterStore(order.userId).storeAddress }}
+              </p>
+              <p class="text-gray-600">
+                Store proprietor: {{ filterStore(order.userId).storeManager }}
+              </p>
+              <p class="text-gray-600">Phone Number: {{ filterStore(order.userId).storePhone }}</p>
+              <p class="text-gray-600">Email address: {{ filterUser(order.userId).email }}</p>
+              <!-- <p class="text-gray-600">Pack Size: {{ filterProduct(order.productId).packSize }}</p>
+            <p class="text-gray-600">Product MRP: {{ filterProduct(order.productId).price }}</p> -->
+            </div>
+            <div>
+              <p class="text-gray-600">
+                Total bill: <strong>৳ {{ order.price }}/-</strong>
+              </p>
+              <p class="text-gray-600">
+                Payment status: <strong>৳ {{ order.payment }}</strong>
+              </p>
+            </div>
+            <div class="flex space-x-2 grid grid-cols-2">
+              <button
+                class="bg-blue-500 m-2 text-white p-2 rounded-md hover:bg-blue-600"
+                @click="viewOrder(order)"
+              >
+                View
+              </button>
+              <button
+                class="bg-yellow-500 m-2 text-white p-2 rounded-md hover:bg-yellow-600"
+                @click="
+                  openOrderModal({ ...order, storeName: filterStore(order.userId).storeName })
+                "
+              >
+                Edit
+              </button>
+              <button
+                class="bg-red-500 m-2 text-white p-2 rounded-md hover:bg-red-600"
+                @click="deleteOrder(order._id)"
+              >
+                Delete
+              </button>
+              <button
+                class="bg-green-500 m-2 text-white p-2 rounded-md hover:bg-green-600"
+                @click="generatePDF(filterStore(order.userId), order, authStore.user)"
+              >
+                Print Invoice
+              </button>
+            </div>
+          </div>
+          <table class="min-w-full bg-white mt-4 border border-gray-300">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="py-2 px-2 text-center">Product</th>
+                <th class="py-2 px-2 text-center">Pack Size</th>
+                <th class="py-2 px-2 text-center">Group</th>
+                <th class="py-2 px-2 text-center">MRP</th>
+                <th class="py-2 px-2 text-center">Quantity</th>
+                <th class="py-2 px-2 text-center">Total price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="product in order.products"
+                :key="product._id"
+                class="border-b border-gray-200"
+              >
+                <td class="py-2 px-2 text-center">
+                  {{
+                    filterProduct(product.productId)[0]
+                      ? filterProduct(product.productId)[0].name
+                      : 'loading...'
+                  }}
+                </td>
+                <td class="py-2 px-2 text-center">
+                  {{
+                    filterProduct(product.productId)[0]
+                      ? filterProduct(product.productId)[0].packSize
+                      : 'Not set'
+                  }}
+                </td>
+                <td class="py-2 px-2 text-center">
+                  {{
+                    filterProduct(product.productId)[0]
+                      ? filterProduct(product.productId)[0].group
+                      : 'Not set'
+                  }}
+                </td>
+                <td class="py-2 px-2 text-center">
+                  {{
+                    filterProduct(product.productId)[0]
+                      ? filterProduct(product.productId)[0].price
+                      : 'MRP'
+                  }}/-
+                </td>
+                <td class="py-2 px-2 text-center">{{ product.quantity }}</td>
+                <td class="py-2 px-2 text-center">
+                  {{
+                    filterProduct(product.productId)[0]
+                      ? filterProduct(product.productId)[0].price * product.quantity
+                      : 'loading...'
+                  }}/-
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </li>
+      </transition-group>
+    </div>
+    <div v-else class="fixed inset-0 flex items-center z-50 justify-center">
+      <l-grid size="80" speed="2" color="purple"></l-grid>
+    </div>
     <Transition name="modal">
       <ModalComp
         :show="showModal"
@@ -194,19 +201,28 @@ const modalTitle = ref('')
 const modalMessage = ref('')
 const showOrderModal = ref(false)
 const selectedOrder = ref(null)
-
 const ShowView = ref(false)
+
+const loading = ref(false)
 
 // Fetching orders from the stor
 onMounted(async () => {
-  await authStore.fetchAllOrders()
-  await authStore.fetchUser()
-  await authStore.fetchProducts()
-  await authStore.fetchAllStores()
-  users.value = authStore.users
-  orders.value = authStore.allOrders.toReversed()
-  products.value = authStore.products.value
-  stores.value = authStore.allStores
+  try {
+    loading.value = true
+
+    await authStore.fetchAllOrders()
+    await authStore.fetchUser()
+    await authStore.fetchProducts()
+    await authStore.fetchAllStores()
+    users.value = authStore.users
+    orders.value = authStore.allOrders.toReversed()
+    products.value = authStore.products.value
+    stores.value = authStore.allStores
+  } catch (err) {
+    loading.value = false
+    console.log('error fetching orders:  ', err)
+  }
+  loading.value = false
 })
 
 watch(

@@ -31,14 +31,24 @@ watch(
     }
   }
 )
+watch(
+  () => useAuthStore().user,
+  (newVal) => {
+    user.value = newVal
+  }
+)
+watch(
+  () => useAuthStore().logged,
+  () => {
+    fetchUser()
+  }
+)
 
 // const username = localStorage.getItem('username')
 </script>
 
 <template>
-  <nav
-    class="bg-gray-800 max-h-15 mt-0 fixed w-full top-0 z-10 bg-gradient-to-r from-purple-500 to-blue-500"
-  >
+  <nav class="max-h-15 mt-0 fixed w-full top-0 z-10 bg-gradient-to-r from-purple-500 to-blue-500">
     <div class="mx-auto relative max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">

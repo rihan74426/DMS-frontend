@@ -1,19 +1,23 @@
 <template>
   <div>
-    <div class="container min-h-screen mx-auto p-4 ml-20 pt-20">
+    <div class="container min-h-screen min-w-screen p-4 ml-20 pt-20">
       <div class="ml-10">
-        <div class="relative flex place-content-center mb-10">
-          <h1 class="text-4xl text-white font-bold absolute">Transactions</h1>
+        <div class="relative flex place-content-center">
+          <h1 class="text-4xl text-white font-bold text-center absolute">Transactions</h1>
           <button
             @click="showAddTransaction"
             v-if="roleBind()"
-            class="bg-pink-500 mt-20 text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
+            class="bg-pink-500 mt-20 place-content-center text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
           >
             Add a Transaction
           </button>
         </div>
 
-        <table v-if="!loading" class="w-5/6 bg-white shadow-lg rounded-lg ml-40 m-20">
+        <table
+          v-if="!loading"
+          class="w-5/6 bg-white shadow-lg rounded-lg ml-36"
+          :class="!roleBind() ? 'mt-20' : 'ml-20'"
+        >
           <thead>
             <tr class="text-center bg-gray-100 border border-slate-700">
               <th class="p-4 justify-center">Trans Id</th>

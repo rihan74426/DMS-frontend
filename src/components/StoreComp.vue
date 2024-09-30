@@ -11,7 +11,7 @@
       <label class="block mb-2">Store Email:</label>
       <input v-model="store.storeEmail" type="text" class="w-full p-2 border rounded-md mb-4" />
       <label class="block mb-2">Store Contact:</label>
-      <input v-model="store.storePhone" type="number" class="w-full p-2 border rounded-md mb-4" />
+      <input v-model="store.storePhone" class="w-full p-2 border rounded-md mb-4" />
       <label class="block mb-2">Store Location:</label>
       <input v-model="store.storeAddress" type="text" class="w-full p-2 border rounded-md mb-4" />
 

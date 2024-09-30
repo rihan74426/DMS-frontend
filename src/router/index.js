@@ -87,6 +87,16 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next()
   }
+  if (!isAdmin.value && to.path == '/companies') {
+    next('/')
+  } else {
+    next()
+  }
+  if (!isAdmin.value && to.path == '/transactions') {
+    next('/')
+  } else {
+    next()
+  }
 })
 // Vue.use(router)
 export default router

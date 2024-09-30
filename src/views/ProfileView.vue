@@ -31,7 +31,7 @@
       <div class="bg-white p-4 mt-10 rounded shadow-md w-1/2 overflow-auto mb-5 mt-5">
         <h2 class="text-2xl font-bold mb-4 absolute block ml-10">Profile Update</h2>
 
-        <form @submit.prevent="updateProfile">
+        <form v-if="!loading" @submit.prevent="updateProfile">
           <div class="mb-4">
             <div class="mb-4 m-5 w-1/2 ml-40">
               <label
@@ -110,6 +110,9 @@
             </button>
           </div>
         </form>
+        <div v-else class="fixed inset-0 flex items-center z-50 justify-center">
+          <l-grid size="80" speed="2" color="purple"></l-grid>
+        </div>
       </div>
     </div>
     <ModalComp
@@ -143,21 +146,29 @@ const modalMessage = ref('')
 
 const profileImageChanged = ref(false)
 const authStore = useAuthStore()
+const loading = ref(false)
 // const user = authStore.user
 const userMail = localStorage.getItem('email')
 onMounted(async () => {
-  await authStore.fetchUser()
-  const user = authStore.users.filter((user) => user.email.includes(userMail))[0]
-  if (user) {
-    profileData.name = user.username
-    profileData.email = user.email
-    profileData.address = user.address
-    profileData.phone = user.phone
-    profileData.profileImage = user.profileImage
-  }
-  console.log(user)
+  try {
+    loading.value = true
+    await authStore.fetchUser()
+    const user = authStore.users.filter((user) => user.email.includes(userMail))[0]
+    if (user) {
+      profileData.name = user.username
+      profileData.email = user.email
+      profileData.address = user.address
+      profileData.phone = user.phone
+      profileData.profileImage = user.profileImage
+    }
+    console.log(user)
 
-  profileImagePreview.value = `http://localhost:5000/${profileImageUrl.value}`
+    profileImagePreview.value = `http://localhost:5000/${profileImageUrl.value}`
+  } catch (err) {
+    loading.value = false
+    console.log('error fetching user:', err)
+  }
+  loading.value = false
 })
 
 const profileImagePreview = ref('')
