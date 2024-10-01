@@ -1,8 +1,11 @@
 <template>
   <div>
-    <div class="container mx-auto p-4 p-4 ml-20 flex flex-wrap pt-20 left-40 place-content-center">
+    <div
+      class="container mx-auto p-4 flex flex-wrap pt-20 place-content-center"
+      :class="{ 'left-40 ml-20': roleBind() }"
+    >
       <h1 class="text-4xl text-white font-bold m-4 absolute block ml-10">Products</h1>
-      <div class="mt-10 relative inline-flex container flex place-content-center">
+      <div class="mt-10 relative container flex place-content-center">
         <button
           @click="showAddProduct"
           v-if="roleBind()"
@@ -11,7 +14,7 @@
           Add New Product
         </button>
         <input
-          :class="!roleBind() ? 'rounded-l-lg w-2/5 border-purple-500' : ''"
+          :class="{ 'rounded-l-lg w-2/5 border-purple-500': !roleBind() }"
           v-model="searchQuery"
           @input="searchProducts"
           placeholder="Search Products..."
@@ -19,13 +22,16 @@
         />
       </div>
 
-      <div class="mt-30 ml-40 p-5 grid grid-cols-4 gap-4 relative">
+      <div
+        class="mt-30 p-5 grid gap-4 relative"
+        :class="roleBind() ? 'grid-cols-4' : 'grid-cols-5'"
+      >
         <div
-          class="bg-white shadow-md p-6 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-100"
+          class="bg-white border border-purple-500 shadow-md p-6 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-100"
           v-for="product in products"
           :key="product._id"
         >
-          <div class="">
+          <div class="border border-y-2">
             <img :src="product.image" alt="product image" class="object-contain h-48 w-56" />
           </div>
           <h2 class="text-x font-bold flex justify-center p-1">{{ product.name }}</h2>
@@ -61,7 +67,7 @@
               <TrashIcon class="size-6 text-white" />
             </button>
           </div>
-          <div v-else class="m-5 flex place-content-bottom">
+          <div v-else class="m-5 flex place-content-bottom bottom-2">
             <RouterLink to="/stores" class="bg-blue-500 text-white px-2 py-1 rounded ml-4"
               >Order Now!</RouterLink
             >

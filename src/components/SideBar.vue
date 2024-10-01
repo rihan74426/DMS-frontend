@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-64 h-screen bg-gradient-to-r to-purple-400 from-blue-500 text-white fixed shadow-lg pt-20"
-    v-if="logged"
+    v-if="logged && roleBind()"
   >
     <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
       <router-link
@@ -27,7 +27,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 import { useRoute } from 'vue-router'
 import {
@@ -56,7 +56,7 @@ const roleBind = () => {
   return authStore.user && authStore.user.role === 'admin'
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await authStore.fetchUser()
 
   if (roleBind()) {
@@ -75,6 +75,8 @@ onMounted(async () => {
     )
   }
 })
+
+onMounted(async () => {})
 const logged = ref(true)
 const handleLogout = () => {
   authStore.logout()

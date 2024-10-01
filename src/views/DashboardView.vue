@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen ml-60 flex flex-wrap place-content-center">
+  <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'ml-60': roleBind() }">
     <h1 class="text-4xl text-white font-bold m-5">Dashboard</h1>
-    <div class="p-10 w-full bg-black ml-5">
+    <div class="p-10 w-full bg-black">
       <h1 class="text-2xl text-white font-bold">
         Welcome to -> <strong>Distribution Management System</strong>
       </h1>
     </div>
-    <div class="p-4 flex flex-wrap w-full">
+    <div v-if="roleBind()" class="p-4 flex flex-wrap w-full">
       <div class="w-full md:w-1/4 p-4">
         <router-link to="/companies">
           <DashboardCard title="Total Companies" :count="data.totalCompanies" />
@@ -33,6 +33,9 @@
         </router-link>
       </div>
     </div>
+    <div v-else>
+      <ProductsView />
+    </div>
   </div>
 </template>
 
@@ -41,6 +44,7 @@ import { useAuthStore } from '@/stores/authStore'
 import DashboardCard from '../components/DashboardCard.vue'
 import { onMounted } from 'vue'
 import { reactive } from 'vue'
+import ProductsView from './ProductsView.vue'
 
 const authStore = useAuthStore()
 const data = reactive({
@@ -79,4 +83,8 @@ onMounted(async () => {
     data.orders = length
   }
 })
+
+const roleBind = () => {
+  return authStore.user && authStore.user.role === 'admin'
+}
 </script>

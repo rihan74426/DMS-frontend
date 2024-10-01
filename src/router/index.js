@@ -8,7 +8,7 @@ import ProfileView from '@/views/ProfileView.vue'
 import TransactionView from '@/views/TransactionView.vue'
 import StoreView from '@/views/StoreView.vue'
 import OrdersView from '@/views/OrdersView.vue'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
 const routes = [
   {
@@ -80,19 +80,9 @@ router.beforeEach(async (to, from, next) => {
   } else {
     isAdmin.value = false
   }
-
+  const userRoute = ['/orders', '/transactions', '/companies', '/users']
   // If the user is not an admin and trying to access a restricted route
-  if (!isAdmin.value && to.path == '/orders') {
-    next('/')
-  } else {
-    next()
-  }
-  if (!isAdmin.value && to.path == '/companies') {
-    next('/')
-  } else {
-    next()
-  }
-  if (!isAdmin.value && to.path == '/transactions') {
+  if (!isAdmin.value && userRoute.includes(to.path)) {
     next('/')
   } else {
     next()

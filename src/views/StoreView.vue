@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="min-h-screen mx-auto p-4 pt-20">
-      <div class="ml-60">
+      <div :class="{ 'ml-60': roleBind() }">
         <h1 class="text-4xl font-bold text-white text-center mb-6">{{ storeDetails.storeName }}</h1>
 
         <!-- Store Details Section -->
 
-        <div class="bg-white shadow-md rounded-lg flex p-6 mb-8 m-10 grid grid-cols-2 gap-6">
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10 grid grid-cols-2 gap-6">
           <div>
             <h2 class="text-2xl font-semibold mb-4">Store Details</h2>
             <p class="p-2"><strong>Store Name:</strong> {{ storeDetails.storeName }}</p>
