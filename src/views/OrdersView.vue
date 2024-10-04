@@ -2,8 +2,9 @@
   <div class="min-h-screen mx-auto p-4 pt-20 ml-60 pl-10">
     <h1 class="text-4xl font-bold text-white text-center mb-6">Orders ({{ orders.length }})</h1>
     <h4 class="text-xl font-bold text-white text-center mb-6">
-      Completed: {{ authStore.allOrders.filter((el) => el.status == 'completed').length }} pending:
-      {{ authStore.allOrders.filter((el) => el.status !== 'completed').length }}
+      Completed: {{ authStore.allOrders.filter((el) => el.status == 'completed').length }} -
+      Pending: {{ authStore.allOrders.filter((el) => el.status == 'pending').length }} - Canceled:
+      {{ authStore.allOrders.filter((el) => el.status == 'canceled').length }}
     </h4>
     <div v-if="!loading">
       <div class="flex place-content-center">
@@ -83,6 +84,20 @@
                 @click="generatePDF(filterStore(order.userId), order, authStore.user)"
               >
                 Print Invoice
+              </button>
+              <button
+                :disabled="order.status == 'canceled'"
+                class="bg-green-500 m-2 text-white p-2 rounded-md hover:bg-green-600"
+                @click="markPaid(order, order.payment == 'Paid' ? 'Unpaid' : 'Paid')"
+              >
+                Mark {{ order.payment == 'Paid' ? 'unpaid' : 'paid' }}
+              </button>
+              <button
+                :disabled="order.status == 'canceled'"
+                class="bg-green-500 text-white p-2 m-2 rounded-md hover:bg-green-600"
+                @click="markComplete(order, order.status == 'pending' ? 'completed' : 'pending')"
+              >
+                Mark {{ order.status == 'pending' ? 'completed' : 'pending' }}
               </button>
             </div>
           </div>
@@ -300,6 +315,38 @@ const editOrder = async (order) => {
     console.log('Error updating Order', error)
   } // Show modal with form to edit the order
 }
+const markPaid = async (order, status) => {
+  try {
+    order.payment = status
+    const response = await axios.put(`http://localhost:5000/api/auth/orders/${order._id}`, order)
+    const index = orders.value.findIndex((o) => o._id === order._id)
+    orders.value[index] = response.data
+    showModal.value = true
+    modalTitle.value = 'Success'
+    modalMessage.value = 'Marked as ' + status
+  } catch (error) {
+    showModal.value = true
+    modalTitle.value = 'Failure'
+    modalMessage.value = 'Failed to mark as ' + status
+    console.log('Error updating Order', error)
+  } // Show modal with form to edit the order
+}
+const markComplete = async (order, status) => {
+  try {
+    order.status = status
+    const response = await axios.put(`http://localhost:5000/api/auth/orders/${order._id}`, order)
+    const index = orders.value.findIndex((o) => o._id === order._id)
+    orders.value[index] = response.data
+    showModal.value = true
+    modalTitle.value = 'Success'
+    modalMessage.value = 'Marked as ' + status
+  } catch (error) {
+    showModal.value = true
+    modalTitle.value = 'Failure'
+    modalMessage.value = 'Failed to mark as ' + status
+    console.log('Error updating Order', error)
+  } // Show modal with form to edit the order
+}
 
 // Delete order
 const deleteOrder = async (id) => {
@@ -357,14 +404,15 @@ function generatePDF(store, order, user) {
 
   // Order and User Details (right column)
   doc.setFontSize(15)
-  doc.text(`Invoice #: ${order.invoice}`, 110, 40)
+  doc.text(`Invoice #: ${order.invoice}`, 130, 40)
   doc.setFontSize(10)
-  doc.text(`Invoice Date: ${new Date(order.orderDate).toLocaleDateString()}`, 110, 47)
-  doc.text(`Prepared by: ${user.username}`, 110, 54)
-  doc.text(`Order ID: ${order._id}`, 110, 61)
-  doc.text(`Order Status: ${order.status}`, 110, 68)
-  doc.text(`Order Bill: ${order.price}`, 110, 74)
-  doc.text(`Payment Status: ${order.payment}`, 110, 80)
+  doc.text(`Invoice Date: ${new Date().toLocaleString()}`, 130, 47)
+  doc.text(`Prepared by: ${user.username}`, 130, 54)
+  doc.text(`Order ID: ${order._id}`, 130, 61)
+  doc.text(`Order Date: ${new Date(order.orderDate).toLocaleDateString()}`, 130, 68)
+  doc.text(`Order Status: ${order.status}`, 130, 74)
+  doc.text(`Order Bill Total: ${order.price}`, 130, 80)
+  doc.text(`Payment Status: ${order.payment}`, 130, 87)
 
   // Fetch product details for each product in the order
   const productsData = order.products.map((productItem) => {

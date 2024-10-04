@@ -1,42 +1,46 @@
 <template>
-  <div>
-    <div class="min-h-screen container mx-auto p-4 flex flex-wrap pt-20 ml-40 place-content-center">
-      <h1 class="text-2xl font-bold mb-4 text-white absolute block mt-10">User Profile</h1>
-      <div class="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <img :src="profileImagePreview" class="m-4 w-48 h-48 rounded-full object-cover" />
-          <label
-            class="block text-white flex place-content-center mr-40 font-bold text-center"
-            for="profileImage"
-            >Profile Image</label
-          >
-        </div>
-        <div class="mt-10">
-          <h2 class="block text-white text-lg font-bold mb-4">Name: {{ profileData.name }}</h2>
-          <h2 class="block text-white text-lg font-bold mb-4">Email: {{ profileData.email }}</h2>
-          <h2 class="block text-white text-lg font-bold mb-4">
-            Address: {{ profileData.address }}
-          </h2>
-          <h2 class="block text-white text-lg font-bold mb-4">Phone: {{ profileData.phone }}</h2>
+  <div class="min-h-screen container mx-auto p-4 pt-20">
+    <div class="place-content-center" :class="{ 'ml-40': roleBind() }">
+      <h1 class="text-2xl text-center font-bold mb-4 text-white block mt-10 mr-20">
+        {{ roleBind() ? 'Admin' : 'User' }} Profile
+      </h1>
+      <div class="place-content-center">
+        <div class="grid grid-cols-2 gap-4 mb-4 ml-40">
+          <div>
+            <img :src="profileImagePreview" class="m-4 w-48 h-48 rounded-full object-cover" />
+            <label
+              class="text-white place-content-center ml-20 font-bold text-center"
+              for="profileImage"
+              >Profile Image</label
+            >
+          </div>
+          <div class="mt-10">
+            <h2 class="block text-white text-lg font-bold mb-4">Name: {{ profileData.name }}</h2>
+            <h2 class="block text-white text-lg font-bold mb-4">Email: {{ profileData.email }}</h2>
+            <h2 class="block text-white text-lg font-bold mb-4">
+              Address: {{ profileData.address }}
+            </h2>
+            <h2 class="block text-white text-lg font-bold mb-4">Phone: {{ profileData.phone }}</h2>
+          </div>
         </div>
       </div>
-      <button
-        @click="showModal = true"
-        class="absolute block items-center mr-40 m-10 top-40 mt-80 bg-pink-500 rounded-md p-2 text-white hover:bg-pink-700 hover:text-white"
-      >
-        Edit Profile
-      </button>
+      <div class="text-center">
+        <button
+          @click="showModal = true"
+          class="bg-blue-800 rounded-md p-2 text-white hover:bg-purple-700 hover:text-white"
+        >
+          Edit Profile
+        </button>
+      </div>
     </div>
     <div v-if="showModal" class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-      <div class="bg-white p-4 mt-10 rounded shadow-md w-1/2 overflow-auto mb-5 mt-5">
+      <div class="bg-white p-4 rounded shadow-md w-1/2 overflow-auto mb-5 mt-5">
         <h2 class="text-2xl font-bold mb-4 absolute block ml-10">Profile Update</h2>
 
         <form v-if="!loading" @submit.prevent="updateProfile">
           <div class="mb-4">
             <div class="mb-4 m-5 w-1/2 ml-40">
-              <label
-                class="block flex place-content-center text-gray-700 text-sm font-bold"
-                for="profileImage"
+              <label class="ml-20 text-gray-700 text-sm font-bold" for="profileImage"
                 >Profile Image</label
               >
               <img
@@ -95,7 +99,7 @@
             </div>
           </div>
 
-          <div class="flex items-center flex place-content-right">
+          <div class="items-center place-content-right">
             <button
               class="bg-blue-500 m-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               @click="showModal = false"
@@ -170,6 +174,14 @@ onMounted(async () => {
   }
   loading.value = false
 })
+
+const roleBind = () => {
+  if (authStore.user) {
+    if (authStore.user.role == 'admin') return true
+  } else {
+    return false
+  }
+}
 
 const profileImagePreview = ref('')
 // Convert the image path to a usable URL

@@ -32,6 +32,7 @@
                     <th class="py-2 px-2 text-center">Pack</th>
                     <th class="py-2 px-2 text-center">group</th>
                     <th class="py-2 px-2 text-center">MRP</th>
+                    <th class="py-2 px-2 text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody class="text-dark font-light">
@@ -53,6 +54,11 @@
                     <td v-if="product" class="py-2 px-2 text-center">{{ product.packSize }}</td>
                     <td v-if="product" class="py-2 px-2 text-center">{{ product.group }}</td>
                     <td v-if="product" class="py-2 px-2 text-center">{{ product.price }}/-</td>
+                    <td v-if="product" class="py-2 px-2 text-center">
+                      <button @click="deleteStoreProduct(product)">
+                        <Trash2Icon />
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -66,7 +72,10 @@
         <!-- Orders Section -->
         <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10">
           <h2 class="text-2xl text-center font-semibold mb-4">Your Orders</h2>
-          <p v-if="!storeCheck() && userCheck()" class="text-center font-semibold m-2 text-red-500">
+          <p
+            v-if="!storeCheck() && !userCheck()"
+            class="text-center font-semibold m-2 text-red-500"
+          >
             You need to set your profile and store completely to make an order!
           </p>
           <button
@@ -148,22 +157,8 @@
 
             <div class="flex justify-end mt-4">
               <button
-                v-if="roleBind()"
-                @click="openOrderModal({ ...order, storeName: storeDetails.storeName })"
-                class="ml-4 p-2 bg-blue-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-blue-700"
-              >
-                <EditIcon />
-              </button>
-              <button
-                v-if="roleBind()"
-                @click="deleteOrder(order._id)"
-                class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
-              >
-                <Trash2Icon />
-              </button>
-              <button
-                v-if="!roleBind()"
-                @click="deleteOrder(order._id)"
+                v-if="order.status !== 'canceled'"
+                @click="deleteOrder(order)"
                 class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
               >
                 Cancel Order
@@ -211,7 +206,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref } from 'vue'
+import { onBeforeMount, onMounted, onUpdated, ref } from 'vue'
 import StoreComp from '@/components/StoreComp.vue'
 import OrderComp from '@/components/OrderComp.vue'
 import { useAuthStore } from '@/stores/authStore'
@@ -223,30 +218,32 @@ import { grid } from 'ldrs'
 grid.register()
 
 // Default values shown
-onMounted(async () => {
+onBeforeMount(async () => {
   try {
     loading.value = true // Set loader to true when data fetching starts
     await authStore.fetchStore()
     await authStore.fetchOrders()
     await authStore.fetchProducts()
     await authStore.fetchUser()
-    storeDetails.value = authStore.store
-    storeProd()
-    orders.value = authStore.orders.toReversed()
     products.value = authStore.products.value
+    storeDetails.value = authStore.store
+    orders.value = authStore.orders.toReversed()
+    console.log(storeDetails.value.products)
   } catch (error) {
     console.error('Failed to fetch store data:', error)
   } finally {
     loading.value = false // Make sure loader is turned off after fetching completes
+    storeProd()
   }
 })
-onUpdated(async () => {
+onMounted(async () => {
   await authStore.fetchStore()
   await authStore.fetchOrders()
   await authStore.fetchUser()
   storeDetails.value = authStore.store
   orders.value = authStore.orders.toReversed()
   storeProd()
+  console.log(storeDetails.value)
 })
 const authStore = useAuthStore()
 const products = ref([])
@@ -328,6 +325,27 @@ const updateStoreDetails = async (newDetails) => {
   }
   closeStoreDetailsModal()
 }
+const deleteStoreProduct = async (product) => {
+  try {
+    const response = await axios.delete(`http://localhost:5000/api/auth/store/${product._id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}` // Bearer token for authentication
+      }
+    })
+    console.log('response:', response.data)
+    const index = storeDetails.value.products.indexOf(product._id)
+    storeProducts.value.splice(index, 1)
+    showModal.value = true
+    modalTitle.value = 'Success'
+    modalMessage.value = 'Store Updated Successfully'
+  } catch (error) {
+    showModal.value = true
+    modalTitle.value = 'Failure'
+    modalMessage.value = 'Failed to update the Store!'
+    console.log(error)
+  }
+}
 const storeCheck = () => {
   if (
     storeDetails.value.storeName === 'Your Store' &&
@@ -401,19 +419,19 @@ const saveOrder = async (order) => {
   closeOrderModal()
 }
 
-const deleteOrder = async (id) => {
+const deleteOrder = async (order) => {
   confirm('Are you Sure?')
   try {
-    await axios.delete(`http://localhost:5000/api/auth/orders/${id}`)
-    orders.value = orders.value.filter((order) => order.id !== id)
+    order.status = 'canceled'
+    await axios.put(`http://localhost:5000/api/auth/orders/${order._id}`, { ...order })
+
     showModal.value = true
     modalTitle.value = 'Success'
-    modalMessage.value = 'Order canceled Successfully'
+    modalMessage.value = 'Your Order has canceled'
   } catch (error) {
     showModal.value = true
     modalTitle.value = 'Failure'
     modalMessage.value = 'Failed to cancel the order!'
-    console.log('error deleting the order', error)
   }
 }
 </script>

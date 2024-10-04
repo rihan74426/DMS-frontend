@@ -1,19 +1,10 @@
 <script setup>
-import SideBar from '@/components/SideBar.vue'
+import NavComp from '@/components/NavComp.vue'
 import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
-import {
-  HomeIcon,
-  UsersIcon,
-  CompassIcon,
-  PyramidIcon,
-  TerminalSquareIcon,
-  LogOutIcon,
-  StoreIcon,
-  ListCheck
-} from 'lucide-vue-next'
-import { onBeforeMount, onMounted, ref, watch } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+
+import { onMounted, ref, watch } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const user = ref(null)
 const profileImagePreview = ref('')
@@ -54,34 +45,13 @@ watch(
     fetchUser()
   }
 )
-const navItems = ref([
-  { name: 'Dashboard', path: '/', icon: HomeIcon },
-  { name: 'Products', path: '/products', icon: PyramidIcon },
-  { name: 'My Store', path: '/stores', icon: StoreIcon } // My Store item to be removed for admin
-])
 
 const roleBind = () => {
   return authStore.user && authStore.user.role === 'admin'
 }
 
 const authStore = useAuthStore()
-const logged = ref(true)
-const route = useRoute()
-
-const handleLogout = () => {
-  authStore.logout()
-  logged.value = false
-}
-const isActive = (path) => {
-  return route.path === path
-}
 </script>
-
-<style scoped>
-.router-link-active {
-  @apply bg-white/20;
-}
-</style>
 
 <template>
   <nav class="max-h-15 mt-0 fixed w-full top-0 z-10 bg-gradient-to-r from-purple-500 to-blue-500">
@@ -93,8 +63,8 @@ const isActive = (path) => {
           <div class="col-span-2 mt-2 hidden sm:ml-6 sm:block">
             <div class="flex place-content-center relative">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <a href="/" class="w-full rounded-md px-3 py-2 text-lg font-bold"
-                >Distribution Management System</a
+              <RouterLink to="/" class="w-full rounded-md px-3 py-2 text-lg font-bold"
+                >Distribution Management System</RouterLink
               >
             </div>
           </div>
@@ -102,27 +72,7 @@ const isActive = (path) => {
             v-if="!roleBind() && authStore.logged"
             class="flex place-content-center col-span-3 sm:ml-6 sm:block"
           >
-            <div class="flex place-content-center relative">
-              <router-link
-                v-for="item in navItems"
-                :key="item.path"
-                :to="item.path"
-                class="flex w-full items-center font-semibold justify-center transition-colors duration-200 rounded-lg group hover:bg-white/10"
-                :class="{ 'bg-white/20': isActive(item.path) }"
-              >
-                <component :is="item.icon" class="h-4 w-4" />
-                <span class="transition-opacity duration-200 ml-2">
-                  {{ item.name }}
-                </span>
-              </router-link>
-              <button
-                @click="handleLogout"
-                class="w-full flex justify-center font-semibold items-center p-2 transition-colors duration-200 rounded-lg group hover:bg-white/10"
-              >
-                <component :is="LogOutIcon" class="h-4 w-4" />
-                <span class="transition-opacity duration-200 ml-2">logout</span>
-              </button>
-            </div>
+            <NavComp />
           </div>
           <div v-if="useAuthStore().logged" class="right-0 absolute grid grid-cols-4 mt-2 gap-1">
             <h1
@@ -136,7 +86,11 @@ const isActive = (path) => {
               class="rounded-md px-3 py-2 relative"
             >
               <img
-                :src="profileImagePreview"
+                :src="
+                  profileImagePreview
+                    ? profileImagePreview
+                    : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'
+                "
                 class="absolute top-0 w-12 h-12 rounded-full object-cover"
               />
             </RouterLink>
