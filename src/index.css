@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scroll-enter-active,
+.scroll-leave-active {
+  transition: transform 0.2s ease-in-out;
+}
+
+.scroll-enter-from {
+  transform: translateY(100%); /* Slide from bottom */
+}
+.scroll-leave-to {
+  transform: translateY(-100%); /* Slide to top when leaving */
+}
