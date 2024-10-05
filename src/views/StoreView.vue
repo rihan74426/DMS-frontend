@@ -77,6 +77,9 @@
             class="text-center font-semibold m-2 text-red-500"
           >
             You need to set your profile and store completely to make an order!
+            <RouterLink to="/profile" class="text-blue-500 underline">
+              go to your Profile</RouterLink
+            >
           </p>
           <button
             @click="openOrderModal()"

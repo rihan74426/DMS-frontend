@@ -22,12 +22,9 @@
         />
       </div>
 
-      <div
-        class="mt-30 p-5 grid gap-4 relative"
-        :class="roleBind() ? 'grid-cols-4 ml-40' : 'grid-cols-5'"
-      >
+      <div class="mt-30 p-5 grid gap-4 relative grid-cols-4" :class="{ 'ml-40': roleBind() }">
         <div
-          class="bg-white border border-purple-500 shadow-md p-6 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-100"
+          class="bg-white border border-purple-500 shadow-md p-6 pb-24 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-100"
           v-for="product in products"
           :key="product._id"
         >
@@ -67,10 +64,13 @@
               <TrashIcon class="size-6 text-white" />
             </button>
           </div>
-          <div v-else class="m-5 flex place-content-bottom bottom-2">
-            <RouterLink to="/stores" class="bg-blue-500 text-white px-2 py-1 rounded ml-4"
-              >Order Now!</RouterLink
+          <div v-else class="m-5 flex absolute justify-center text-center bottom-5 ml-16">
+            <button
+              class="bg-blue-500 text-white px-2 py-1 rounded text-center"
+              @click="orderNow(product)"
             >
+              Order Now!
+            </button>
           </div>
         </div>
       </div>
@@ -80,6 +80,13 @@
       :product="selectedProduct"
       @close="isModalVisible = false"
       @save="saveProduct"
+    />
+    <OrderComp
+      v-if="showOrderModal"
+      :product="{ productId: selectedProduct._id, quantity: 1 }"
+      :store="authStore.store.storeName"
+      @close="closeOrderModal"
+      @save="saveOrder"
     />
     <div
       v-if="loading"
@@ -104,6 +111,7 @@ import ModalComp from '@/components/ModalComp.vue'
 import { grid } from 'ldrs'
 import { useAuthStore } from '@/stores/authStore'
 import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import OrderComp from '@/components/OrderComp.vue'
 
 grid.register()
 
@@ -111,6 +119,7 @@ const products = ref([])
 const selectedProduct = ref(null)
 const isModalVisible = ref(false)
 const searchQuery = ref('')
+const showOrderModal = ref(false)
 
 const loading = ref(false)
 const showModal = ref(false)
@@ -123,6 +132,7 @@ onMounted(async () => {
   loading.value = true
   await authStore.fetchProducts()
   await authStore.fetchUser()
+  await authStore.fetchStore()
   if (authStore.products) {
     products.value = authStore.products.value
     loading.value = false
@@ -146,6 +156,59 @@ const editProduct = (product) => {
   isModalVisible.value = true
 }
 
+const orderNow = (product) => {
+  selectedProduct.value = product
+  showOrderModal.value = true
+}
+const closeOrderModal = () => {
+  showOrderModal.value = false
+}
+const storeCheck = () => {
+  if (
+    authStore.store.storeName === 'Your Store' &&
+    authStore.store.storeAddress === 'Ex: Bahaddarhat, Chattogram' &&
+    authStore.store.storePhone === '01xxx-xxxxxx' &&
+    authStore.store.storeManager === 'Your Store Manager'
+  ) {
+    return false // Invalid store details
+  }
+  return true // Valid store details
+}
+
+const userCheck = () => {
+  const user = authStore.user
+  if (!user.phone || !user.address) {
+    return false // Invalid user details
+  }
+  return true // Valid user details
+}
+const token = localStorage.getItem('token')
+
+const saveOrder = async (order) => {
+  try {
+    // if (storeCheck() && userCheck()) {
+    const { data } = await axios.post('http://localhost:5000/api/auth/orders', order, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}` // Bearer token for authentication
+      }
+    })
+    console.log(data)
+    showModal.value = true
+    modalTitle.value = 'Success'
+    modalMessage.value = 'Order Placed Successfully'
+    // } else {
+    //   showModal.value = true
+    //   modalTitle.value = 'Warning!'
+    //   modalMessage.value = 'Please set up your profile and store details before placing an order'
+    // }
+  } catch (error) {
+    showModal.value = true
+    modalTitle.value = 'Failure'
+    modalMessage.value = 'Failed to create the order! please try again later'
+    console.log('Error Creating order', error)
+  }
+}
 const deleteProduct = async (id) => {
   if (
     confirm(
