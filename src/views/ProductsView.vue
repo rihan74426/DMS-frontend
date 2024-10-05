@@ -186,22 +186,22 @@ const token = localStorage.getItem('token')
 
 const saveOrder = async (order) => {
   try {
-    // if (storeCheck() && userCheck()) {
-    const { data } = await axios.post('http://localhost:5000/api/auth/orders', order, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}` // Bearer token for authentication
-      }
-    })
-    console.log(data)
-    showModal.value = true
-    modalTitle.value = 'Success'
-    modalMessage.value = 'Order Placed Successfully'
-    // } else {
-    //   showModal.value = true
-    //   modalTitle.value = 'Warning!'
-    //   modalMessage.value = 'Please set up your profile and store details before placing an order'
-    // }
+    if (storeCheck() && userCheck()) {
+      const { data } = await axios.post('http://localhost:5000/api/auth/orders', order, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` // Bearer token for authentication
+        }
+      })
+      console.log(data)
+      showModal.value = true
+      modalTitle.value = 'Success'
+      modalMessage.value = 'Order Placed Successfully'
+    } else {
+      showModal.value = true
+      modalTitle.value = 'Warning!'
+      modalMessage.value = 'Please set up your profile and store details before placing an order'
+    }
   } catch (error) {
     showModal.value = true
     modalTitle.value = 'Failure'
