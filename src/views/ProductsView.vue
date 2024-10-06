@@ -24,7 +24,7 @@
 
       <div class="mt-30 p-5 grid gap-4 relative grid-cols-4" :class="{ 'ml-40': roleBind() }">
         <div
-          class="bg-white border border-purple-500 shadow-md p-6 pb-24 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-100"
+          class="bg-white border border-black shadow-md p-6 pb-24 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-100"
           v-for="product in products"
           :key="product._id"
         >
@@ -41,7 +41,7 @@
               <p class="p-2">Available: {{ product.quantityInStore }}</p>
               <p class="p-2">Supplied: {{ product.quantitySupplied }}</p>
             </div>
-            <h1 class="font-bold text-lg">MRP:- ৳ {{ product.price }}</h1>
+            <h1 class="font-bold text-lg">MRP:- ৳{{ product.price }}</h1>
           </div>
           <div>
             <strong>Additional info:</strong>
@@ -75,31 +75,37 @@
         </div>
       </div>
     </div>
-    <productModal
-      v-show="isModalVisible && roleBind()"
-      :product="selectedProduct"
-      @close="isModalVisible = false"
-      @save="saveProduct"
-    />
-    <OrderComp
-      v-if="showOrderModal"
-      :product="{ productId: selectedProduct._id, quantity: 1 }"
-      :store="authStore.store.storeName"
-      @close="closeOrderModal"
-      @save="saveOrder"
-    />
+    <Transition name="modal">
+      <productModal
+        v-show="isModalVisible && roleBind()"
+        :product="selectedProduct"
+        @close="isModalVisible = false"
+        @save="saveProduct"
+      />
+    </Transition>
+    <Transition name="modal">
+      <OrderComp
+        v-if="showOrderModal"
+        :product="{ productId: selectedProduct._id, quantity: 1 }"
+        :store="authStore.store.storeName"
+        @close="closeOrderModal"
+        @save="saveOrder"
+      />
+    </Transition>
     <div
       v-if="loading"
       class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
     >
       <l-grid size="80" speed="2" color="purple"></l-grid>
     </div>
-    <ModalComp
-      :show="showModal"
-      :title="modalTitle"
-      :message="modalMessage"
-      @close="showModal = false"
-    />
+    <Transition name="modal">
+      <ModalComp
+        :show="showModal"
+        :title="modalTitle"
+        :message="modalMessage"
+        @close="showModal = false"
+      />
+    </Transition>
   </div>
 </template>
 
@@ -291,9 +297,35 @@ watch(searchQuery, () => {
 onUpdated(() => {
   authStore.fetchProducts()
   products.value = authStore.products.value
+  console.log('updated')
 })
 </script>
 
 <style scoped>
-/* Add any additional styling here */
+.modal-enter-active,
+.modal-leave-active {
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+}
+
+.modal-enter-from {
+  transform: scale(0.5);
+  opacity: 0;
+}
+
+.modal-enter-to {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-leave-from {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-leave-to {
+  transform: scale(0.5);
+  opacity: 0;
+}
 </style>
