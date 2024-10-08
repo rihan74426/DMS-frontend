@@ -1,23 +1,29 @@
 <template>
-  <div class="flex place-content-center relative">
+  <div class="flex place-content-center relative space-x-4">
+    <!-- Loop through navigation items -->
     <router-link
       v-for="item in navItems"
       :key="item.path"
       :to="item.path"
-      class="flex w-full items-center font-semibold justify-center transition-colors duration-200 rounded-lg group hover:bg-white/10"
+      class="flex flex-col items-center font-semibold justify-center p-2 transition-colors duration-200 rounded-lg group hover:bg-white/10"
       :class="{ 'bg-white/20': isActive(item.path) }"
     >
-      <component :is="item.icon" class="h-4 w-4" />
-      <span class="transition-opacity duration-200 ml-2">
+      <!-- Display icon for each nav item -->
+      <component :is="item.icon" class="h-6 w-6" />
+
+      <!-- Show label on medium and larger screens, hide on small screens -->
+      <span class="transition-opacity duration-200 mt-1 hidden md:block">
         {{ item.name }}
       </span>
     </router-link>
+
+    <!-- Logout button -->
     <button
       @click="handleLogout"
-      class="w-full flex justify-center font-semibold items-center p-2 transition-colors duration-200 rounded-lg group hover:bg-white/10"
+      class="flex flex-col items-center font-semibold justify-center p-2 transition-colors duration-200 rounded-lg group hover:bg-white/10"
     >
-      <component :is="LogOutIcon" class="h-4 w-4" />
-      <span class="transition-opacity duration-200 ml-2">logout</span>
+      <component :is="LogOutIcon" class="h-6 w-6" />
+      <span class="transition-opacity duration-200 mt-1 hidden md:block">Logout</span>
     </button>
   </div>
 </template>
@@ -36,17 +42,29 @@ const navItems = ref([
 
 const handleLogout = () => {
   authStore.logout()
-  logged.value = false
 }
 const isActive = (path) => {
   return route.path === path
 }
-const logged = ref(true)
+
 const route = useRoute()
 const authStore = useAuthStore()
 </script>
+
 <style scoped>
+/* Apply background to active links */
 .router-link-active {
-  @apply bg-white/20;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive visibility for labels */
+.hidden.md\\:block {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hidden.md\\:block {
+    display: block;
+  }
 }
 </style>

@@ -1,18 +1,16 @@
 <template>
   <div>
-    <div class="p-4 ml-40 min-h-screen flex flex-wrap pt-20 place-content-center">
-      <h1 class="absolute block ml-10 text-4xl font-bold text-white text-center mb-6">
-        Users Management
-      </h1>
-      <div class="mt-10 relative inline-flex container flex place-content-center">
+    <div class="p-4 sm:ml-40 min-h-screen flex flex-wrap pt-20 place-content-center">
+      <h1 class="block ml-10 text-4xl font-bold text-white text-center">Users Management</h1>
+      <div class="justify-center inline-flex container">
         <input
           v-model="searchQuery"
           placeholder="Search User by Name..."
-          class="ring-2 px-2 mt-10 py-2 mb-4 rounded-lg w-half"
+          class="ring-2 px-2 py-2 my-10 text-center rounded-lg w-half"
         />
       </div>
       <!-- Users Table -->
-      <div class="overflow-x-auto mt-20 ml-20">
+      <div class="overflow-x-auto sm:ml-20">
         <table class="min-w-full bg-white border border-gray-200">
           <thead>
             <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">

@@ -1,6 +1,12 @@
 <template>
-  <div class="min-h-screen mx-auto p-4 pt-20 ml-60 pl-10">
-    <h1 class="text-4xl font-bold text-white text-center mb-6">Orders ({{ orders.length }})</h1>
+  <div
+    class="min-h-screen mx-auto p-4 pt-20 md:pt-12 lg:pt-20 ml-0 md:ml-20 lg:ml-60 pl-2 md:pl-6 lg:pl-10"
+  >
+    <h1
+      class="text-2xl md:text-3xl lg:text-4xl font-bold text-white text-center mb-4 md:mb-5 lg:mb-6"
+    >
+      Orders ({{ orders.length }})
+    </h1>
     <h4 class="text-xl font-bold text-white text-center mb-6">
       Completed: {{ authStore.allOrders.filter((el) => el.status == 'completed').length }} -
       Pending: {{ authStore.allOrders.filter((el) => el.status == 'pending').length }} - Canceled:
@@ -23,20 +29,20 @@
           :key="order._id"
           class="p-4 bg-white shadow rounded-md hover:bg-gray-50 transition-all duration-300"
         >
-          <div class="flex justify-between items-center">
-            <div>
+          <div class="sm:flex justify-between items-center">
+            <div class="mt-5">
               <h2 class="font-semibold text-xl">Invoice: {{ order.invoice }}</h2>
               <h2 class="font-bold text-xl">Status: {{ order.status }}</h2>
               <p class="text-gray-600">Customer: {{ filterUser(order.userId).username }}</p>
               <p class="text-gray-600">Customer contact: {{ filterUser(order.userId).phone }}</p>
               <p class="text-gray-600">Customer email: {{ filterUser(order.userId).email }}</p>
-              <!-- <p class="text-gray-600">Product: {{ filterProduct(order.productId).name }}</p> -->
+              <!-- <p class="text-gray-600">Product: {{ fibbblterProduct(order.productId).name }}</p> -->
 
               <p class="text-gray-500">
                 Order Date: {{ new Date(order.orderDate).toLocaleDateString() }}
               </p>
             </div>
-            <div>
+            <div class="mt-5">
               <h2 class="font-bold text-xl">Store Details:</h2>
               <p class="text-gray-600">Store Name: {{ filterStore(order.userId).storeName }}</p>
               <p class="text-gray-600">
@@ -50,7 +56,7 @@
               <!-- <p class="text-gray-600">Pack Size: {{ filterProduct(order.productId).packSize }}</p>
             <p class="text-gray-600">Product MRP: {{ filterProduct(order.productId).price }}</p> -->
             </div>
-            <div>
+            <div class="mt-5">
               <p class="text-gray-600">
                 Total bill: <strong>৳ {{ order.price }}/-</strong>
               </p>
@@ -58,7 +64,7 @@
                 Payment status: <strong>৳ {{ order.payment }}</strong>
               </p>
             </div>
-            <div class="flex space-x-2 grid grid-cols-2">
+            <div class="space-x-2 grid grid-cols-2">
               <button
                 class="bg-blue-500 m-2 text-white p-2 rounded-md hover:bg-blue-600"
                 @click="viewOrder(order)"
@@ -86,14 +92,14 @@
                 Print Invoice
               </button>
               <button
-                :disabled="order.status == 'canceled'"
+                v-if="order.status !== 'canceled'"
                 class="bg-green-500 m-2 text-white p-2 rounded-md hover:bg-green-600"
                 @click="markPaid(order, order.payment == 'Paid' ? 'Unpaid' : 'Paid')"
               >
                 Mark {{ order.payment == 'Paid' ? 'unpaid' : 'paid' }}
               </button>
               <button
-                :disabled="order.status == 'canceled'"
+                v-if="order.status !== 'canceled'"
                 class="bg-green-500 text-white p-2 m-2 rounded-md hover:bg-green-600"
                 @click="markComplete(order, order.status == 'pending' ? 'completed' : 'pending')"
               >
@@ -404,7 +410,7 @@ function generatePDF(store, order, user) {
 
   // Order and User Details (right column)
   doc.setFontSize(15)
-  doc.text(`Invoice #: ${order.invoice}`, 130, 40)
+  doc.text(`Invoice: #${order.invoice}`, 130, 40)
   doc.setFontSize(10)
   doc.text(`Invoice Date: ${new Date().toLocaleString()}`, 130, 47)
   doc.text(`Prepared by: ${user.username}`, 130, 54)

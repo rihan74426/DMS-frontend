@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container min-h-screen min-w-screen p-4 ml-20 pt-20">
+    <div class="container min-h-screen min-w-screen p-4 ml-16 pt-20">
       <div class="ml-10">
         <div class="relative flex place-content-center">
           <h1 class="text-4xl text-white font-bold text-center absolute">Transactions</h1>
@@ -13,20 +13,15 @@
           </button>
         </div>
 
-        <table
-          v-if="!loading"
-          class="w-5/6 bg-white shadow-lg rounded-lg ml-36"
-          :class="!roleBind() ? 'mt-20' : 'ml-20'"
-        >
+        <table v-if="!loading" class="bg-white shadow-lg rounded-lg ml-36">
           <thead>
             <tr class="text-center bg-gray-100 border border-slate-700">
               <th class="p-4 justify-center">Trans Id</th>
-              <th class="p-4 justify-center">Company</th>
+              <th class="p-4 justify-center">Order</th>
               <th class="p-4 justify-center">Product</th>
               <th class="p-4 justify-center">Quantity</th>
               <th class="p-4 justify-center">Item Price</th>
               <th class="p-4 justify-center">Total</th>
-              <th class="p-4 justify-center">Person</th>
               <th class="p-4 justify-center">Created</th>
               <th class="p-4 justify-center" v-if="roleBind()">Actions</th>
             </tr>
@@ -38,16 +33,16 @@
               class="border border-slate-700 text-center"
             >
               <td class="p-2">tx{{ transaction._id }}</td>
+              <td class="p-2">#{{ transaction.order }}</td>
               <td class="p-2">
-                {{ showCompany(transaction.companyId) }}
+                {{ transaction.products.map((el) => showProduct(el.productId).name).join(' - ') }}
               </td>
+              <td class="p-2">{{ transaction.products.map((el) => el.quantity).join(' - ') }}</td>
               <td class="p-2">
-                {{ showProduct(transaction.productId) }}
+                {{ transaction.products.map((el) => showProduct(el.productId).price).join(' - ') }}
+                /-
               </td>
-              <td class="p-2">{{ transaction.quantity }}</td>
-              <td class="p-2">{{ transaction.price }} /-</td>
-              <td class="p-2">{{ transaction.quantity * transaction.price }} /-</td>
-              <td class="p-2">{{ transaction.person }}</td>
+              <td class="p-2">{{ transaction.total }} /-</td>
               <td class="p-2">
                 {{ timeCon(transaction.createdAt) }}
               </td>
@@ -141,9 +136,8 @@ const roleBind = () => {
 }
 // Fetch companies and products
 const timeCon = (time) => {
-  const date = new Date(time).toLocaleDateString()
-  const yyyyMMdd = date.slice(0, 10)
-  return yyyyMMdd
+  const date = new Date(time).toLocaleString()
+  return date
 }
 
 // Fetch transactions
@@ -246,11 +240,11 @@ const printVoucher = (transaction) => {
   doc.setFontSize(12)
   doc.setTextColor(subHeaderColor[0], subHeaderColor[1], subHeaderColor[2])
   doc.setFont('helvetica', 'normal')
-  doc.text(`Date: ${new Date().toLocaleDateString()}`, doc.internal.pageSize.getWidth() / 1.1, 40, {
+  doc.text(`Date: ${new Date().toLocaleString()}`, doc.internal.pageSize.getWidth() / 1.1, 40, {
     align: 'right'
   })
   doc.text(
-    `Transaction Created: ${new Date(transaction.createdAt).toLocaleDateString()}`,
+    `Transaction Created: ${new Date(transaction.createdAt).toLocaleString()}`,
     doc.internal.pageSize.getWidth() / 1.1,
     50,
     {
@@ -262,48 +256,41 @@ const printVoucher = (transaction) => {
   doc.setFontSize(14)
   doc.setTextColor(headerColor[0], headerColor[1], headerColor[2])
   doc.setFont('helvetica', 'bold')
-  doc.text(
-    `Company name: ${companies.value.filter((el) => el._id == transaction.companyId)[0].name}`,
-    20,
-    70
-  )
-  doc.text(`Dealing with: ${transaction.person}`, 20, 80)
+  doc.text(`Order Invoice: #${transaction.order}`, 20, 70)
+  doc.text(`Dealing with: ${transaction.client}`, 20, 80)
 
   // Product Details Table
-  const tableColumnHeaders = ['Product Name', 'Price', 'Quantity', 'Total']
-  const tableRows = products.value
-    .filter((el) => el._id == transaction.productId)
-    .map((product) => [
-      product.name,
-      `$${transaction.price.toFixed(2)}`,
-      transaction.quantity,
-      `$${(transaction.price * transaction.quantity).toFixed(2)}`
-    ])
-
-  doc.autoTable({
-    head: [tableColumnHeaders],
-    body: tableRows,
-    startY: 100,
-    headStyles: {
-      fillColor: headerColor,
-      textColor: [255, 255, 255], // White text
-      halign: 'center',
-      valign: 'middle'
-    },
-    bodyStyles: {
-      halign: 'center'
-    },
-    theme: 'striped'
+  const productsData = transaction.products.map((productItem) => {
+    const orderItem = showProduct(productItem.productId)
+    return [
+      orderItem.name, // Product name
+      `${productItem.quantity} pcs`, // Quantity
+      `${orderItem.packSize}`, // Pack size
+      `${orderItem.group}`, // Pack size
+      `${orderItem.price.toFixed(2)}/- tk`, // Price per unit
+      `${(orderItem.price * productItem.quantity).toFixed(2)}/- tk` // Total for that product
+    ]
   })
 
-  // Calculate the total price
-  const totalPrice = transaction.price * transaction.quantity
+  // Generate the product table with multiple products
+  doc.autoTable({
+    startY: 90, // Position after header content
+    head: [['Product', 'Quantity', 'Pack Size', 'group', 'MRP', 'Total']],
+    body: productsData, // 2D array containing product details
+    styles: {
+      textColor: [34, 34, 34] // White text color for table content
+    },
+    headStyles: {
+      fillColor: [29, 78, 216], // Blue for table header
+      textColor: [255, 255, 255]
+    }
+  })
 
   // Add Total Amount
   doc.setFontSize(14)
   doc.setTextColor(subHeaderColor[1], subHeaderColor[1], subHeaderColor[2])
   doc.setFont('helvetica', 'bold')
-  doc.text(`Total Amount: $${totalPrice.toFixed(2)}`, 20, doc.autoTable.previous.finalY + 20)
+  doc.text(`Total Amount: $${transaction.total.toFixed(2)}`, 20, doc.autoTable.previous.finalY + 20)
 
   // Signature
   doc.setFontSize(12)
@@ -316,35 +303,67 @@ const printVoucher = (transaction) => {
   )
 
   // Save or Download the PDF
-  doc.save(
-    `voucher_for_${companies.value.filter((el) => el._id == transaction.companyId)[0].name}.pdf`
-  )
+  doc.save(`voucher_for_${transaction.client}.pdf`)
+}
+const findUser = (id) => {
+  const user = authStore.users.find((user) => user._id === id)
+  return user
 }
 
 const printExcel = (transaction) => {
-  // Define your transactions in an array of objects
-  // const companyName = companies.value.filter((el) => el._id == transaction.companyId)[0].name
-  // const productName = products.value.filter((el) => el._id == transaction.productId)[0].name
-  const data = {
-    'Transaction ID': transaction._id,
-    Client: transaction.person,
-    Company: showCompany(transaction.companyId),
-    Product: showProduct(transaction.productId),
-    Quantity: transaction.quantity,
-    Price: transaction.price,
-    Total: transaction.quantity * transaction.price,
-    Date: new Date(transaction.createdAt).toLocaleDateString()
-  }
+  // Transaction metadata (details that aren't product-specific)
+  const transactionData = [
+    ['Transaction', transaction._id],
+    ['Client', findUser(transaction.client).username],
+    ['Order Invoice', '#' + transaction.order],
+    ['Total', transaction.total],
+    ['Date', new Date(transaction.createdAt).toLocaleString()]
+  ]
+
+  // Prepare product details for the separate table
+  const productDetailsHeader = ['S/N', 'Product Name', 'Quantity', 'Price', 'Total Price']
+
+  const productDetails = transaction.products.map((el, index) => [
+    index + 1,
+    showProduct(el.productId).name,
+    el.quantity,
+    showProduct(el.productId).price,
+    el.quantity * showProduct(el.productId).price
+  ])
 
   // Create a new workbook and a new sheet
-  const ws = XLSX.utils.json_to_sheet([data])
   const wb = XLSX.utils.book_new()
+  const ws = XLSX.utils.aoa_to_sheet([]) // Start with an empty sheet
+
+  // Append transaction metadata at the top of the sheet
+  XLSX.utils.sheet_add_aoa(ws, transactionData, { origin: 'D5' })
+
+  // Append product details header right below the transaction metadata
+  XLSX.utils.sheet_add_aoa(ws, [productDetailsHeader], { origin: `D${transactionData.length + 6}` })
+
+  // Append product details below the header
+  XLSX.utils.sheet_add_aoa(ws, productDetails, { origin: `D${transactionData.length + 7}` })
+
+  // Apply black background and white text to product header row
+  const headerRowStart = transactionData.length + 6
+  const range = XLSX.utils.decode_range(`D${headerRowStart}:H${headerRowStart}`)
+
+  for (let C = range.s.c; C <= range.e.c; ++C) {
+    const cell_address = XLSX.utils.encode_cell({ r: range.s.r, c: C })
+    if (!ws[cell_address]) continue
+
+    // Apply black background and white text color to header cells
+    ws[cell_address].s = {
+      fill: { fgColor: { rgb: '000000' } }, // Black background
+      font: { color: { rgb: 'FFFFFF' }, bold: true } // White text, bold
+    }
+  }
 
   // Add the sheet to the workbook
-  XLSX.utils.book_append_sheet(wb, ws, 'Transactions')
+  XLSX.utils.book_append_sheet(wb, ws, 'Transaction & Products')
 
   // Generate Excel file and trigger download
-  XLSX.writeFile(wb, `Transaction_of_${showCompany(transaction.companyId)}.xlsx`)
+  XLSX.writeFile(wb, `Transaction_of_${findUser(transaction.client).username}.xlsx`)
 }
 
 // const printExcel = (transaction) => {
@@ -356,16 +375,17 @@ const printExcel = (transaction) => {
 
 const showCompany = (Id) => {
   if (companies.value) {
-    return companies.value.filter((el) => el._id == Id)[0].name
+    // return companies.value.filter((el) => el._id == Id)[0]
   } else {
     return 'Company not found'
   }
 }
 const showProduct = (Id) => {
-  if (products.value.filter((el) => el._id == Id)[0]) {
-    return products.value.filter((el) => el._id == Id)[0].name
+  if (products.value) {
+    const product = products.value.find((el) => el._id === Id)
+    return product ? product : 'Product not found!'
   } else {
-    return 'Product not found'
+    return 'Products not fetched!'
   }
 }
 
@@ -375,15 +395,16 @@ onMounted(async () => {
   await authStore.fetchProducts()
   await authStore.fetchTransactions()
   if (authStore.transactions) {
-    transactions.value = authStore.transactions.value
+    transactions.value = authStore.transactions.value.toReversed()
     loading.value = false
   }
   companies.value = authStore.companies.value
   products.value = authStore.products.value
+  console.log(transactions.value)
 })
 
 onUpdated(() => {
   authStore.fetchTransactions()
-  transactions.value = authStore.transactions.value
+  // transactions.value = authStore.transactions.value
 })
 </script>

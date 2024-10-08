@@ -1,102 +1,132 @@
 <script setup>
 import NavComp from '@/components/NavComp.vue'
+import SideBar from '@/components/SideBar.vue'
 import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
+import { LucideMenu } from 'lucide-vue-next'
 
 import { onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const user = ref(null)
 const profileImagePreview = ref('')
+const authStore = useAuthStore()
+const isSidebarOpen = ref(false)
 
-onMounted(() => {
-  fetchUser()
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value
+}
+
+// Fetch user data with async/await
+onMounted(async () => {
+  await fetchUser()
 })
+
 const fetchUser = async () => {
   try {
     const { data } = await axios.get('http://localhost:5000/api/auth/profile')
     const userMail = localStorage.getItem('email')
-    user.value = data.filter((user) => user.email.includes(userMail))[0]
+    user.value = data.find((user) => user.email.includes(userMail))
     profileImagePreview.value = `http://localhost:5000/${user.value.profileImage}`
-    console.log(profileImagePreview.value)
   } catch (error) {
-    // this.logout()
-    console.log('error fetching data: ', error)
+    console.error('Error fetching data:', error)
   }
 }
 
 watch(
   () => useAuthStore().userUpdated,
   (newVal) => {
-    if (newVal == true) {
-      fetchUser()
-    }
+    if (newVal === true) fetchUser()
   }
 )
-watch(
-  () => useAuthStore().user,
-  (newVal) => {
-    user.value = newVal
-  }
-)
+
 watch(
   () => useAuthStore().logged,
-  () => {
-    fetchUser()
-  }
+  () => fetchUser()
 )
 
 const roleBind = () => {
   return authStore.user && authStore.user.role === 'admin'
 }
-
-const authStore = useAuthStore()
 </script>
 
 <template>
-  <nav class="max-h-15 mt-0 fixed w-full top-0 z-10 bg-gradient-to-r from-purple-500 to-blue-500">
+  <SideBar :isOpen="isSidebarOpen" class="hidden sm:block" @closeSidebar="toggleSidebar" />
+
+  <nav
+    class="max-h-15 mt-0 fixed w-full top-0 z-10"
+    :class="
+      roleBind()
+        ? 'bg-gradient-to-r from-blue-800 to-blue-400'
+        : 'bg-gradient-to-r from-purple-500 to-blue-500'
+    "
+  >
     <div class="relative max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 justify-between">
-        <div
-          class="grid grid-cols-5 items-center text-white justify-center sm:items-stretch sm:justify-start"
-        >
-          <div class="col-span-2 mt-2 hidden sm:ml-6 sm:block">
-            <div class="flex place-content-center relative">
-              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <RouterLink to="/" class="w-full rounded-md px-3 py-2 text-lg font-bold"
-                >Distribution Management System</RouterLink
-              >
-            </div>
-          </div>
-          <div
-            v-if="!roleBind() && authStore.logged"
-            class="flex place-content-center col-span-3 sm:ml-6 sm:block"
+      <div class="grid grid-cols-2 sm:grid-cols-3 relative h-16 justify-between">
+        <!-- Toggle button for smaller screens -->
+        <div v-if="roleBind()" class="sm:hidden flex items-center">
+          <button
+            @click="toggleSidebar"
+            class="text-white focus:outline-none px-3 py-2 rounded-md"
+            aria-label="Toggle Sidebar"
           >
-            <NavComp />
-          </div>
-          <div v-if="useAuthStore().logged" class="right-0 absolute grid grid-cols-4 mt-2 gap-1">
-            <h1
-              class="relative col-span-3 text-right rounded-md px-3 py-2 text-lg font-medium text-white"
-            >
-              Hello {{ user ? user.username : 'User' }}, Welcome!
-            </h1>
-            <RouterLink
-              to="/profile"
-              title="Goes to your Profile"
-              class="rounded-md px-3 py-2 relative"
-            >
-              <img
-                :src="
-                  profileImagePreview
-                    ? profileImagePreview
-                    : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'
-                "
-                class="absolute top-0 w-12 h-12 rounded-full object-cover"
-              />
+            <LucideMenu />
+          </button>
+        </div>
+
+        <!-- Title for larger screens -->
+        <div class="mt-2 hidden sm:ml-6 sm:block">
+          <div class="flex place-content-center relative">
+            <RouterLink to="/" class="w-full rounded-md px-3 py-2 text-lg font-bold text-white">
+              Distribution Management System
             </RouterLink>
           </div>
+        </div>
+
+        <!-- Navigation links for larger screens -->
+        <div v-if="!roleBind() && authStore.logged" class="flex text-white sm:ml-6 sm:block">
+          <NavComp />
+        </div>
+
+        <!-- User profile -->
+        <div v-if="authStore.logged" class="right-0 absolute grid grid-cols-4 mt-2 gap-1">
+          <h1
+            class="relative col-span-3 mt-3 text-right text-sm sm:text-base md:text-lg font-medium text-white"
+          >
+            Hello {{ user ? user.username : 'User' }}, Welcome!
+          </h1>
+          <RouterLink
+            to="/profile"
+            title="Goes to your Profile"
+            class="rounded-md px-3 py-2 relative"
+          >
+            <img
+              :src="
+                profileImagePreview ||
+                'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'
+              "
+              class="absolute top-0 w-12 h-12 rounded-full object-cover"
+            />
+          </RouterLink>
         </div>
       </div>
     </div>
   </nav>
+
+  <!-- Sidebar transition for smaller screens -->
+  <transition name="sidebar">
+    <SideBar v-if="isSidebarOpen" @closeSidebar="toggleSidebar" />
+  </transition>
 </template>
+
+<style scoped>
+/* Sidebar transitions */
+.sidebar-enter-active,
+.sidebar-leave-active {
+  transition: transform 0.3s ease;
+}
+.sidebar-enter,
+.sidebar-leave-to {
+  transform: translateX(-100%);
+}
+</style>

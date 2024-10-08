@@ -1,7 +1,12 @@
 <template>
   <div
-    class="w-64 h-screen bg-gradient-to-r to-purple-400 from-blue-500 text-white fixed shadow-lg pt-20"
+    class="w-64 h-screen text-white fixed shadow-lg pt-20 z-1"
     v-if="logged && roleBind()"
+    :class="
+      roleBind()
+        ? 'bg-gradient-to-r from-blue-800 to-blue-400'
+        : 'bg-gradient-to-r to-purple-400 from-blue-500'
+    "
   >
     <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
       <router-link

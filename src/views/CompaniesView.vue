@@ -1,8 +1,8 @@
 <template>
-  <div class="container min-h-screen mx-auto p-4 ml-20 pt-20">
-    <div class="p-4 ml-40">
-      <h1 class="text-2xl text-white font-bold mb-4 absolute block ml-10">Companies</h1>
-      <div class="p-4 mt-10">
+  <div class="container min-h-screen mx-auto p-4 sm:ml-20 pt-20">
+    <div class="sm:ml-40">
+      <h1 class="text-2xl text-white font-bold mb-4 ml-10">Companies</h1>
+      <div class="p-4 overflow-x-auto">
         <tableComp :items="companies" @editItem="edititem" @deleteItem="deleteitem" />
         <div class="m-5">
           <transition

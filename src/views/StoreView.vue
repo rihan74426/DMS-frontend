@@ -6,7 +6,7 @@
 
         <!-- Store Details Section -->
 
-        <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10 grid grid-cols-2 gap-6">
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-5 grid sm:grid-cols-2 gap-6">
           <div>
             <h2 class="text-2xl font-semibold mb-4">Store Details</h2>
             <p class="p-2"><strong>Store Name:</strong> {{ storeDetails.storeName }}</p>
@@ -70,7 +70,7 @@
         </div>
 
         <!-- Orders Section -->
-        <div class="bg-white shadow-md rounded-lg p-6 mb-8 m-10">
+        <div class="bg-white shadow-md rounded-lg p-6 mb-5 m-3">
           <h2 class="text-2xl text-center font-semibold mb-4">Your Orders</h2>
           <p
             v-if="!storeCheck() && !userCheck()"
@@ -152,7 +152,7 @@
                       findThings(product.productId)[0]
                         ? findThings(product.productId)[0].price * product.quantity
                         : 'loading...'
-                    }}
+                    }}/-
                   </td>
                 </tr>
               </tbody>
@@ -311,12 +311,13 @@ const token = localStorage.getItem('token')
 
 const updateStoreDetails = async (newDetails) => {
   try {
-    await axios.put('http://localhost:5000/api/auth/store', newDetails, {
+    const newStore = await axios.put('http://localhost:5000/api/auth/store', newDetails, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}` // Bearer token for authentication
       }
     })
+    storeDetails.value = newStore.data
     showModal.value = true
     modalTitle.value = 'Success'
     modalMessage.value = 'Store Updated Successfully'

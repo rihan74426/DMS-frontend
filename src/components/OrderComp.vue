@@ -1,6 +1,6 @@
 <template>
   <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-8 rounded-lg h-5/6 shadow-lg overflow-auto w-1/3 mb-5 mt-5">
+    <div class="bg-white p-6 rounded-lg h-5/6 shadow-lg overflow-auto sm:w-1/3 w-full mb-5 m-5">
       <h2 class="text-2xl font-semibold mb-4 text-center">
         {{ order ? 'Edit Order' : 'Place an Order' }}
       </h2>
@@ -10,6 +10,7 @@
         {{ props.store ? props.store : orderData.storeName }}
       </p>
       <div>
+        <p v-if="selectedProduct.length > 0">Cart:</p>
         <ul>
           <li
             v-for="product in orderData.products"
@@ -78,7 +79,7 @@
         </label>
         <label class="m-2 block">
           <input type="radio" v-model="orderData.paymentMethod" value="Cash On Delivery" />
-          Cash On delivery
+          Cash On Delivery
         </label>
         <label v-if="order" class="block mb-2">Order Status:</label>
         <select

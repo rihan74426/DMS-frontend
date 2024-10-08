@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'ml-60': roleBind() }">
+  <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'sm:ml-60': roleBind() }">
     <h1 class="text-4xl text-white font-bold m-5">Dashboard</h1>
     <div class="p-10 w-full bg-black">
       <h1 class="text-2xl text-white font-bold">
