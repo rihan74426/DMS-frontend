@@ -1,10 +1,8 @@
 <script setup>
 import navbarView from './views/navbarView.vue'
-import SideBar from './components/SideBar.vue'
 import { onMounted } from 'vue'
 import { useAuthStore } from './stores/authStore'
 import LoginView from './views/LoginView.vue'
-import RegisterView from './views/RegisterView.vue'
 
 const authStore = useAuthStore()
 

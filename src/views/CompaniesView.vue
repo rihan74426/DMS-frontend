@@ -24,7 +24,7 @@
           </transition>
         </div>
         <button
-          class="inline-flex bg-pink-600 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-green-500 overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700 transition duration-500"
+          class="inline-flex bg-pink-600 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-green-500 overflow-hidden transform hover:scale-105 transition duration-500"
           @click="togglefunc"
           v-if="!isVisible && roleBind()"
         >

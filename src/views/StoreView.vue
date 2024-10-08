@@ -83,7 +83,7 @@
           </p>
           <button
             @click="openOrderModal()"
-            class="m-4 p-2 bg-green-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-green-700 transition duration-500 ease-in-out"
+            class="m-4 p-2 bg-green-600 text-white font-bold rounded-md overflow-hidden transform transition-all hover:scale-105 hover:bg-green-700 duration-500 ease-in-out"
           >
             Order Something
           </button>
@@ -209,13 +209,13 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, onUpdated, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import StoreComp from '@/components/StoreComp.vue'
 import OrderComp from '@/components/OrderComp.vue'
 import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
 import ModalComp from '@/components/ModalComp.vue'
-import { EditIcon, Trash2Icon } from 'lucide-vue-next'
+import { Trash2Icon } from 'lucide-vue-next'
 import { grid } from 'ldrs'
 
 grid.register()
