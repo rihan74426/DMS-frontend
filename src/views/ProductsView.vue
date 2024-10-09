@@ -1,79 +1,81 @@
 <template>
-  <div
-    class="container min-h-screen p-4 flex flex-wrap pt-20 place-content-center"
-    :class="{ 'sm:pl-30': roleBind() }"
-  >
-    <h1 class="sm:text-4xl text-2xl text-white font-bold m-4">Products</h1>
-    <div class="container flex place-content-center">
-      <button
-        @click="showAddProduct"
-        v-if="roleBind()"
-        class="inline-flex bg-pink-500 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-pink-300 hover:text-black"
-      >
-        Add New Product
-      </button>
-      <input
-        :class="{ 'rounded-l-lg w-2/5 border-purple-500': !roleBind() }"
-        v-model="searchQuery"
-        @input="searchProducts"
-        placeholder="Search Products..."
-        class="ring-2 px-2 mt-10 py-1 mb-4 rounded-r-lg w-half"
-      />
-    </div>
+  <div class="container min-h-screen p-4 sm:ml-16">
+    <div class="pt-20 place-content-center flex flex-wrap" :class="{ 'sm:pl-30': roleBind() }">
+      <h1 class="text-4xl text-white font-bold m-4">Products</h1>
+      <div class="container flex place-content-center">
+        <button
+          @click="showAddProduct"
+          v-if="roleBind()"
+          class="inline-flex bg-pink-500 mt-10 text-white px-4 py-2 rounded-l-lg mb-4 hover:bg-pink-300 hover:text-black"
+        >
+          Add New Product
+        </button>
+        <input
+          :class="{ 'rounded-l-lg w-2/5 border-purple-500': !roleBind() }"
+          v-model="searchQuery"
+          @input="searchProducts"
+          placeholder="Search Products..."
+          class="ring-2 px-2 mt-10 py-1 mb-4 rounded-r-lg w-half"
+        />
+      </div>
 
-    <div class="p-5 grid gap-4 sm:grid-cols-4" :class="{ 'sm:ml-60': roleBind() }">
-      <div
-        class="bg-white border border-black shadow-md p-6 rounded-lg transform transition-all hover:scale-105 duration-800"
-        v-for="product in products"
-        :key="product._id"
-      >
-        <div class="border border-y-2 justify-center flex">
-          <img
-            :src="product.image"
-            alt="product image"
-            class="object-contain h-full w-full sm:h-48 sm:w-56"
-          />
-        </div>
-        <h2 class="text-x font-bold flex justify-center p-1">{{ product.name }}</h2>
-        <p class="line-clamp-3 hover:line-clamp-none text-justify">{{ product.description }}</p>
-        <p class="p-2">ID: {{ product.hashtagSerial }}</p>
-        <div class="grid grid-cols-3 items-center gap-2">
-          <div class="col-span-2">
-            <p class="p-2">Group: {{ product.group }}</p>
-            <p class="p-2">Pack Size: {{ product.packSize }}</p>
-            <p class="p-2">Available: {{ product.quantityInStore }}</p>
-            <p class="p-2">Supplied: {{ product.quantitySupplied }}</p>
+      <div class="grid gap-4 sm:grid-cols-4" :class="{ 'sm:ml-48': roleBind() }">
+        <div
+          class="bg-white border border-black shadow-md p-6 rounded-lg transform transition-all hover:scale-105 duration-800"
+          v-for="product in products"
+          :key="product._id"
+        >
+          <div class="border border-y-2 justify-center flex">
+            <img
+              :src="product.image"
+              alt="product image"
+              class="object-contain h-full w-full sm:h-48 sm:w-56"
+            />
           </div>
-          <h1 class="font-bold text-lg">MRP:- ৳{{ product.price }}</h1>
-        </div>
-        <div>
-          <strong>Additional info:</strong>
-          <p>SDP: {{ product.sdp }}</p>
-          <p>DP: {{ product.dp }}</p>
-          <p>TP: {{ product.tp }}</p>
-        </div>
+          <h2 class="text-x font-bold flex justify-center p-1">{{ product.name }}</h2>
+          <p class="line-clamp-3 hover:line-clamp-none text-justify">{{ product.description }}</p>
+          <p class="p-2">ID: {{ product.hashtagSerial }}</p>
+          <div class="grid grid-cols-3 items-center gap-2">
+            <div class="col-span-2">
+              <p class="p-2">Group: {{ product.group }}</p>
+              <p class="p-2">Pack Size: {{ product.packSize }}</p>
+              <p class="p-2">Available: {{ product.quantityInStore }}</p>
+              <p class="p-2">Supplied: {{ product.quantitySupplied }}</p>
+            </div>
+            <h1 class="font-bold text-lg">MRP:- ৳{{ product.price }}</h1>
+          </div>
+          <div>
+            <strong>Additional info:</strong>
+            <p>SDP: {{ product.sdp }}</p>
+            <p>DP: {{ product.dp }}</p>
+            <p>TP: {{ product.tp }}</p>
+          </div>
 
-        <div class="m-5 flex absolute justify-center text-center bottom-5 ml-10" v-if="roleBind()">
-          <button
-            @click="editProduct(product)"
-            class="bg-blue-500 text-white px-2 py-1 rounded ml-4"
+          <div
+            class="m-5 flex absolute justify-center text-center bottom-5 sm:ml-10 right-5"
+            v-if="roleBind()"
           >
-            <PencilSquareIcon class="size-6 text-white" />
-          </button>
-          <button
-            @click="deleteProduct(product._id)"
-            class="bg-red-500 text-white px-2 py-1 rounded ml-2"
-          >
-            <TrashIcon class="size-6 text-white" />
-          </button>
-        </div>
-        <div v-else class="m-5 flex absolute justify-center text-center bottom-5 ml-16">
-          <button
-            class="bg-blue-500 text-white px-2 py-1 rounded text-center"
-            @click="orderNow(product)"
-          >
-            Order Now!
-          </button>
+            <button
+              @click="editProduct(product)"
+              class="bg-blue-500 text-white px-2 py-1 rounded ml-4"
+            >
+              <PencilSquareIcon class="size-6 text-white" />
+            </button>
+            <button
+              @click="deleteProduct(product._id)"
+              class="bg-red-500 text-white px-2 py-1 rounded ml-2"
+            >
+              <TrashIcon class="size-6 text-white" />
+            </button>
+          </div>
+          <div v-else class="m-5 flex absolute justify-center text-center bottom-5 ml-16 right-5">
+            <button
+              class="bg-blue-500 text-white p-5 sm:px-2 sm:py-1 rounded text-center"
+              @click="orderNow(product)"
+            >
+              Order Now!
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -149,7 +151,6 @@ onMounted(async () => {
 const showAddProduct = () => {
   selectedProduct.value = null
   isModalVisible.value = true
-  console.log('showing')
 }
 const roleBind = () => {
   if (authStore.user) {
@@ -195,13 +196,12 @@ const token = localStorage.getItem('token')
 const saveOrder = async (order) => {
   try {
     if (storeCheck() && userCheck()) {
-      const { data } = await axios.post('http://localhost:5000/api/auth/orders', order, {
+      await axios.post('http://localhost:5000/api/auth/orders', order, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}` // Bearer token for authentication
         }
       })
-      console.log(data)
       showModal.value = true
       modalTitle.value = 'Success'
       modalMessage.value = 'Order Placed Successfully'
@@ -304,7 +304,6 @@ watch(searchQuery, () => {
 // refreshing the product after every actions
 onUpdated(() => {
   authStore.fetchProducts()
-  products.value = authStore.products.value
   console.log('updated')
 })
 </script>

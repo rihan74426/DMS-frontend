@@ -53,12 +53,6 @@
       </div>
 
       <!-- Modal for Editing User -->
-      <UserModal
-        v-if="showModal"
-        :user="selectedUser"
-        @close="showModal = false"
-        @update="updateUser"
-      />
       <div
         v-if="loading"
         class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
@@ -72,6 +66,12 @@
         @close="showResModal = false"
       />
     </div>
+    <UserModal
+      v-if="showModal"
+      :user="selectedUser"
+      @close="showModal = false"
+      @update="updateUser"
+    />
   </div>
 </template>
 

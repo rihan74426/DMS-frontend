@@ -1,80 +1,79 @@
 <template>
   <div>
-    <div class="container min-h-screen min-w-screen p-4 ml-16 pt-20">
-      <div class="ml-10">
-        <div class="relative flex place-content-center">
-          <h1 class="text-4xl text-white font-bold text-center absolute">Transactions</h1>
+    <div class="container min-h-screen p-4 pt-20 sm:ml-16">
+      <div class="sm:ml-48 flex-wrap">
+        <div class="text-center">
+          <h1 class="text-4xl text-white font-bold">Transactions</h1>
           <button
             @click="showAddTransaction"
             v-if="roleBind()"
-            class="bg-pink-500 mt-20 place-content-center text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
+            class="bg-pink-500 m-5 place-content-center text-white px-4 py-2 rounded-lg mb-4 hover:bg-pink-300 hover:text-black"
           >
             Add a Transaction
           </button>
         </div>
+        <div v-if="!loading" class="overflow-x-auto">
+          <table class="bg-white shadow-lg rounded-lg">
+            <thead>
+              <tr class="text-center bg-gray-100 border border-slate-700">
+                <th class="p-4 justify-center">Trans Id</th>
+                <th class="p-4 justify-center">Order</th>
+                <th class="p-4 justify-center">Status</th>
+                <th class="p-4 justify-center">Product</th>
+                <th class="p-4 justify-center">Quantity</th>
+                <th class="p-4 justify-center">Total</th>
+                <th class="p-4 justify-center">Created</th>
+                <th class="p-4 justify-center" v-if="roleBind()">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="transaction in transactions"
+                :key="transaction._id"
+                class="border border-slate-700 text-center"
+              >
+                <td class="p-2">tx{{ transaction._id }}</td>
+                <td class="p-2">#{{ transaction.order }}</td>
+                <td class="p-2">{{ transaction.status }}</td>
+                <td class="p-2">
+                  {{ transaction.products.map((el) => showProduct(el.productId).name).join(' + ') }}
+                </td>
+                <td class="p-2">{{ transaction.products.map((el) => el.quantity).join(' + ') }}</td>
 
-        <table v-if="!loading" class="bg-white shadow-lg rounded-lg ml-36">
-          <thead>
-            <tr class="text-center bg-gray-100 border border-slate-700">
-              <th class="p-4 justify-center">Trans Id</th>
-              <th class="p-4 justify-center">Order</th>
-              <th class="p-4 justify-center">Product</th>
-              <th class="p-4 justify-center">Quantity</th>
-              <th class="p-4 justify-center">Item Price</th>
-              <th class="p-4 justify-center">Total</th>
-              <th class="p-4 justify-center">Created</th>
-              <th class="p-4 justify-center" v-if="roleBind()">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="transaction in transactions"
-              :key="transaction._id"
-              class="border border-slate-700 text-center"
-            >
-              <td class="p-2">tx{{ transaction._id }}</td>
-              <td class="p-2">#{{ transaction.order }}</td>
-              <td class="p-2">
-                {{ transaction.products.map((el) => showProduct(el.productId).name).join(' - ') }}
-              </td>
-              <td class="p-2">{{ transaction.products.map((el) => el.quantity).join(' - ') }}</td>
-              <td class="p-2">
-                {{ transaction.products.map((el) => showProduct(el.productId).price).join(' - ') }}
-                /-
-              </td>
-              <td class="p-2">{{ transaction.total }} /-</td>
-              <td class="p-2">
-                {{ timeCon(transaction.createdAt) }}
-              </td>
-              <td class="p-2 justify-between flex" v-if="roleBind()">
-                <button
-                  @click="editTransaction(transaction)"
-                  class="bg-blue-500 text-white px-2 py-2 rounded m-1"
-                >
-                  <PencilSquareIcon class="size-6 text-white" />
-                </button>
-                <button
-                  @click="deleteTransaction(transaction._id)"
-                  class="bg-red-500 text-white p-2 rounded m-1"
-                >
-                  <TrashIcon class="size-6 text-white" />
-                </button>
-                <button
-                  @click="printVoucher(transaction)"
-                  class="bg-green-500 text-white px-2 py-2 rounded block m-1"
-                >
-                  PDF
-                </button>
-                <button
-                  @click="printExcel(transaction)"
-                  class="bg-green-500 text-white px-2 py-2 rounded block m-1"
-                >
-                  Exel
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <td class="p-2">{{ transaction.total }} /-</td>
+                <td class="p-2">
+                  {{ timeCon(transaction.createdAt) }}
+                </td>
+                <td class="p-2 justify-between flex" v-if="roleBind()">
+                  <button
+                    @click="editTransaction(transaction)"
+                    class="bg-blue-500 text-white px-2 py-2 rounded m-1"
+                  >
+                    <PencilSquareIcon class="size-6 text-white" />
+                  </button>
+                  <button
+                    @click="deleteTransaction(transaction._id)"
+                    class="bg-red-500 text-white p-2 rounded m-1"
+                  >
+                    <TrashIcon class="size-6 text-white" />
+                  </button>
+                  <button
+                    @click="printVoucher(transaction)"
+                    class="bg-green-500 text-white px-2 py-2 rounded block m-1"
+                  >
+                    PDF
+                  </button>
+                  <button
+                    @click="printExcel(transaction)"
+                    class="bg-green-500 text-white px-2 py-2 rounded block m-1"
+                  >
+                    Exel
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div v-else class="inset-0 flex items-center z-50 justify-center">
           <l-grid size="80" speed="2" color="purple"></l-grid>
@@ -373,13 +372,6 @@ const printExcel = (transaction) => {
 //   XLSX.writeFile(wb, `Transaction_${transaction._id}.xlsx`) // File named with transaction ID
 // }
 
-const showCompany = (Id) => {
-  if (companies.value) {
-    // return companies.value.filter((el) => el._id == Id)[0]
-  } else {
-    return 'Company not found'
-  }
-}
 const showProduct = (Id) => {
   if (products.value) {
     const product = products.value.find((el) => el._id === Id)

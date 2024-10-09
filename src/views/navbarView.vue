@@ -42,7 +42,10 @@ watch(
 
 watch(
   () => useAuthStore().logged,
-  () => fetchUser()
+  (newVal) => {
+    isSidebarOpen.value = newVal
+    fetchUser()
+  }
 )
 
 const roleBind = () => {
@@ -52,9 +55,8 @@ const roleBind = () => {
 
 <template>
   <SideBar :isOpen="isSidebarOpen" class="hidden sm:block" @closeSidebar="toggleSidebar" />
-
   <nav
-    class="max-h-15 mt-0 fixed w-full top-0 z-10"
+    class="max-h-15 mt-0 fixed w-full top-0 z-20"
     :class="
       roleBind()
         ? 'bg-gradient-to-r from-blue-800 to-blue-400'
@@ -91,7 +93,7 @@ const roleBind = () => {
         <!-- User profile -->
         <div v-if="authStore.logged" class="right-0 absolute grid grid-cols-4 mt-2 gap-1">
           <h1
-            class="relative col-span-3 mt-3 text-right text-sm sm:text-base md:text-lg font-medium text-white"
+            class="relative col-span-3 mt-3 text-right text-md sm:text-base md:text-lg font-medium text-white"
           >
             Hello {{ user ? user.username : 'User' }}, Welcome!
           </h1>

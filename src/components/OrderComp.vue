@@ -121,8 +121,8 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/authStore'
-import { ArrowDown, ArrowDown01, ArrowUp, ArrowUpFromDot, ArrowUpLeft } from 'lucide-vue-next'
-import { onMounted, onUpdated, reactive, ref, watch } from 'vue'
+import { ArrowDown } from 'lucide-vue-next'
+import { onMounted, reactive, ref, watch } from 'vue'
 
 const props = defineProps(['order', 'product', 'store'])
 const products = ref([]) // Correcting to make 'products' reactive
@@ -178,7 +178,7 @@ const filterProduct = (id) => {
 }
 
 watch(orderData, () => {
-  const tablePrice = orderData.products.map((val, arr) => {
+  const tablePrice = orderData.products.map((val) => {
     return filterProduct(val.productId).price * val.quantity
   })
   if (tablePrice[0]) orderData.price = tablePrice.reduce((partialSum, a) => partialSum + a, 0)

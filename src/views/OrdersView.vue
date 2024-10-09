@@ -7,18 +7,18 @@
     >
       Orders ({{ orders.length }})
     </h1>
-    <h4 class="text-xl font-bold text-white text-center mb-6">
+    <h4 class="sm:text-xl font-bold text-white text-center mb-6">
       Completed: {{ authStore.allOrders.filter((el) => el.status == 'completed').length }} -
       Pending: {{ authStore.allOrders.filter((el) => el.status == 'pending').length }} - Canceled:
       {{ authStore.allOrders.filter((el) => el.status == 'canceled').length }}
     </h4>
     <div v-if="!loading">
       <div class="flex place-content-center">
-        <div class="text-xl font-bold text-white text-center mb-6 mr-6">
+        <div class="sm:text-xl font-bold text-white text-center mb-6 mr-6">
           <input type="checkbox" class="h-5 w-5 m-2" id="checkbox" v-model="showPending" />
           <label for="checkbox">Show only pending </label>
         </div>
-        <div class="text-xl font-bold text-white text-center mb-6">
+        <div class="sm:text-xl font-bold text-white text-center mb-6">
           <input type="checkbox" class="h-5 w-5 m-2" id="checkbox" v-model="showCompleted" />
           <label for="checkbox">Show only completed</label>
         </div>
@@ -46,7 +46,7 @@
               <h2 class="font-bold text-xl">Store Details:</h2>
               <p class="text-gray-600">Store Name: {{ filterStore(order.userId).storeName }}</p>
               <p class="text-gray-600">
-                Delivery Address: {{ filterStore(order.userId).storeAddress }}
+                Store Address: {{ filterStore(order.userId).storeAddress }}
               </p>
               <p class="text-gray-600">
                 Store proprietor: {{ filterStore(order.userId).storeManager }}
@@ -56,13 +56,14 @@
               <!-- <p class="text-gray-600">Pack Size: {{ filterProduct(order.productId).packSize }}</p>
             <p class="text-gray-600">Product MRP: {{ filterProduct(order.productId).price }}</p> -->
             </div>
-            <div class="mt-5">
+            <div class="mt-5 w-1/4">
               <p class="text-gray-600">
                 Total bill: <strong>৳ {{ order.price }}/-</strong>
               </p>
               <p class="text-gray-600">
-                Payment status: <strong>৳ {{ order.payment }}</strong>
+                Payment status: <strong>{{ order.payment }}</strong>
               </p>
+              <p class="text-gray-600"><strong>Delivery Address:</strong> {{ order.address }}</p>
             </div>
             <div class="space-x-2 grid grid-cols-2">
               <button

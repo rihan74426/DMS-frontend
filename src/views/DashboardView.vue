@@ -61,7 +61,6 @@ onMounted(async () => {
   await authStore.fetchProducts()
   await authStore.fetchTransactions()
   await authStore.fetchAllOrders()
-  console.log(authStore.allOrders.length)
   if (authStore.companies) {
     const length = authStore.companies.value.length
     data.totalCompanies = length

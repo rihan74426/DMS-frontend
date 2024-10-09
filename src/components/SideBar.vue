@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-64 h-screen text-white fixed shadow-lg pt-20 z-1"
+    class="w-64 h-screen text-white fixed shadow-lg pt-20 z-10"
     v-if="logged && roleBind()"
     :class="
       roleBind()
@@ -42,7 +42,6 @@ import {
   PyramidIcon,
   TerminalSquareIcon,
   LogOutIcon,
-  StoreIcon,
   ListCheck
 } from 'lucide-vue-next'
 
@@ -54,7 +53,7 @@ const navItems = ref([
   { name: 'Companies', path: '/companies', icon: CompassIcon },
   { name: 'Products', path: '/products', icon: PyramidIcon },
   { name: 'Transactions', path: '/transactions', icon: TerminalSquareIcon },
-  { name: 'My Store', path: '/stores', icon: StoreIcon } // My Store item to be removed for admin
+  { name: 'Orders', path: '/orders', icon: ListCheck }
 ])
 
 const roleBind = () => {
@@ -66,9 +65,6 @@ onBeforeMount(async () => {
 
   if (roleBind()) {
     // Add the "Orders" item for admins
-    const newItem = { name: 'Orders', path: '/orders', icon: ListCheck }
-    navItems.value.splice(2, 0, newItem) // Ensure reactivity with `.value`
-
     // Remove the "My Store" item (based on path or name) for admins
     const storeIndex = navItems.value.findIndex((item) => item.name === 'My Store')
     if (storeIndex !== -1) {

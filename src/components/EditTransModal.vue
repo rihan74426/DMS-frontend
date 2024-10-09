@@ -1,21 +1,19 @@
 <template>
   <div v-if="showModal" class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-1/2 overflow-auto mb-5 mt-5">
+    <div class="bg-white p-8 rounded-lg shadow-lg sm:w-1/2 overflow-auto mb-5 m-5">
       <h2 class="text-xl font-semibold mb-4">
         {{ isEditMode ? 'Edit Transaction' : 'Add Transaction' }}
       </h2>
-
+      <p>Id: {{ transactionData._id }}</p>
       <!-- Company Selection -->
-      <label class="block mb-2">Select Company</label>
-      <select v-model="transaction.companyId" class="w-full mb-4 p-2 border rounded">
-        <option v-for="company in companies" :key="company._id" :value="company._id">
-          {{ company.name }}
-        </option>
-      </select>
+      <label class="block mb-2">Client:</label>
+      <input type="text" v-model="transaction.client" class="w-full mb-4 p-2 border rounded" />
+      <label class="block mb-2">Order:</label>
+      <input type="text" v-model="transaction.order" class="w-full mb-4 p-2 border rounded" />
 
       <!-- Product Selection -->
       <label class="block mb-2">Select Product</label>
-      <select v-model="transaction.productId" class="w-full mb-4 p-2 border rounded">
+      <select v-model="transaction.products" class="w-full mb-4 p-2 border rounded">
         <option v-for="product in products" :key="product._id" :value="product._id">
           {{ product.name }}
         </option>
@@ -23,25 +21,24 @@
 
       <!-- Quantity -->
       <label class="block mb-2">Quantity</label>
-      <input type="number" v-model="transaction.quantity" class="w-full mb-4 p-2 border rounded" />
+      <input
+        type="number"
+        v-model="transaction.products[0].quantity"
+        class="w-full mb-4 p-2 border rounded"
+      />
 
       <!-- Price -->
-      <label class="block mb-2">Price</label>
-      <input type="number" v-model="transaction.price" class="w-full mb-4 p-2 border rounded" />
+      <label class="block mb-2">Total</label>
+      <input type="number" v-model="transaction.total" class="w-full mb-4 p-2 border rounded" />
 
       <!-- Person -->
-      <label class="block mb-2">Transaction with</label>
+      <label class="block mb-2">Status</label>
       <input
         type="text"
-        v-model="transaction.person"
+        v-model="transaction.status"
         class="w-full mb-4 p-2 border rounded"
         placeholder="ext: Md Irfan Uddin"
       />
-
-      <!-- Total -->
-      <p class="mb-4 font-bold">
-        Total: {{ transactionTotal || 0 }} <span class="font-bold text-xl">৳</span>
-      </p>
 
       <!-- Actions -->
       <div class="flex justify-end">
@@ -63,11 +60,11 @@ const props = defineProps(['showModal', 'isEditMode', 'transactionData', 'compan
 const emit = defineEmits(['close', 'save'])
 
 const transaction = ref({
-  companyId: '',
-  productId: '',
-  quantity: 1,
-  price: 0,
-  person: ''
+  client: props.transactionData ? props.transactionData.client : '',
+  order: props.transactionData ? props.transactionData.order : '',
+  status: props.transactionData ? props.transactionData.status : 'pending',
+  products: props.transactionData ? props.transactionData.products : [],
+  total: props.transactionData ? props.transactionData.total : 0
 })
 
 const transactionTotal = computed(() => transaction.value.quantity * transaction.value.price)

@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen container mx-auto p-4 pt-20">
-    <div class="place-content-center" :class="{ 'ml-40': roleBind() }">
+    <div class="place-content-center" :class="{ 'sm:ml-40': roleBind() }">
       <h1 class="text-2xl text-center font-bold mb-4 text-white block mt-10 mr-20">
         {{ roleBind() ? 'Admin' : 'User' }} Profile
       </h1>
       <div class="place-content-center">
-        <div class="grid grid-cols-2 gap-4 mb-4 ml-40">
+        <div class="grid grid-cols-2 gap-4 mb-4 sm:ml-40">
           <div>
             <img :src="profileImagePreview" class="m-4 w-48 h-48 rounded-full object-cover" />
             <label
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div v-if="showModal" class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-      <div class="bg-white p-4 rounded shadow-md w-1/2 overflow-auto mb-5 mt-5">
+      <div class="bg-white p-4 rounded shadow-md sm:w-1/2 overflow-auto mb-5 m-5">
         <h2 class="text-2xl font-bold mb-4 absolute block ml-10">Profile Update</h2>
 
         <form v-if="!loading" @submit.prevent="updateProfile">
