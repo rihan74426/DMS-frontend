@@ -178,7 +178,6 @@ const handleSaveTransaction = async (transactionData) => {
     try {
       const response = await axios.post('http://localhost:5000/api/transactions', transactionData)
       transactions.value.push(response.data)
-      console.log(response.data)
       modalTitle.value = 'Success'
       modalMessage.value = 'Transaction added successfully!'
       showResModal.value = true
@@ -392,7 +391,6 @@ onMounted(async () => {
   }
   companies.value = authStore.companies.value
   products.value = authStore.products.value
-  console.log(transactions.value)
 })
 
 onUpdated(() => {

@@ -165,7 +165,6 @@ onMounted(async () => {
       profileData.phone = user.phone
       profileData.profileImage = user.profileImage
     }
-    console.log(user)
 
     profileImagePreview.value = `http://localhost:5000/${profileImageUrl.value}`
   } catch (err) {
@@ -214,7 +213,6 @@ const updateProfile = async () => {
         Authorization: `Bearer ${token}` // Bearer token for authentication
       }
     })
-    console.log(formData)
     // Update the local storage with the new username if updated
     localStorage.setItem('username', response.data.username) // Update local storage with the new username
     authStore.userUpdated = true

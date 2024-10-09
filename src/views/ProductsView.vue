@@ -268,7 +268,6 @@ const saveProduct = async (product) => {
       loading.value = true
       const newProduct = await axios.post('http://localhost:5000/api/products', product)
 
-      console.log(product)
       products.value.push(newProduct)
       showModal.value = true
       modalTitle.value = 'Success'
@@ -297,15 +296,10 @@ const filteredProducts = computed(() =>
   )
 )
 watch(searchQuery, () => {
-  console.log(filteredProducts.value)
   authStore.products.value = filteredProducts.value
 })
 
 // refreshing the product after every actions
-onUpdated(() => {
-  authStore.fetchProducts()
-  console.log('updated')
-})
 </script>
 
 <style scoped>

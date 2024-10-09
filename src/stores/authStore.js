@@ -25,9 +25,7 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('email', data.email)
         localStorage.setItem('username', data.username)
         axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
-        console.log('Login succeed:', data)
         this.logged = true
-        console.log('Logged changed to', this.logged)
       } catch (error) {
         console.log('Login failed: ', error)
       }
@@ -40,7 +38,6 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('email')
       delete axios.defaults.headers.common['Authorization']
       this.logged = false
-      console.log('Logged changed to', this.logged)
     },
     async fetchUser() {
       if (this.token) {

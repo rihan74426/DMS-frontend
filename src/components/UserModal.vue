@@ -76,7 +76,6 @@ const emit = defineEmits('update')
 
 function updateUser() {
   emit('update', user.value)
-  console.log('emit working')
 }
 </script>
 
