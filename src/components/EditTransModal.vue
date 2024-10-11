@@ -4,7 +4,7 @@
       <h2 class="text-xl font-semibold mb-4">
         {{ isEditMode ? 'Edit Transaction' : 'Add Transaction' }}
       </h2>
-      <p>Id: {{ transactionData._id }}</p>
+      <p>Id: {{ transactionData ? transactionData._id : '' }}</p>
       <!-- Company Selection -->
       <label class="block mb-2">Client:</label>
       <input type="text" v-model="transaction.client" class="w-full mb-4 p-2 border rounded" />
@@ -21,11 +21,7 @@
 
       <!-- Quantity -->
       <label class="block mb-2">Quantity</label>
-      <input
-        type="number"
-        v-model="transaction.products[0].quantity"
-        class="w-full mb-4 p-2 border rounded"
-      />
+      <input type="number" v-model="transaction.products" class="w-full mb-4 p-2 border rounded" />
 
       <!-- Price -->
       <label class="block mb-2">Total</label>
@@ -54,7 +50,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 
 const props = defineProps(['showModal', 'isEditMode', 'transactionData', 'companies', 'products'])
 const emit = defineEmits(['close', 'save'])
@@ -66,8 +62,6 @@ const transaction = ref({
   products: props.transactionData ? props.transactionData.products : [],
   total: props.transactionData ? props.transactionData.total : 0
 })
-
-const transactionTotal = computed(() => transaction.value.quantity * transaction.value.price)
 
 watch(
   () => props.transactionData,

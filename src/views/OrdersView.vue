@@ -56,7 +56,7 @@
               <!-- <p class="text-gray-600">Pack Size: {{ filterProduct(order.productId).packSize }}</p>
             <p class="text-gray-600">Product MRP: {{ filterProduct(order.productId).price }}</p> -->
             </div>
-            <div class="mt-5 w-1/4">
+            <div class="mt-5 sm:w-1/4">
               <p class="text-gray-600">
                 Total bill: <strong>৳ {{ order.price }}/-</strong>
               </p>
@@ -65,15 +65,15 @@
               </p>
               <p class="text-gray-600"><strong>Delivery Address:</strong> {{ order.address }}</p>
             </div>
-            <div class="space-x-2 grid grid-cols-2">
+            <div class="grid grid-cols-2 sm:w-2/6">
               <button
-                class="bg-blue-500 m-2 text-white p-2 rounded-md hover:bg-blue-600"
+                class="bg-blue-500 m-1 text-white p-2 rounded-md hover:bg-blue-600"
                 @click="viewOrder(order)"
               >
                 View
               </button>
               <button
-                class="bg-yellow-500 m-2 text-white p-2 rounded-md hover:bg-yellow-600"
+                class="bg-yellow-500 m-1 text-white p-2 rounded-md hover:bg-yellow-600"
                 @click="
                   openOrderModal({ ...order, storeName: filterStore(order.userId).storeName })
                 "
@@ -81,30 +81,30 @@
                 Edit
               </button>
               <button
-                class="bg-red-500 m-2 text-white p-2 rounded-md hover:bg-red-600"
+                class="bg-red-500 m-1 text-white p-2 rounded-md hover:bg-red-600"
                 @click="deleteOrder(order._id)"
               >
                 Delete
               </button>
               <button
-                class="bg-green-500 m-2 text-white p-2 rounded-md hover:bg-green-600"
+                class="bg-green-500 m-1 text-white p-2 rounded-md hover:bg-green-600"
                 @click="generatePDF(filterStore(order.userId), order, authStore.user)"
               >
                 Print Invoice
               </button>
               <button
                 v-if="order.status !== 'canceled'"
-                class="bg-green-500 m-2 text-white p-2 rounded-md hover:bg-green-600"
+                class="bg-green-500 m-1 text-white p-2 rounded-md hover:bg-green-600"
                 @click="markPaid(order, order.payment == 'Paid' ? 'Unpaid' : 'Paid')"
               >
                 Mark {{ order.payment == 'Paid' ? 'unpaid' : 'paid' }}
               </button>
               <button
                 v-if="order.status !== 'canceled'"
-                class="bg-green-500 text-white p-2 m-2 rounded-md hover:bg-green-600"
+                class="bg-green-500 text-white p-2 m-1 rounded-md hover:bg-green-600"
                 @click="markComplete(order, order.status == 'pending' ? 'completed' : 'pending')"
               >
-                Mark {{ order.status == 'pending' ? 'completed' : 'pending' }}
+                Mark {{ order.status == 'pending' ? 'complete' : 'pending' }}
               </button>
             </div>
           </div>
@@ -427,8 +427,11 @@ function generatePDF(store, order, user) {
     return [
       orderItem.name, // Product name
       `${productItem.quantity} pcs`, // Quantity
-      `${orderItem.packSize}`, // Pack size
-      `${orderItem.group}`, // Pack size
+      `${orderItem.packSize}`,
+      `${orderItem.group}`,
+      `${orderItem.sdp}`,
+      `${orderItem.dp}`,
+      `${orderItem.tp}`,
       `${orderItem.price.toFixed(2)}/- tk`, // Price per unit
       `${(orderItem.price * productItem.quantity).toFixed(2)}/- tk` // Total for that product
     ]
@@ -436,8 +439,8 @@ function generatePDF(store, order, user) {
 
   // Generate the product table with multiple products
   doc.autoTable({
-    startY: 90, // Position after header content
-    head: [['Product', 'Quantity', 'Pack Size', 'group', 'MRP', 'Total']],
+    startY: 100, // Position after header content
+    head: [['Product', 'Quantity', 'Pack Size', 'Group', 'SDP', 'DP', 'TP', 'MRP', 'Total']],
     body: productsData, // 2D array containing product details
     styles: {
       textColor: [34, 34, 34] // White text color for table content
@@ -456,7 +459,7 @@ function generatePDF(store, order, user) {
 
   // Display total at the bottom of the table
   doc.setFontSize(12)
-  doc.text(`Total: ${totalAmount.toFixed(2)}/- tk`, 150, doc.lastAutoTable.finalY + 10)
+  doc.text(`Total Bill: ${totalAmount.toFixed(2)}/- tk`, 150, doc.lastAutoTable.finalY + 20)
 
   // Save the PDF
   doc.save(`Order_${order.invoice}.pdf`)

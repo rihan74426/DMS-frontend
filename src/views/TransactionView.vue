@@ -34,7 +34,24 @@
               >
                 <td class="p-2">tx{{ transaction._id }}</td>
                 <td class="p-2">#{{ transaction.order }}</td>
-                <td class="p-2">{{ transaction.status }}</td>
+                <td class="p-2">
+                  {{ transaction.status }}
+                  <button
+                    :class="
+                      transaction.status == 'pending'
+                        ? 'bg-green-500 p-1 text-white'
+                        : 'bg-red-500 p-1 text-white'
+                    "
+                    @click="
+                      markTransaction({
+                        ...transaction,
+                        status: transaction.status == 'pending' ? 'completed' : 'pending'
+                      })
+                    "
+                  >
+                    Mark {{ transaction.status == 'pending' ? 'comp' : 'pend' }}
+                  </button>
+                </td>
                 <td class="p-2">
                   {{ transaction.products.map((el) => showProduct(el.productId).name).join(' + ') }}
                 </td>
@@ -167,7 +184,7 @@ const handleSaveTransaction = async (transactionData) => {
     } catch (error) {
       console.log('error updating data', error)
       modalTitle.value = 'Failed'
-      modalMessage.value = 'Failed to update the product!'
+      modalMessage.value = 'Failed to update the transaction!'
       showResModal.value = true
     } finally {
       loading.value = false
@@ -190,6 +207,25 @@ const handleSaveTransaction = async (transactionData) => {
       showModal.value = false
       authStore.fetchTransactions()
     }
+  }
+}
+const markTransaction = async (transaction) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:5000/api/transactions/${transaction._id}`,
+      transaction
+    )
+    const index = transactions.value.findIndex((t) => t._id === transaction._id)
+    transactions.value[index] = response.data
+    console.log(index)
+    modalTitle.value = 'Success'
+    modalMessage.value = `Transaction marked as ${response.data.status}!`
+    showResModal.value = true
+  } catch (error) {
+    console.log('error updating data', error)
+    modalTitle.value = 'Failed'
+    modalMessage.value = 'Failed to mark the transaction!'
+    showResModal.value = true
   }
 }
 
@@ -226,14 +262,6 @@ const printVoucher = (transaction) => {
     align: 'center'
   })
 
-  // Add Title - "Distributor Management System"
-  // doc.setFontSize(22)
-  // doc.setTextColor(titleColor)
-  // doc.setFont('helvetica', 'bold')
-  // doc.text('Distributor Management System', doc.internal.pageSize.getWidth() / 2, 20, {
-  //   align: 'center'
-  // })
-
   // Add Voucher Creation Date and Transaction Creation Date
   doc.setFontSize(12)
   doc.setTextColor(subHeaderColor[0], subHeaderColor[1], subHeaderColor[2])
@@ -255,7 +283,7 @@ const printVoucher = (transaction) => {
   doc.setTextColor(headerColor[0], headerColor[1], headerColor[2])
   doc.setFont('helvetica', 'bold')
   doc.text(`Order Invoice: #${transaction.order}`, 20, 70)
-  doc.text(`Dealing with: ${transaction.client}`, 20, 80)
+  doc.text(`Dealing with: ${findUser(transaction.client).username}`, 20, 80)
 
   // Product Details Table
   const productsData = transaction.products.map((productItem) => {
