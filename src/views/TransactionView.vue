@@ -39,8 +39,8 @@
                   <button
                     :class="
                       transaction.status == 'pending'
-                        ? 'bg-green-500 p-1 text-white'
-                        : 'bg-red-500 p-1 text-white'
+                        ? 'bg-red-500 p-1 text-white'
+                        : 'bg-green-500 p-1 text-white'
                     "
                     @click="
                       markTransaction({

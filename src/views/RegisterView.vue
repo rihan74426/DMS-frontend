@@ -2,6 +2,9 @@
   <div class="min-h-screen flex items-center justify-center pt-10">
     <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
       <h2 class="text-2xl font-bold mb-6 text-gray-800">Register</h2>
+      <p class="mb-6 text-gray-800">
+        After clicking the register button, you'll be automatically logged in.
+      </p>
       <form @submit.prevent="register">
         <div class="mb-4">
           <label class="block text-gray-700" for="name">Name</label>

@@ -2,8 +2,13 @@
   <div>
     <div v-if="!showReg" class="min-h-screen flex items-center justify-center">
       <transition name="login">
-        <div v-if="trans" class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <div v-if="trans" class="bg-white p-8 mt-10 rounded-lg shadow-lg max-w-md w-full">
           <h2 class="text-2xl font-bold mb-6 text-gray-800">Login</h2>
+          <p class="text-gray-800">
+            * For logging as an Admin try email: rihan@gmail.com and password: rihan. You can then
+            log out and log in again as an User to see the difference.
+          </p>
+          <p class="mb-6 text-gray-800">* For testing user experience try registering simply</p>
           <form @submit.prevent="handleLogin">
             <div class="mb-4">
               <label class="block text-gray-700" for="email">Email</label>
