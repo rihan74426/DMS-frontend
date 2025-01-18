@@ -3,6 +3,7 @@ import navbarView from './views/navbarView.vue'
 import { onMounted } from 'vue'
 import { useAuthStore } from './stores/authStore'
 import LoginView from './views/LoginView.vue'
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 
 const authStore = useAuthStore()
 
