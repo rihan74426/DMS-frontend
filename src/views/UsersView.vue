@@ -10,16 +10,16 @@
         />
       </div>
       <!-- Users Table -->
-      <div class="overflow-x-auto sm:ml-20">
-        <table class="min-w-full bg-white border border-gray-200">
+      <div class="sm:ml-20">
+        <table class="ml-5 bg-white border border-gray-200">
           <thead>
             <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">
-              <th class="py-3 px-6 text-left">Name</th>
-              <th class="py-3 px-6 text-left">Email</th>
-              <th class="py-3 px-6 text-left">Phone</th>
-              <th class="py-3 px-6 text-center">Address</th>
-              <th class="py-3 px-6 text-center">Role</th>
-              <th class="py-3 px-6 text-center" v-if="roleBind()">Actions</th>
+              <th class="py-3 px-3 text-left">Name</th>
+              <th class="py-3 px-3 text-left">Email</th>
+              <th class="py-3 px-3 text-left">Phone</th>
+              <th class="py-3 px-3 text-center">Address</th>
+              <th class="py-3 px-3 text-center">Role</th>
+              <th class="py-3 px-3 text-center" v-if="roleBind()">Actions</th>
             </tr>
           </thead>
           <tbody class="text-dark font-light">
@@ -28,12 +28,12 @@
               :key="user._id"
               class="border-b border-gray-200 hover:bg-gray-100"
             >
-              <td class="py-3 px-6 text-left">{{ user.username }}</td>
-              <td class="py-3 px-6 text-left">{{ user.email }}</td>
-              <td class="py-3 px-6 text-left">{{ user.phone }}</td>
-              <td class="py-3 px-6 text-left">{{ user.address }}</td>
-              <td class="py-3 px-6 text-center">{{ user.role }}</td>
-              <td class="py-3 px-6 text-center" v-if="roleBind()">
+              <td class="py-3 px-3 text-left">{{ user.username }}</td>
+              <td class="py-3 px-3 text-left">{{ user.email }}</td>
+              <td class="py-3 px-3 text-left">{{ user.phone }}</td>
+              <td class="py-3 px-3 w-52 text-left">{{ user.address }}</td>
+              <td class="py-3 px-3 text-center">{{ user.role }}</td>
+              <td class="py-3 px-3 text-center" v-if="roleBind()">
                 <button
                   @click="editUser(user)"
                   class="bg-blue-500 text-white px-4 py-2 rounded mr-2"
