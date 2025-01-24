@@ -156,9 +156,7 @@ onMounted(async () => {
   orderData.userId = authStore.user._id
   orderData.storeName = authStore.store.storeName
   // Generate the invoice number once userId is available
-  !props.order || !props.product
-    ? (orderData.invoice = generateInvoiceNumber(orderData.userId))
-    : (orderData.invoice = props.order.invoice)
+  if (!props.order) orderData.invoice = generateInvoiceNumber(orderData.userId)
 
   if (props.order) {
     orderData.value = props.order
