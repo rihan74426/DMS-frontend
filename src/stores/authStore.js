@@ -110,7 +110,7 @@ export const useAuthStore = defineStore('auth', {
     async fetchAllOrders() {
       try {
         const response = await axios.get(
-          'https://dms-backend-server2.vercel.app//api/auth/ordersAll'
+          'https://dms-backend-server2.vercel.app/api/auth/ordersAll'
         )
         this.allOrders = response.data
       } catch (err) {

@@ -29,7 +29,9 @@ const fetchUser = async () => {
     user.value = data.find((user) => user.email.includes(userMail))
 
     if (user.value) profileImagePreview.value = user.value.profileImage
-    else profileImagePreview.value = 'https://dms-backend-server2.vercel.app/uploads/default.png'
+    else
+      profileImagePreview.value =
+        'https://dms-backend-server2.vercel.app/uploads/profile-pictures/default.png'
   } catch (error) {
     console.error('Error fetching data:', error)
   }
