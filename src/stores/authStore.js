@@ -75,7 +75,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchTransactions() {
       try {
-        const response = await axios.get('https://dms-backend-server2.vercel.app/transactions')
+        const response = await axios.get('https://dms-backend-server2.vercel.app/api/transactions')
         this.transactions.value = response.data
       } catch (error) {
         console.error('Error fetching transactions:', error)
@@ -83,7 +83,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchStore() {
       try {
-        const response = await axios.get('https://dms-backend-server2.vercel.app/auth/store', {
+        const response = await axios.get('https://dms-backend-server2.vercel.app/api/auth/store', {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.token}`
@@ -96,7 +96,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchOrders() {
       try {
-        const response = await axios.get('https://dms-backend-server2.vercel.app/auth/orders', {
+        const response = await axios.get('https://dms-backend-server2.vercel.app/api/auth/orders', {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.token}`
@@ -109,7 +109,9 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchAllOrders() {
       try {
-        const response = await axios.get('https://dms-backend-server2.vercel.app/auth/ordersAll')
+        const response = await axios.get(
+          'https://dms-backend-server2.vercel.app//api/auth/ordersAll'
+        )
         this.allOrders = response.data
       } catch (err) {
         console.log('Error fetching Store:', err)
@@ -117,7 +119,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchAllStores() {
       try {
-        const response = await axios.get('https://dms-backend-server2.vercel.app/auth/stores')
+        const response = await axios.get('https://dms-backend-server2.vercel.app/api/auth/stores')
         this.allStores = response.data
       } catch (err) {
         console.log('Error fetching Store:', err)
