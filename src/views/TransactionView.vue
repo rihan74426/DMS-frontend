@@ -175,7 +175,7 @@ const handleSaveTransaction = async (transactionData) => {
     try {
       loading.value = true
       await axios.put(
-        `http://localhost:5000/api/transactions/${transactionData._id}`,
+        `https://dms-backend-server2.vercel.app/api/transactions/${transactionData._id}`,
         transactionData
       )
       modalTitle.value = 'Success'
@@ -193,7 +193,10 @@ const handleSaveTransaction = async (transactionData) => {
     }
   } else {
     try {
-      const response = await axios.post('http://localhost:5000/api/transactions', transactionData)
+      const response = await axios.post(
+        'https://dms-backend-server2.vercel.app/api/transactions',
+        transactionData
+      )
       transactions.value.push(response.data)
       modalTitle.value = 'Success'
       modalMessage.value = 'Transaction added successfully!'
@@ -212,7 +215,7 @@ const handleSaveTransaction = async (transactionData) => {
 const markTransaction = async (transaction) => {
   try {
     const response = await axios.put(
-      `http://localhost:5000/api/transactions/${transaction._id}`,
+      `https://dms-backend-server2.vercel.app/api/transactions/${transaction._id}`,
       transaction
     )
     const index = transactions.value.findIndex((t) => t._id === transaction._id)
@@ -232,7 +235,7 @@ const markTransaction = async (transaction) => {
 const deleteTransaction = async (id) => {
   if (confirm(`Are you sure you want to delete this item from transaction list?`)) {
     try {
-      await axios.delete(`http://localhost:5000/api/transactions/${id}`)
+      await axios.delete(`https://dms-backend-server2.vercel.app/api/transactions/${id}`)
       modalTitle.value = 'Success'
       modalMessage.value = 'Transaction deleted successfully!'
       showResModal.value = true

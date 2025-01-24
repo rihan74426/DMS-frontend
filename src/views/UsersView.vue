@@ -115,7 +115,7 @@ onUpdated(async () => {
 const fetchUser = async () => {
   try {
     loading.value = true // Show loading spinner
-    const response = await axios.get('http://localhost:5000/api/auth/profile')
+    const response = await axios.get('https://dms-backend-server2.vercel.app/api/auth/profile')
     users.value = response.data
   } catch (error) {
     console.error('Error fetching data:', error)
@@ -142,7 +142,7 @@ watch(searchQuery, () => {
 async function deleteUser(userId) {
   if (confirm('Are you serious? You want to delete a user!')) {
     try {
-      await axios.delete(`http://localhost:5000/api/auth/profile/${userId}`)
+      await axios.delete(`https://dms-backend-server2.vercel.app/api/auth/profile/${userId}`)
       users.value = users.value.filter((user) => user._id !== userId)
       loading.value = true
       showResModal.value = true
@@ -162,7 +162,7 @@ async function deleteUser(userId) {
 async function updateUser(updatedUser) {
   try {
     const response = await axios.put(
-      `http://localhost:5000/api/auth/profile/${updatedUser._id}`,
+      `https://dms-backend-server2.vercel.app/api/auth/profile/${updatedUser._id}`,
       updatedUser
     )
     const index = users.value.findIndex((user) => user._id === updatedUser._id)

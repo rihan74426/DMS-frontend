@@ -24,11 +24,12 @@ onMounted(async () => {
 
 const fetchUser = async () => {
   try {
-    const { data } = await axios.get('http://localhost:5000/api/auth/profile')
+    const { data } = await axios.get('https://dms-backend-server2.vercel.app/api/auth/profile')
     const userMail = localStorage.getItem('email')
     user.value = data.find((user) => user.email.includes(userMail))
 
-    if (user.value) profileImagePreview.value = `http://localhost:5000/${user.value.profileImage}`
+    if (user.value)
+      profileImagePreview.value = `https://dms-backend-server2.vercel.app/${user.value.profileImage}`
   } catch (error) {
     console.error('Error fetching data:', error)
   }

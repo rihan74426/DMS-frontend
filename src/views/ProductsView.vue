@@ -196,7 +196,7 @@ const token = localStorage.getItem('token')
 const saveOrder = async (order) => {
   try {
     if (storeCheck() && userCheck()) {
-      await axios.post('http://localhost:5000/api/auth/orders', order, {
+      await axios.post('https://dms-backend-server2.vercel.app/api/auth/orders', order, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}` // Bearer token for authentication
@@ -225,7 +225,7 @@ const deleteProduct = async (id) => {
   ) {
     try {
       loading.value = true
-      await axios.delete(`http://localhost:5000/api/products/${id}`)
+      await axios.delete(`https://dms-backend-server2.vercel.app/api/products/${id}`)
 
       showModal.value = true
       modalTitle.value = 'Success'
@@ -246,7 +246,7 @@ const saveProduct = async (product) => {
     try {
       loading.value = true
       const updatedProduct = await axios.put(
-        `http://localhost:5000/api/products/${product._id}`,
+        `https://dms-backend-server2.vercel.app/api/products/${product._id}`,
         product
       )
       const index = products.value.findIndex({ _id: product._id })
@@ -266,7 +266,10 @@ const saveProduct = async (product) => {
   } else {
     try {
       loading.value = true
-      const newProduct = await axios.post('http://localhost:5000/api/products', product)
+      const newProduct = await axios.post(
+        'https://dms-backend-server2.vercel.app/api/products',
+        product
+      )
 
       products.value.push(newProduct)
       showModal.value = true

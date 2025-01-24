@@ -18,7 +18,10 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async login(credentials) {
       try {
-        const { data } = await axios.post('http://localhost:5000/api/auth/login', credentials)
+        const { data } = await axios.post(
+          'https://dms-backend-server2.vercel.app/api/auth/login',
+          credentials
+        )
         this.user = data.user
         this.token = data.token
         localStorage.setItem('token', data.token)
@@ -42,7 +45,9 @@ export const useAuthStore = defineStore('auth', {
     async fetchUser() {
       if (this.token) {
         try {
-          const { data } = await axios.get('http://localhost:5000/api/auth/profile')
+          const { data } = await axios.get(
+            'https://dms-backend-server2.vercel.app/api/auth/profile'
+          )
           this.users = data
           const userMail = localStorage.getItem('email')
           this.user = this.users.filter((user) => user.email.includes(userMail))[0]
@@ -54,7 +59,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchCompanies() {
       try {
-        const response = await axios.get('http://localhost:5000/api/companies')
+        const response = await axios.get('https://dms-backend-server2.vercel.app/api/companies')
         this.companies.value = response.data
       } catch (error) {
         console.error('Error fetching companies:', error)
@@ -62,7 +67,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchProducts() {
       try {
-        const response = await axios.get('http://localhost:5000/api/products')
+        const response = await axios.get('https://dms-backend-server2.vercel.app/api/products')
         this.products.value = response.data
       } catch (error) {
         console.log('error fetching data', error)
@@ -70,7 +75,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchTransactions() {
       try {
-        const response = await axios.get('http://localhost:5000/api/transactions')
+        const response = await axios.get('https://dms-backend-server2.vercel.app/transactions')
         this.transactions.value = response.data
       } catch (error) {
         console.error('Error fetching transactions:', error)
@@ -78,7 +83,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchStore() {
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/store', {
+        const response = await axios.get('https://dms-backend-server2.vercel.app/auth/store', {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.token}`
@@ -91,7 +96,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchOrders() {
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/orders', {
+        const response = await axios.get('https://dms-backend-server2.vercel.app/auth/orders', {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.token}`
@@ -104,7 +109,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchAllOrders() {
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/ordersAll')
+        const response = await axios.get('https://dms-backend-server2.vercel.app/auth/ordersAll')
         this.allOrders = response.data
       } catch (err) {
         console.log('Error fetching Store:', err)
@@ -112,7 +117,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchAllStores() {
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/stores')
+        const response = await axios.get('https://dms-backend-server2.vercel.app/auth/stores')
         this.allStores = response.data
       } catch (err) {
         console.log('Error fetching Store:', err)

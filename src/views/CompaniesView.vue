@@ -92,7 +92,7 @@ const deleteitem = async (id) => {
   if (confirm('Are you sure you want to delete this company?')) {
     try {
       loading.value = true // Show loading spinner
-      await axios.delete(`http://localhost:5000/api/companies/${id}`)
+      await axios.delete(`https://dms-backend-server2.vercel.app/api/companies/${id}`)
       console.log('Company deleted')
       modalTitle.value = 'Success'
       modalMessage.value = 'Company deleted successfully!'
@@ -126,7 +126,10 @@ const isEditing = ref(false)
 const addCompany = async (company) => {
   try {
     loading.value = true // Show loading spinner
-    const response = await axios.post('http://localhost:5000/api/companies/add', company)
+    const response = await axios.post(
+      'https://dms-backend-server2.vercel.app/api/companies/add',
+      company
+    )
     companies.value.push(company)
     console.log('Company added:', response.data)
     modalTitle.value = 'Success'
@@ -150,7 +153,7 @@ const updateCompany = async (updatedCompany) => {
       companies.value[index] = updatedCompany
       loading.value = true // Show loading spinner
       const response = await axios.put(
-        `http://localhost:5000/api/companies/${selectedCompany.value._id}`,
+        `https://dms-backend-server2.vercel.app/api/companies/${selectedCompany.value._id}`,
         updatedCompany
       )
       modalTitle.value = 'Success'

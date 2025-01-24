@@ -311,12 +311,16 @@ const token = localStorage.getItem('token')
 
 const updateStoreDetails = async (newDetails) => {
   try {
-    const newStore = await axios.put('http://localhost:5000/api/auth/store', newDetails, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}` // Bearer token for authentication
+    const newStore = await axios.put(
+      'https://dms-backend-server2.vercel.app/api/auth/store',
+      newDetails,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` // Bearer token for authentication
+        }
       }
-    })
+    )
     storeDetails.value = newStore.data
     showModal.value = true
     modalTitle.value = 'Success'
@@ -331,12 +335,15 @@ const updateStoreDetails = async (newDetails) => {
 }
 const deleteStoreProduct = async (product) => {
   try {
-    const response = await axios.delete(`http://localhost:5000/api/auth/store/${product._id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}` // Bearer token for authentication
+    const response = await axios.delete(
+      `https://dms-backend-server2.vercel.app/api/auth/store/${product._id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` // Bearer token for authentication
+        }
       }
-    })
+    )
     console.log('response:', response.data)
     const index = storeDetails.value.products.indexOf(product._id)
     storeProducts.value.splice(index, 1)
@@ -383,7 +390,10 @@ const closeOrderModal = () => {
 const saveOrder = async (order) => {
   if (order._id) {
     try {
-      const response = await axios.put(`http://localhost:5000/api/auth/orders/${order._id}`, order)
+      const response = await axios.put(
+        `https://dms-backend-server2.vercel.app/api/auth/orders/${order._id}`,
+        order
+      )
       const index = orders.value.findIndex((o) => o._id === order._id)
       orders.value[index] = response.data
       showModal.value = true
@@ -398,12 +408,16 @@ const saveOrder = async (order) => {
   } else {
     try {
       if (storeCheck() && userCheck()) {
-        const { data } = await axios.post('http://localhost:5000/api/auth/orders', order, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}` // Bearer token for authentication
+        const { data } = await axios.post(
+          'https://dms-backend-server2.vercel.app/api/auth/orders',
+          order,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}` // Bearer token for authentication
+            }
           }
-        })
+        )
         orders.value.push(data)
         showModal.value = true
         modalTitle.value = 'Success'
@@ -427,7 +441,9 @@ const deleteOrder = async (order) => {
   confirm('Are you Sure?')
   try {
     order.status = 'canceled'
-    await axios.put(`http://localhost:5000/api/auth/orders/${order._id}`, { ...order })
+    await axios.put(`https://dms-backend-server2.vercel.app/api/auth/orders/${order._id}`, {
+      ...order
+    })
 
     showModal.value = true
     modalTitle.value = 'Success'

@@ -166,7 +166,7 @@ onMounted(async () => {
       profileData.profileImage = user.profileImage
     }
 
-    profileImagePreview.value = `http://localhost:5000/${profileImageUrl.value}`
+    profileImagePreview.value = `https://dms-backend-server2.vercel.app/${profileImageUrl.value}`
   } catch (err) {
     loading.value = false
     console.log('error fetching user:', err)
@@ -207,12 +207,16 @@ const updateProfile = async () => {
     if (profileData.profileImage && profileImageChanged)
       formData.append('profileImage', profileData.profileImage)
     // Send request to the backend
-    const response = await axios.put('http://localhost:5000/api/auth/profile', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data', // Important for file upload
-        Authorization: `Bearer ${token}` // Bearer token for authentication
+    const response = await axios.put(
+      'https://dms-backend-server2.vercel.app/api/auth/profile',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Important for file upload
+          Authorization: `Bearer ${token}` // Bearer token for authentication
+        }
       }
-    })
+    )
     // Update the local storage with the new username if updated
     localStorage.setItem('username', response.data.username) // Update local storage with the new username
     authStore.userUpdated = true

@@ -87,7 +87,7 @@ const emit = defineEmits('show')
 
 const register = async () => {
   try {
-    const response = await axios.post('http://localhost:5000/api/auth/register', {
+    const response = await axios.post('https://dms-backend-server2.vercel.app/api/auth/register', {
       username: name.value,
       email: email.value,
       password: password.value
