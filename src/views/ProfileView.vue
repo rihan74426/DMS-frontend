@@ -7,7 +7,7 @@
       <div class="place-content-center">
         <div class="grid grid-cols-2 gap-4 mb-4 sm:ml-40">
           <div>
-            <img :src="profileImagePreview" class="m-4 w-48 h-48 rounded-full object-cover" />
+            <img :src="profileData.profileImage" class="m-4 w-48 h-48 rounded-full object-cover" />
             <label
               class="text-white place-content-center ml-20 font-bold text-center"
               for="profileImage"
@@ -44,7 +44,7 @@
                 >Profile Image</label
               >
               <img
-                :src="profileImagePreview"
+                :src="profileData.profileImage"
                 class="m-4 w-32 h-32 rounded-full object-cover ml-20"
               />
               <input
@@ -164,9 +164,9 @@ onMounted(async () => {
       profileData.address = user.address
       profileData.phone = user.phone
       profileData.profileImage = user.profileImage
+    } else {
+      profileData.profileImage = `https://dms-backend-server2.vercel.app/${profileImageUrl.value}`
     }
-
-    profileImagePreview.value = `https://dms-backend-server2.vercel.app/${profileImageUrl.value}`
   } catch (err) {
     loading.value = false
     console.log('error fetching user:', err)
@@ -182,7 +182,6 @@ const roleBind = () => {
   }
 }
 
-const profileImagePreview = ref('')
 // Convert the image path to a usable URL
 const profileImageUrl = computed(() => {
   return profileData.profileImage.replace(/\\/g, '/') // Replace backslashes with forward slashes
@@ -191,7 +190,6 @@ const profileImageUrl = computed(() => {
 const onFileChange = (e) => {
   const file = e.target.files[0]
   profileData.profileImage = file
-  profileImagePreview.value = URL.createObjectURL(file)
   profileImageChanged.value = true
 }
 

@@ -28,8 +28,8 @@ const fetchUser = async () => {
     const userMail = localStorage.getItem('email')
     user.value = data.find((user) => user.email.includes(userMail))
 
-    if (user.value)
-      profileImagePreview.value = `https://dms-backend-server2.vercel.app/${user.value.profileImage}`
+    if (user.value) profileImagePreview.value = user.value.profileImage
+    else profileImagePreview.value = 'https://dms-backend-server2.vercel.app/uploads/default.png'
   } catch (error) {
     console.error('Error fetching data:', error)
   }
