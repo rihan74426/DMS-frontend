@@ -310,7 +310,7 @@ const closeViewModal = () => {
 const editOrder = async (order) => {
   try {
     const response = await axios.put(
-      `https://dms-backend-server2.vercel.app/auth/orders/${order._id}`,
+      `https://dms-backend-server2.vercel.app/api/auth/orders/${order._id}`,
       order
     )
     const index = orders.value.findIndex((o) => o._id === order._id)
@@ -329,7 +329,7 @@ const markPaid = async (order, status) => {
   try {
     order.payment = status
     const response = await axios.put(
-      `https://dms-backend-server2.vercel.app/auth/orders/${order._id}`,
+      `https://dms-backend-server2.vercel.app/api/auth/orders/${order._id}`,
       order
     )
     const index = orders.value.findIndex((o) => o._id === order._id)
@@ -348,7 +348,7 @@ const markComplete = async (order, status) => {
   try {
     order.status = status
     const response = await axios.put(
-      `https://dms-backend-server2.vercel.app/auth/orders/${order._id}`,
+      `https://dms-backend-server2.vercel.app/api/auth/orders/${order._id}`,
       order
     )
     const index = orders.value.findIndex((o) => o._id === order._id)
@@ -368,7 +368,7 @@ const markComplete = async (order, status) => {
 const deleteOrder = async (id) => {
   confirm('Are you Sure?')
   try {
-    await axios.delete(`https://dms-backend-server2.vercel.app/auth/orders/${id}`)
+    await axios.delete(`https://dms-backend-server2.vercel.app/api/auth/orders/${id}`)
     orders.value = orders.value.filter((order) => order.id !== id)
     showModal.value = true
     modalTitle.value = 'Success'
