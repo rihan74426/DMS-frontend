@@ -438,21 +438,21 @@ const saveOrder = async (order) => {
 }
 
 const deleteOrder = async (order) => {
-  confirm('Are you Sure?')
-  try {
-    order.status = 'canceled'
-    await axios.put(`https://dms-backend-server2.vercel.app/api/auth/orders/${order._id}`, {
-      ...order
-    })
+  if (confirm('Are you Sure?'))
+    try {
+      order.status = 'canceled'
+      await axios.put(`https://dms-backend-server2.vercel.app/api/auth/orders/${order._id}`, {
+        ...order
+      })
 
-    showModal.value = true
-    modalTitle.value = 'Success'
-    modalMessage.value = 'Your Order has canceled'
-  } catch (error) {
-    showModal.value = true
-    modalTitle.value = 'Failure'
-    modalMessage.value = 'Failed to cancel the order!'
-  }
+      showModal.value = true
+      modalTitle.value = 'Success'
+      modalMessage.value = 'Your Order has canceled'
+    } catch (error) {
+      showModal.value = true
+      modalTitle.value = 'Failure'
+      modalMessage.value = 'Failed to cancel the order!'
+    }
 }
 </script>
 
