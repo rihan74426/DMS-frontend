@@ -170,7 +170,7 @@ onMounted(async () => {
       profileData.profileImage = user.profileImage
     }
 
-    profileImagePreview.value = `https://dms-backend-server2.vercel.app/${profileImageUrl.value}`
+    profileImagePreview.value = profileImageUrl.value
   } catch (err) {
     loading.value = false
     console.log('error fetching user:', err)

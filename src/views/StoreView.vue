@@ -160,7 +160,7 @@
 
             <div class="flex justify-end mt-4">
               <button
-                v-if="order.status !== 'canceled'"
+                v-if="order.status !== 'canceled' || order.status !== 'completed'"
                 @click="deleteOrder(order)"
                 class="ml-2 p-2 bg-red-600 text-white rounded-md overflow-hidden transform transition-all hover:scale-105 duration-100 hover:bg-red-700"
               >
