@@ -4,7 +4,7 @@ import SideBar from '@/components/SideBar.vue'
 import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
 import { LucideMenu } from 'lucide-vue-next'
-
+import { onClickOutside } from '@vueuse/core'
 import { onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 
@@ -13,9 +13,17 @@ const profileImagePreview = ref('')
 const authStore = useAuthStore()
 const isSidebarOpen = ref(false)
 
+// Create a ref for the sidebar container
+const sidebarRef = ref(null)
+
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
 }
+
+// Use VueUse's onClickOutside on the sidebar container
+onClickOutside(sidebarRef, () => {
+  isSidebarOpen.value = false
+})
 
 // Fetch user data with async/await
 onMounted(async () => {
@@ -28,10 +36,12 @@ const fetchUser = async () => {
     const userMail = localStorage.getItem('email')
     user.value = data.find((user) => user.email.includes(userMail))
 
-    if (user.value) profileImagePreview.value = user.value.profileImage
-    else
+    if (user.value) {
+      profileImagePreview.value = user.value.profileImage
+    } else {
       profileImagePreview.value =
         'https://dms-backend-server2.vercel.app/uploads/profile-pictures/default.png'
+    }
   } catch (error) {
     console.error('Error fetching data:', error)
   }
@@ -58,7 +68,11 @@ const roleBind = () => {
 </script>
 
 <template>
-  <SideBar :isOpen="isSidebarOpen" class="hidden sm:block" @closeSidebar="toggleSidebar" />
+  <!-- Sidebar container with a ref for click-outside detection -->
+  <div ref="sidebarRef" class="relative">
+    <SideBar :isOpen="isSidebarOpen" class="hidden sm:block" @closeSidebar="toggleSidebar" />
+  </div>
+
   <nav
     class="max-h-15 mt-0 fixed w-full top-0 z-20"
     :class="
@@ -69,7 +83,7 @@ const roleBind = () => {
   >
     <div class="relative max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="grid grid-cols-2 sm:grid-cols-3 relative h-16 justify-between">
-        <!-- Toggle button for smaller screens -->
+        <!-- Toggle button for smaller screens (admin only) -->
         <div v-if="roleBind()" class="sm:hidden flex items-center">
           <button
             @click="toggleSidebar"
@@ -89,7 +103,7 @@ const roleBind = () => {
           </div>
         </div>
 
-        <!-- Navigation links for larger screens -->
+        <!-- Navigation links for non-admin users -->
         <div v-if="!roleBind() && authStore.logged" class="flex text-white sm:ml-6 sm:block">
           <NavComp />
         </div>
