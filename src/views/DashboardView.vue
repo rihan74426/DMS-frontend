@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'sm:ml-60': roleBind() }">
     <h1 class="text-4xl text-white font-bold m-5">Dashboard</h1>
-    <div class="p-10 w-full bg-black">
+    <div class="p-10 w-full absolute mt-20 bg-black">
       <h1 class="text-2xl text-white font-bold">
         Welcome to -> <strong>Distribution Management System</strong>
       </h1>
@@ -33,7 +33,7 @@
         </router-link>
       </div>
     </div>
-    <div v-else>
+    <div v-else class="mt-5">
       <ProductsView />
     </div>
   </div>

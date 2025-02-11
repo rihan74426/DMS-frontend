@@ -1,6 +1,6 @@
 <template>
   <div class="container min-h-screen p-4 sm:ml-16">
-    <div class="pt-20 place-content-center flex flex-wrap" :class="{ 'sm:pl-30': roleBind() }">
+    <div class="place-content-center flex flex-wrap" :class="roleBind() ? 'sm:pl-30' : 'pt-20'">
       <h1 class="text-4xl text-white font-bold m-4">Products</h1>
       <div class="container flex place-content-center">
         <button
