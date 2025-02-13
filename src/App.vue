@@ -1,7 +1,7 @@
 <script setup>
-import NavbarView from './views/NavbarView.vue'
 import { onMounted } from 'vue'
 import { useAuthStore } from './stores/authStore'
+import NavbarView from './views/NavbarView.vue'
 
 const authStore = useAuthStore()
 

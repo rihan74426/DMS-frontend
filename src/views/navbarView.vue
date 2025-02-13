@@ -15,7 +15,7 @@ const isSidebarOpen = ref(false)
 
 // Create a ref for the sidebar container
 const sidebarRef = ref(null)
-const navbar = ref(null)
+const Navbar = ref(null)
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
@@ -27,7 +27,7 @@ onClickOutside(
   () => {
     isSidebarOpen.value = false
   },
-  { ignore: [navbar, sidebarRef] }
+  { ignore: [Navbar, sidebarRef] }
 )
 
 // Fetch user data with async/await
@@ -91,7 +91,7 @@ const roleBind = () => {
         : 'bg-gradient-to-r from-purple-500 to-blue-500'
     "
   >
-    <div ref="navbar" class="relative max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div ref="Navbar" class="relative max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="grid grid-cols-2 sm:grid-cols-3 relative h-16 justify-between">
         <!-- Toggle button for smaller screens (admin only) -->
         <div v-if="roleBind()" class="sm:hidden flex items-center">
