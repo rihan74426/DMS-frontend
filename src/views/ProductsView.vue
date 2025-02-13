@@ -1,5 +1,5 @@
 <template>
-  <div class="container min-h-screen p-4 sm:ml-16">
+  <div class="container min-h-screen p-4 sm:ml-16" :class="{ 'mt-20': !authStore.logged }">
     <div class="place-content-center flex flex-wrap" :class="roleBind() ? 'sm:pl-30' : 'pt-20'">
       <h1 class="text-4xl text-white font-bold m-4">Products</h1>
       <div class="container flex place-content-center">
@@ -68,13 +68,23 @@
               <TrashIcon class="size-6 text-white" />
             </button>
           </div>
-          <div v-else class="m-5 flex absolute justify-center text-center bottom-5 ml-16 right-5">
+          <div
+            v-else-if="authStore.logged"
+            class="m-5 flex absolute justify-center text-center bottom-5 ml-16 right-5"
+          >
             <button
               class="bg-blue-500 text-white p-5 sm:px-2 sm:py-1 rounded text-center"
               @click="orderNow(product)"
             >
               Order Now!
             </button>
+          </div>
+          <div v-else class="m-5 flex absolute justify-center text-center bottom-5 ml-16 right-5">
+            <RouterLink
+              to="/login"
+              class="bg-blue-500 text-white p-5 sm:px-2 sm:py-1 rounded text-center"
+              >Log In to Order</RouterLink
+            >
           </div>
         </div>
       </div>
@@ -138,11 +148,13 @@ const modalMessage = ref('')
 
 const authStore = useAuthStore()
 
+if (authStore.logged) {
+}
 onMounted(async () => {
   loading.value = true
   await authStore.fetchProducts()
   await authStore.fetchUser()
-  await authStore.fetchStore()
+  if (authStore.logged) await authStore.fetchStore()
   if (authStore.products) {
     products.value = authStore.products.value
     loading.value = false

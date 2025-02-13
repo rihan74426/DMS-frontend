@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'sm:ml-60': roleBind() }">
-    <h1 class="text-4xl text-white font-bold m-5">Dashboard</h1>
+    <h1 v-if="authStore.logged" class="text-4xl text-white font-bold m-5">Dashboard</h1>
     <div class="p-10 w-full absolute mt-20 bg-black">
       <h1 class="text-2xl text-white font-bold">
         Welcome to -> <strong>Distribution Management System</strong>
@@ -55,33 +55,35 @@ const data = reactive({
   orders: 0
 })
 
-onMounted(async () => {
-  await authStore.fetchCompanies()
-  await authStore.fetchUser()
-  await authStore.fetchProducts()
-  await authStore.fetchTransactions()
-  await authStore.fetchAllOrders()
-  if (authStore.companies) {
-    const length = authStore.companies.value.length
-    data.totalCompanies = length
-  }
-  if (authStore.users) {
-    const length = authStore.users.length
-    data.totalUsers = length
-  }
-  if (authStore.products) {
-    const length = authStore.products.value.length
-    data.totalProducts = length
-  }
-  if (authStore.transactions) {
-    const length = authStore.transactions.value.length
-    data.totalTransactions = length
-  }
-  if (authStore.allOrders) {
-    const length = authStore.allOrders.length
-    data.orders = length
-  }
-})
+if (authStore.logged) {
+  onMounted(async () => {
+    await authStore.fetchCompanies()
+    await authStore.fetchUser()
+    await authStore.fetchProducts()
+    await authStore.fetchTransactions()
+    await authStore.fetchAllOrders()
+    if (authStore.companies) {
+      const length = authStore.companies.value.length
+      data.totalCompanies = length
+    }
+    if (authStore.users) {
+      const length = authStore.users.length
+      data.totalUsers = length
+    }
+    if (authStore.products) {
+      const length = authStore.products.value.length
+      data.totalProducts = length
+    }
+    if (authStore.transactions) {
+      const length = authStore.transactions.value.length
+      data.totalTransactions = length
+    }
+    if (authStore.allOrders) {
+      const length = authStore.allOrders.length
+      data.orders = length
+    }
+  })
+}
 
 const roleBind = () => {
   return authStore.user && authStore.user.role === 'admin'

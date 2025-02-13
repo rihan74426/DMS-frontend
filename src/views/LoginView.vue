@@ -85,6 +85,7 @@ const modalMessage = ref('')
 
 onMounted(() => {
   trans.value = true
+  console.log("I'm in the login page")
 })
 const handleLogin = async () => {
   try {

@@ -15,15 +15,20 @@ const isSidebarOpen = ref(false)
 
 // Create a ref for the sidebar container
 const sidebarRef = ref(null)
+const navbar = ref(null)
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
 }
 
 // Use VueUse's onClickOutside on the sidebar container
-onClickOutside(sidebarRef, () => {
-  isSidebarOpen.value = false
-})
+onClickOutside(
+  sidebarRef,
+  () => {
+    isSidebarOpen.value = false
+  },
+  { ignore: [navbar, sidebarRef] }
+)
 
 // Fetch user data with async/await
 onMounted(async () => {
@@ -70,7 +75,12 @@ const roleBind = () => {
 <template>
   <!-- Sidebar container with a ref for click-outside detection -->
   <div ref="sidebarRef" class="relative">
-    <SideBar :isOpen="isSidebarOpen" class="hidden sm:block" @closeSidebar="toggleSidebar" />
+    <SideBar
+      ref="sidebarRef"
+      :isOpen="isSidebarOpen"
+      class="hidden sm:block"
+      @closeSidebar="toggleSidebar"
+    />
   </div>
 
   <nav
@@ -81,7 +91,7 @@ const roleBind = () => {
         : 'bg-gradient-to-r from-purple-500 to-blue-500'
     "
   >
-    <div class="relative max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div ref="navbar" class="relative max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="grid grid-cols-2 sm:grid-cols-3 relative h-16 justify-between">
         <!-- Toggle button for smaller screens (admin only) -->
         <div v-if="roleBind()" class="sm:hidden flex items-center">
@@ -128,6 +138,12 @@ const roleBind = () => {
               class="absolute top-0 w-12 h-12 rounded-full object-cover"
             />
           </RouterLink>
+        </div>
+        <div
+          v-else
+          class="right-0 absolute mt-2 text-lg font-bold text-white px-4 py-2 transition-colors duration-200 rounded-lg group hover:bg-white/10"
+        >
+          <RouterLink to="/login" class="rounded-md px-3 py-2 relative">Log In</RouterLink>
         </div>
       </div>
     </div>

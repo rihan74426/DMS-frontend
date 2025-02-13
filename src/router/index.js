@@ -8,9 +8,13 @@ import ProfileView from '@/views/ProfileView.vue'
 import TransactionView from '@/views/TransactionView.vue'
 import StoreView from '@/views/StoreView.vue'
 import OrdersView from '@/views/OrdersView.vue'
-import { ref } from 'vue'
+import LoginView from '@/views/LoginView.vue'
 
 const routes = [
+  {
+    path: '/login',
+    component: LoginView
+  },
   {
     path: '/',
     component: DashboardView
@@ -27,8 +31,7 @@ const routes = [
   },
   {
     path: '/products',
-    component: ProductsView,
-    meta: { requiresAuth: true }
+    component: ProductsView
   },
   {
     path: '/transactions',
@@ -50,43 +53,38 @@ const routes = [
     component: OrdersView,
     meta: { requiresAuth: true }
   }
-  // More routes here
 ]
 
-const router = new createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next('/')
-  } else {
-    next()
-  }
-})
-const isAdmin = ref(false)
-
+// Global Navigation Guard
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+  await authStore.fetchUser() // Ensure user data is loaded
 
-  // Fetch the user (if not already fetched)
-  await authStore.fetchUser()
+  const isAuthenticated = authStore.isAuthenticated
+  const isAdmin = authStore.user?.role === 'admin'
 
-  // Check the user role
-  if (authStore.user && authStore.user.role === 'admin') {
-    isAdmin.value = true
-  } else {
-    isAdmin.value = false
+  // Allow access to login page even if not authenticated
+  if (to.path === '/login' && !isAuthenticated) {
+    return next()
   }
-  const userRoute = ['/orders', '/transactions', '/companies', '/users']
-  // If the user is not an admin and trying to access a restricted route
-  if (!isAdmin.value && userRoute.includes(to.path)) {
-    next('/')
-  } else {
-    next()
+
+  // If trying to access a protected page without authentication, redirect to login
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next('/login')
   }
+
+  // Restrict access to admin-only pages
+  const adminRoutes = ['/orders', '/transactions', '/companies', '/users']
+  if (adminRoutes.includes(to.path) && !isAdmin) {
+    return next('/')
+  }
+
+  next()
 })
-// Vue.use(router)
+
 export default router
