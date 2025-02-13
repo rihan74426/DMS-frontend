@@ -1,6 +1,9 @@
 <template>
-  <div class="container min-h-screen p-4 sm:ml-16" :class="{ 'mt-20': !authStore.logged }">
-    <div class="place-content-center flex flex-wrap" :class="roleBind() ? 'sm:pl-30' : 'pt-20'">
+  <div class="container min-h-screen p-4 sm:ml-16">
+    <div
+      class="place-content-center flex flex-wrap"
+      :class="roleBind() ? 'sm:pl-30 mt-20' : 'pt-20'"
+    >
       <h1 class="text-4xl text-white font-bold m-4">Products</h1>
       <div class="container flex place-content-center">
         <button
@@ -124,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUpdated, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import axios from 'axios'
 import productModal from '@/components/productModal.vue'
 import ModalComp from '@/components/ModalComp.vue'
@@ -148,8 +151,6 @@ const modalMessage = ref('')
 
 const authStore = useAuthStore()
 
-if (authStore.logged) {
-}
 onMounted(async () => {
   loading.value = true
   await authStore.fetchProducts()

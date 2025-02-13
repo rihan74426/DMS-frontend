@@ -1,7 +1,10 @@
 <template>
-  <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'sm:ml-60': roleBind() }">
-    <h1 v-if="authStore.logged" class="text-4xl text-white font-bold m-5">Dashboard</h1>
-    <div class="p-10 w-full absolute mt-20 bg-black">
+  <div
+    class="min-h-screen flex flex-wrap place-content-center mt-10"
+    :class="{ 'sm:ml-60': roleBind() }"
+  >
+    <h1 v-if="authStore.logged" class="text-4xl text-white font-bold m-10">Dashboard</h1>
+    <div :class="roleBind() ? 'relative' : 'absolute mt-24'" class="p-10 w-full bg-black">
       <h1 class="text-2xl text-white font-bold">
         Welcome to -> <strong>Distribution Management System</strong>
       </h1>
