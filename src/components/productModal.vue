@@ -1,6 +1,9 @@
 <template>
   <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-4 rounded shadow-md w-full sm:w-1/3 overflow-auto mb-5 m-5">
+    <div
+      ref="clickOutside"
+      class="bg-white p-4 rounded shadow-md w-full sm:w-1/3 overflow-auto mb-5 m-5"
+    >
       <h2 class="text-xl font-bold mb-4">{{ props.product ? 'Edit' : 'Add' }} Product</h2>
       <form @submit.prevent="submitForm">
         <div class="mb-4">
@@ -122,12 +125,19 @@
 </template>
 
 <script setup>
+import { onClickOutside } from '@vueuse/core'
 import { ref, watch } from 'vue'
+
+const clickOutside = ref(null)
 
 const props = defineProps({
   product: Object
 })
 
+onClickOutside(clickOutside, () => {
+  console.log('clicked outside')
+  emit('close')
+})
 const productData = ref({
   name: '',
   image: '',
@@ -168,7 +178,7 @@ watch(
   { immediate: true }
 )
 
-const emit = defineEmits(['save'])
+const emit = defineEmits(['save', 'close'])
 
 const submitForm = () => {
   emit('save', productData.value)

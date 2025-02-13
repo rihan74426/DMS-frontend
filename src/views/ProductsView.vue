@@ -102,6 +102,7 @@
     </Transition>
     <Transition name="modal">
       <OrderComp
+        ref="orderComp"
         v-if="showOrderModal"
         :product="{ productId: selectedProduct._id, quantity: 1 }"
         :store="authStore.store.storeName"
@@ -148,7 +149,6 @@ const loading = ref(false)
 const showModal = ref(false)
 const modalTitle = ref('')
 const modalMessage = ref('')
-
 const authStore = useAuthStore()
 
 onMounted(async () => {
@@ -165,6 +165,7 @@ const showAddProduct = () => {
   selectedProduct.value = null
   isModalVisible.value = true
 }
+
 const roleBind = () => {
   if (authStore.user) {
     if (authStore.user.role == 'admin') return true
