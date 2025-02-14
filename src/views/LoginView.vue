@@ -49,7 +49,7 @@
       v-if="loading"
       class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
     >
-      <l-grid size="80" speed="2" color="purple"></l-grid>
+      <l-grid size="80" speed="2" color="blue"></l-grid>
     </div>
     <RegisterView v-if="showReg" @show="showReg = false" />
     <ModalComp

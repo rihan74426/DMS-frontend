@@ -39,7 +39,7 @@
         </button>
       </div>
       <div v-else class="fixed inset-0 flex items-center justify-center z-50">
-        <l-grid size="80" speed="2" color="purple"></l-grid>
+        <l-grid size="80" speed="2" color="blue"></l-grid>
       </div>
       <ModalComp
         :show="showModal"

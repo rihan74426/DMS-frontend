@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'sm:ml-60': roleBind() }">
-    <div class="mt-10">
+    <div class="mt-10 min-w-full">
       <h1 class="text-4xl text-center text-white font-bold m-10">
         {{ authStore.logged ? 'Dashboard' : 'Landing Page' }}
       </h1>

@@ -191,11 +191,8 @@
         </Transition>
       </div>
     </div>
-    <div
-      v-if="loading"
-      class="fixed inset-0 flex items-center justify-center bg-black z-50 bg-opacity-50"
-    >
-      <l-grid size="80" speed="2" color="purple"></l-grid>
+    <div v-if="loading" class="fixed inset-0 flex items-center justify-center">
+      <l-grid size="80" speed="2" color="blue"></l-grid>
     </div>
     <Transition name="modal">
       <ModalComp

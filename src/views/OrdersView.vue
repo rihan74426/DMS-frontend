@@ -168,7 +168,7 @@
       </transition-group>
     </div>
     <div v-else class="fixed inset-0 flex items-center z-50 justify-center">
-      <l-grid size="80" speed="2" color="purple"></l-grid>
+      <l-grid size="80" speed="2" color="blue"></l-grid>
     </div>
     <Transition name="modal">
       <ModalComp

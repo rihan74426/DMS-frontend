@@ -13,7 +13,7 @@
               class="m-4 w-48 h-48 rounded-full object-cover"
             />
             <div v-if="loading" class="fixed inset-0 flex items-center z-50 justify-center">
-              <l-grid size="80" speed="2" color="purple"></l-grid>
+              <l-grid size="80" speed="2" color="blue"></l-grid>
             </div>
             <label
               class="text-white place-content-center ml-20 font-bold text-center"
@@ -32,7 +32,7 @@
         </div>
       </div>
       <div v-else class="fixed inset-0 flex items-center z-50 justify-center">
-        <l-grid size="80" speed="2" color="purple"></l-grid>
+        <l-grid size="80" speed="2" color="blue"></l-grid>
       </div>
       <div class="text-center">
         <button
@@ -133,7 +133,7 @@
           </div>
         </form>
         <div v-else class="fixed inset-0 flex items-center z-50 justify-center">
-          <l-grid size="80" speed="2" color="purple"></l-grid>
+          <l-grid size="80" speed="2" color="blue"></l-grid>
         </div>
       </div>
     </div>

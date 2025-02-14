@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
 import { LucideMenu } from 'lucide-vue-next'
 import { onClickOutside } from '@vueuse/core'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUpdated, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const user = ref(null)
@@ -27,7 +27,7 @@ onClickOutside(
   () => {
     isSidebarOpen.value = false
   },
-  { ignore: [Navbar, sidebarRef] }
+  { ignore: [Navbar] }
 )
 
 // Fetch user data with async/await
