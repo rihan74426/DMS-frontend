@@ -15,7 +15,7 @@ const authStore = useAuthStore()
 // Create a ref for the sidebar container
 const sidebarRef = ref(null)
 const Navbar = ref(null)
-const isSidebarOpen = ref(roleBind())
+const isSidebarOpen = ref(false)
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
@@ -32,6 +32,9 @@ onClickOutside(
 
 // Fetch user data with async/await
 onMounted(async () => {
+  if (roleBind()) {
+    isSidebarOpen.value = true
+  }
   await fetchUser()
   roleBind()
 })
