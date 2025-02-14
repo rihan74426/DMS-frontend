@@ -4,10 +4,17 @@
       <h1 class="text-2xl text-center font-bold mb-4 text-white block mt-10 mr-20">
         {{ roleBind() ? 'Admin' : 'User' }} Profile
       </h1>
-      <div class="place-content-center">
+      <div v-if="!loading" class="place-content-center">
         <div class="grid grid-cols-2 gap-4 mb-4 sm:ml-40">
           <div>
-            <img :src="profileImagePreview" class="m-4 w-48 h-48 rounded-full object-cover" />
+            <img
+              v-if="!loading"
+              :src="profileImagePreview"
+              class="m-4 w-48 h-48 rounded-full object-cover"
+            />
+            <div v-if="loading" class="fixed inset-0 flex items-center z-50 justify-center">
+              <l-grid size="80" speed="2" color="purple"></l-grid>
+            </div>
             <label
               class="text-white place-content-center ml-20 font-bold text-center"
               for="profileImage"
@@ -24,6 +31,9 @@
           </div>
         </div>
       </div>
+      <div v-else class="fixed inset-0 flex items-center z-50 justify-center">
+        <l-grid size="80" speed="2" color="purple"></l-grid>
+      </div>
       <div class="text-center">
         <button
           @click="showModal = true"
@@ -34,7 +44,10 @@
       </div>
     </div>
     <div v-if="showModal" class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-      <div class="bg-white p-4 rounded shadow-md sm:w-1/2 overflow-auto mb-5 m-5">
+      <div
+        ref="clickOutside"
+        class="bg-white p-4 rounded shadow-md sm:w-1/2 overflow-auto mb-5 m-5"
+      >
         <h2 class="text-2xl font-bold mb-4 absolute block ml-10">Profile Update</h2>
 
         <form v-if="!loading" @submit.prevent="updateProfile">
@@ -51,6 +64,7 @@
                 "
                 class="m-4 w-32 h-32 rounded-full object-cover ml-20"
               />
+
               <input
                 type="file"
                 @change="onFileChange"
@@ -137,6 +151,9 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '@/stores/authStore'
 import ModalComp from '@/components/ModalComp.vue'
+import { onClickOutside } from '@vueuse/core'
+
+const clickOutside = ref(null)
 
 const profileData = reactive({
   name: '',
@@ -160,6 +177,7 @@ const userMail = localStorage.getItem('email')
 onMounted(async () => {
   try {
     loading.value = true
+
     await authStore.fetchUser()
     const user = authStore.users.filter((user) => user.email.includes(userMail))[0]
     if (user) {
@@ -176,6 +194,10 @@ onMounted(async () => {
     console.log('error fetching user:', err)
   }
   loading.value = false
+})
+
+onClickOutside(clickOutside, () => {
+  showModal.value = false
 })
 
 const roleBind = () => {

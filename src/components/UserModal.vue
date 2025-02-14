@@ -1,6 +1,6 @@
 <template>
   <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg sm:w-1/3 overflow-auto m-5">
+    <div ref="clickOutside" class="bg-white p-6 rounded-lg shadow-lg sm:w-1/3 overflow-auto m-5">
       <h2 class="text-xl font-semibold mb-4">Edit User</h2>
       <form @submit.prevent="updateUser">
         <div class="mb-4">
@@ -58,8 +58,10 @@
 </template>
 
 <script setup>
+import { onClickOutside } from '@vueuse/core'
 import { ref, watch } from 'vue'
 
+const clickOutside = ref(null)
 const props = defineProps({
   user: Object
 })
@@ -77,6 +79,10 @@ const emit = defineEmits('update')
 function updateUser() {
   emit('update', user.value)
 }
+
+onClickOutside(clickOutside, () => {
+  emit('close')
+})
 </script>
 
 <style scoped>

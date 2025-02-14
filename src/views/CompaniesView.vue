@@ -2,7 +2,7 @@
   <div class="container min-h-screen mx-auto p-4 sm:ml-20 pt-20">
     <div class="sm:ml-40">
       <h1 class="text-2xl text-white font-bold mb-4 ml-10">Companies</h1>
-      <div class="p-4 overflow-x-auto">
+      <div v-if="!loading" class="p-4 overflow-x-auto">
         <tableComp :items="companies" @editItem="edititem" @deleteItem="deleteitem" />
         <div class="m-5">
           <transition
@@ -38,10 +38,7 @@
           Cancel
         </button>
       </div>
-      <div
-        v-if="loading"
-        class="fixed inset-0 flex items-center justify-center bg-black z-50 bg-opacity-50"
-      >
+      <div v-else class="fixed inset-0 flex items-center justify-center z-50">
         <l-grid size="80" speed="2" color="purple"></l-grid>
       </div>
       <ModalComp

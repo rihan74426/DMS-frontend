@@ -1,6 +1,9 @@
 <template>
   <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-8 rounded-lg shadow-lg sm:w-1/3 w-full overflow-auto mb-5 m-5">
+    <div
+      ref="clickOutside"
+      class="bg-white p-8 rounded-lg shadow-lg sm:w-1/3 w-full overflow-auto mb-5 m-5"
+    >
       <h2 class="text-2xl font-semibold mb-4">Edit Store Details</h2>
       <label class="block mb-2">Store Name:</label>
       <input v-model="store.storeName" type="text" class="w-full p-2 border rounded-md mb-4" />
@@ -28,11 +31,18 @@
 </template>
 
 <script setup>
+import { onClickOutside } from '@vueuse/core'
 import { ref } from 'vue'
 const props = defineProps({ store: Object })
 const store = ref({ ...props.store })
 
-const emit = defineEmits(['save'])
+const clickOutside = ref(null)
+
+onClickOutside(clickOutside, () => {
+  emit('close')
+})
+
+const emit = defineEmits(['save', 'close'])
 const saveChanges = () => {
   emit('save', store.value)
 }

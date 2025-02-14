@@ -1,6 +1,7 @@
 <template>
   <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
     <div
+      ref="clickOutside"
       class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
     >
       <div class="fixed inset-0" aria-hidden="true">
@@ -71,7 +72,14 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/authStore'
+import { onClickOutside } from '@vueuse/core'
+import { ref } from 'vue'
 
+const clickOutside = ref(null)
+
+onClickOutside(clickOutside, () => {
+  emit('close')
+})
 const authStore = useAuthStore()
 const props = defineProps({
   order: {

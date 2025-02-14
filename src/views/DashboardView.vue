@@ -1,45 +1,44 @@
 <template>
-  <div
-    class="min-h-screen flex flex-wrap place-content-center mt-10"
-    :class="{ 'sm:ml-60': roleBind() }"
-  >
-    <h1 class="text-4xl text-white font-bold m-10">
-      {{ authStore.logged ? 'Dashboard' : 'Landing Page' }}
-    </h1>
-    <div :class="roleBind() ? 'relative' : 'absolute mt-24'" class="p-10 w-full bg-black">
-      <h1 class="text-2xl text-white font-bold">
-        Welcome to -> <strong>Distribution Management System</strong>
+  <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'sm:ml-60': roleBind() }">
+    <div class="mt-10">
+      <h1 class="text-4xl text-center text-white font-bold m-10">
+        {{ authStore.logged ? 'Dashboard' : 'Landing Page' }}
       </h1>
-    </div>
-    <div v-if="roleBind()" class="p-4 flex flex-wrap w-full">
-      <div class="w-full md:w-1/4 p-4">
-        <router-link to="/companies">
-          <DashboardCard title="Total Companies" :count="data.totalCompanies" />
-        </router-link>
+      <div :class="roleBind() ? 'relative' : 'absolute mt-10'" class="p-10 w-full bg-black">
+        <h1 class="text-2xl text-white font-bold">
+          Welcome to -> <strong>Distribution Management System</strong>
+        </h1>
       </div>
-      <div class="w-full md:w-1/4 p-4">
-        <router-link to="/transactions">
-          <DashboardCard title="Total Transactions" :count="data.totalTransactions" />
-        </router-link>
+      <div v-if="roleBind()" class="p-4 flex flex-wrap w-full">
+        <div class="w-full md:w-1/4 p-4">
+          <router-link to="/companies">
+            <DashboardCard title="Total Companies" :count="data.totalCompanies" />
+          </router-link>
+        </div>
+        <div class="w-full md:w-1/4 p-4">
+          <router-link to="/transactions">
+            <DashboardCard title="Total Transactions" :count="data.totalTransactions" />
+          </router-link>
+        </div>
+        <div class="w-full md:w-1/4 p-4">
+          <router-link to="/products">
+            <DashboardCard title="Total Products" :count="data.totalProducts" />
+          </router-link>
+        </div>
+        <div class="w-full md:w-1/4 p-4">
+          <router-link to="/users">
+            <DashboardCard title="Total Users" :count="data.totalUsers" />
+          </router-link>
+        </div>
+        <div class="w-full md:w-1/4 p-4">
+          <router-link to="/orders">
+            <DashboardCard title="Total Orders" :count="data.orders" />
+          </router-link>
+        </div>
       </div>
-      <div class="w-full md:w-1/4 p-4">
-        <router-link to="/products">
-          <DashboardCard title="Total Products" :count="data.totalProducts" />
-        </router-link>
+      <div v-else class="mt-5">
+        <ProductsView />
       </div>
-      <div class="w-full md:w-1/4 p-4">
-        <router-link to="/users">
-          <DashboardCard title="Total Users" :count="data.totalUsers" />
-        </router-link>
-      </div>
-      <div class="w-full md:w-1/4 p-4">
-        <router-link to="/orders">
-          <DashboardCard title="Total Orders" :count="data.orders" />
-        </router-link>
-      </div>
-    </div>
-    <div v-else class="mt-5">
-      <ProductsView />
     </div>
   </div>
 </template>

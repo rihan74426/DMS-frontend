@@ -231,7 +231,6 @@ onBeforeMount(async () => {
     products.value = authStore.products.value
     storeDetails.value = authStore.store
     orders.value = authStore.orders.toReversed()
-    console.log(storeDetails.value.products)
   } catch (error) {
     console.error('Failed to fetch store data:', error)
   } finally {
@@ -246,7 +245,6 @@ onMounted(async () => {
   storeDetails.value = authStore.store
   orders.value = authStore.orders.toReversed()
   storeProd()
-  console.log(storeDetails.value)
 })
 const authStore = useAuthStore()
 const products = ref([])

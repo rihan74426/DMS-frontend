@@ -80,7 +80,7 @@ const roleBind = () => {
       ref="sidebarRef"
       :isOpen="isSidebarOpen"
       class="hidden sm:block"
-      @closeSidebar="toggleSidebar"
+      @closeSidebar="isSidebarOpen = false"
     />
   </div>
 
@@ -98,7 +98,7 @@ const roleBind = () => {
         <div v-if="roleBind()" class="sm:hidden flex items-center">
           <button
             @click="toggleSidebar"
-            class="text-white focus:outline-none px-3 py-2 rounded-md"
+            class="text-white focus :outline-none px-3 py-2 rounded-md"
             aria-label="Toggle Sidebar"
           >
             <LucideMenu />
@@ -152,7 +152,7 @@ const roleBind = () => {
 
   <!-- Sidebar transition for smaller screens -->
   <transition name="sidebar">
-    <SideBar v-if="isSidebarOpen" @closeSidebar="toggleSidebar" />
+    <SideBar v-if="isSidebarOpen" @closeSidebar="isSidebarOpen = false" />
   </transition>
 </template>
 

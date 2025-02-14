@@ -32,9 +32,9 @@
   </div>
 </template>
 <script setup>
-import { onBeforeMount, onMounted, ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useAuthStore } from '../stores/authStore'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import {
   HomeIcon,
   UsersIcon,

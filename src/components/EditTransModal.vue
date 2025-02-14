@@ -1,6 +1,9 @@
 <template>
   <div v-if="showModal" class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-8 rounded-lg shadow-lg sm:w-1/2 overflow-auto mb-5 m-5">
+    <div
+      ref="clickOutside"
+      class="bg-white p-8 rounded-lg shadow-lg sm:w-1/2 overflow-auto mb-5 m-5"
+    >
       <h2 class="text-xl font-semibold mb-4">
         {{ isEditMode ? 'Edit Transaction' : 'Add Transaction' }}
       </h2>
@@ -50,7 +53,14 @@
 </template>
 
 <script setup>
+import { onClickOutside } from '@vueuse/core'
 import { ref, watch, onMounted } from 'vue'
+
+const clickOutside = ref(null)
+
+onClickOutside(clickOutside, () => {
+  emit('close')
+})
 
 const props = defineProps(['showModal', 'isEditMode', 'transactionData', 'companies', 'products'])
 const emit = defineEmits(['close', 'save'])

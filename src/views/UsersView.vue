@@ -1,17 +1,17 @@
 <template>
-  <div>
-    <div class="p-4 sm:ml-40 min-h-screen flex flex-wrap pt-20 place-content-center">
-      <h1 class="block ml-10 text-4xl font-bold text-white text-center">Users Management</h1>
-      <div class="justify-center inline-flex container">
+  <div class="p-4 sm:ml-40 mx-auto min-h-screen pt-20">
+    <div class="container">
+      <h1 class="ml-10 text-4xl font-bold text-white text-center">Users Management</h1>
+      <div class="justify-self-center">
         <input
           v-model="searchQuery"
           placeholder="Search User by Name..."
-          class="ring-2 px-2 py-2 my-10 text-center rounded-lg w-half"
+          class="ring-2 px-2 py-2 my-10 rounded-lg w-half"
         />
       </div>
       <!-- Users Table -->
-      <div class="sm:ml-20">
-        <table class="ml-5 bg-white border border-gray-200">
+      <div class="sm:ml-20 p-4 overflow-x-auto">
+        <table class="bg-white shadow-lg rounded-lg min-w-full">
           <thead>
             <tr class="bg-gray-100 text-dark uppercase text-sm leading-normal">
               <th class="py-3 px-3 text-left">Name</th>
@@ -53,10 +53,7 @@
       </div>
 
       <!-- Modal for Editing User -->
-      <div
-        v-if="loading"
-        class="fixed inset-0 flex items-center z-50 justify-center bg-black bg-opacity-50"
-      >
+      <div v-if="loading" class="fixed inset-0 flex items-center z-50 justify-center">
         <l-grid size="80" speed="2" color="purple"></l-grid>
       </div>
       <ModalComp
