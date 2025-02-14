@@ -135,7 +135,6 @@ const props = defineProps({
 })
 
 onClickOutside(clickOutside, () => {
-  console.log('clicked outside')
   emit('close')
 })
 const productData = ref({

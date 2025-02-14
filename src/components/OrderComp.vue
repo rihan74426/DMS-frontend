@@ -1,6 +1,9 @@
 <template>
   <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg h-5/6 shadow-lg overflow-auto sm:w-1/3 w-full mb-5 m-5">
+    <div
+      ref="clickOutside"
+      class="bg-white p-6 rounded-lg h-5/6 shadow-lg overflow-auto sm:w-1/3 w-full mb-5 m-5"
+    >
       <h2 class="text-2xl font-semibold mb-4 text-center">
         {{ order ? 'Edit Order' : 'Place an Order' }}
       </h2>
@@ -121,16 +124,23 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/authStore'
+import { onClickOutside } from '@vueuse/core'
 import { ArrowDown } from 'lucide-vue-next'
 import { onMounted, reactive, ref, watch } from 'vue'
 
 const props = defineProps(['order', 'product', 'store'])
 const products = ref([]) // Correcting to make 'products' reactive
 const sameAs = ref(false)
+const clickOutside = ref(null)
+
+onClickOutside(clickOutside, () => {
+  emit('close')
+})
 const selectedProduct = ref({
   productId: '',
   quantity: 1
 })
+
 const orderData = reactive(
   props.order
     ? { ...props.order }

@@ -11,11 +11,11 @@ import { RouterLink } from 'vue-router'
 const user = ref(null)
 const profileImagePreview = ref('')
 const authStore = useAuthStore()
-const isSidebarOpen = ref(false)
 
 // Create a ref for the sidebar container
 const sidebarRef = ref(null)
 const Navbar = ref(null)
+const isSidebarOpen = ref(roleBind())
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
@@ -33,6 +33,7 @@ onClickOutside(
 // Fetch user data with async/await
 onMounted(async () => {
   await fetchUser()
+  roleBind()
 })
 
 const fetchUser = async () => {

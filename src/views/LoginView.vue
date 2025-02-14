@@ -66,7 +66,6 @@ import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 import ModalComp from '@/components/ModalComp.vue'
-import SideBar from '@/components/SideBar.vue'
 import RegisterView from './RegisterView.vue'
 
 const email = ref('')
@@ -85,7 +84,6 @@ const modalMessage = ref('')
 
 onMounted(() => {
   trans.value = true
-  console.log("I'm in the login page")
 })
 const handleLogin = async () => {
   try {
@@ -95,6 +93,8 @@ const handleLogin = async () => {
       showModal.value = true
       modalTitle.value = 'Success'
       modalMessage.value = 'Logged In Successfully'
+      email.value = ''
+      password.value = ''
       router.push('/')
     } else {
       resMessage.value = 'Wrong credintials'

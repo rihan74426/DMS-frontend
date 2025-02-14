@@ -34,7 +34,7 @@
 <script setup>
 import { onBeforeMount, onMounted, ref } from 'vue'
 import { useAuthStore } from '../stores/authStore'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   HomeIcon,
   UsersIcon,
@@ -70,14 +70,9 @@ onBeforeMount(async () => {
     if (storeIndex !== -1) {
       navItems.value.splice(storeIndex, 1) // Remove "My Store"
     }
-  } else {
-    navItems.value = navItems.value.filter((item) =>
-      ['Products', 'My Store', 'Logout'].includes(item.name)
-    )
   }
 })
 
-onMounted(async () => {})
 const logged = ref(true)
 const handleLogout = () => {
   authStore.logout()

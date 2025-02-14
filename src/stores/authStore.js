@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import router from '@/router'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token'),
@@ -41,6 +42,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('email')
       delete axios.defaults.headers.common['Authorization']
       this.logged = false
+      router.push('/')
     },
     async fetchUser() {
       if (this.token) {
