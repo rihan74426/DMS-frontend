@@ -1,9 +1,12 @@
 <template>
-  <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-50">
+  <div class="fixed inset-0 z-40 flex justify-center bg-black bg-opacity-50">
     <div
       ref="clickOutside"
       class="bg-white p-6 rounded-lg h-5/6 shadow-lg overflow-auto sm:w-1/3 w-full mb-5 m-5"
     >
+      <div v-if="isLoading" class="fixed inset-0 flex items-center justify-center z-50">
+        <l-grid size="80" speed="2" color="blue"></l-grid>
+      </div>
       <h2 class="text-2xl font-semibold mb-4 text-center">
         {{ order ? 'Edit Order' : 'Place an Order' }}
       </h2>
@@ -132,9 +135,10 @@ const props = defineProps(['order', 'product', 'store'])
 const products = ref([]) // Correcting to make 'products' reactive
 const sameAs = ref(false)
 const clickOutside = ref(null)
+const isLoading = ref(false)
 
 onClickOutside(clickOutside, () => {
-  emit('close')
+  closeModal()
 })
 const selectedProduct = ref({
   productId: '',
@@ -157,6 +161,12 @@ const orderData = reactive(
       }
 )
 
+if (props.product && orderData.invoice === '') {
+  console.log('loading')
+} else if (props.product && orderData.invoice !== '') {
+  console.log('Loaded')
+}
+
 const authStore = useAuthStore()
 onMounted(async () => {
   await authStore.fetchProducts()
@@ -168,6 +178,12 @@ onMounted(async () => {
   // Generate the invoice number once userId is available
   if (!props.order) orderData.invoice = generateInvoiceNumber(orderData.userId)
 
+  if (props.product && orderData.invoice === '') {
+    isLoading.value = true
+  }
+  if (props.product && orderData.invoice !== '') {
+    isLoading.value = false
+  }
   if (props.order) {
     orderData.value = props.order
   } else if (props.product) {

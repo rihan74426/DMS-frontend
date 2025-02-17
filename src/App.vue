@@ -1,11 +1,12 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useAuthStore } from './stores/authStore'
-import NavbarView from './views/navbarView.vue'
+import NavbarView from './views/NavbarView.vue'
 
 const authStore = useAuthStore()
 
-onMounted(() => {
+onMounted(async () => {
+  await authStore.fetchUser() // Ensure user data is loaded
   authStore.fetchUser()
 })
 

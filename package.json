@@ -20,6 +20,7 @@
     "jspdf-autotable": "^3.8.3",
     "ldrs": "^1.0.2",
     "lucide-vue-next": "^0.441.0",
+    "nprogress": "^0.2.0",
     "pinia": "^2.2.2",
     "vue": "^3.4.29",
     "vue-router": "^4.4.5",

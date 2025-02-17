@@ -9,6 +9,8 @@ import TransactionView from '@/views/TransactionView.vue'
 import StoreView from '@/views/StoreView.vue'
 import OrdersView from '@/views/OrdersView.vue'
 import LoginView from '@/views/LoginView.vue'
+import NProgress from '@/assets/LoadingBar'
+import nProgress from 'nprogress'
 
 const routes = [
   {
@@ -62,29 +64,37 @@ const router = createRouter({
 
 // Global Navigation Guard
 router.beforeEach(async (to, from, next) => {
+  NProgress.start()
+
   const authStore = useAuthStore()
-  await authStore.fetchUser() // Ensure user data is loaded
+
+  // Fetch user only if not already loaded
+  if (!authStore.user) {
+    await authStore.fetchUser()
+  }
 
   const isAuthenticated = authStore.isAuthenticated
   const isAdmin = authStore.user?.role === 'admin'
 
-  // Allow access to login page even if not authenticated
+  // Allow public pages
   if (to.path === '/login' && !isAuthenticated) {
-    return next()
+    next()
   }
-
-  // If trying to access a protected page without authentication, redirect to login
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    return next('/login')
+  // Redirect if authentication is required but user is not authenticated
+  else if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login')
   }
-
-  // Restrict access to admin-only pages
-  const adminRoutes = ['/orders', '/transactions', '/companies', '/users']
-  if (adminRoutes.includes(to.path) && !isAdmin) {
-    return next('/')
+  // Restrict admin-only pages
+  else if (to.meta.requiresAdmin && !isAdmin) {
+    next('/')
+  } else {
+    next()
   }
+})
 
-  next()
+// Ensure progress bar stops on navigation completion
+router.afterEach(() => {
+  NProgress.done()
 })
 
 export default router
