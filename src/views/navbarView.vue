@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
 import { LucideMenu } from 'lucide-vue-next'
 import { onClickOutside } from '@vueuse/core'
-import { onMounted, onUpdated, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const user = ref(null)
@@ -95,8 +95,8 @@ const roleBind = () => {
         : 'bg-gradient-to-r from-purple-500 to-blue-500'
     "
   >
-    <div ref="Navbar" class="relative max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-2 sm:grid-cols-3 relative h-16 justify-between">
+    <div ref="Navbar" class="relative min-w-full px-2 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-3 sm:grid-cols-6 relative h-16 justify-between">
         <!-- Toggle button for smaller screens (admin only) -->
         <div v-if="roleBind()" class="sm:hidden flex items-center">
           <button
@@ -109,37 +109,44 @@ const roleBind = () => {
         </div>
 
         <!-- Title for larger screens -->
-        <div class="mt-2 hidden sm:ml-6 sm:block">
+        <div class="mt-2 hidden col-span-1 md:col-span-2 sm:ml-6 md:block">
           <div class="flex place-content-center relative">
             <RouterLink to="/" class="w-full rounded-md px-3 py-2 text-lg font-bold text-white">
-              Distribution Management System
+              <span class="hidden md:inline lg:hidden">DMS</span>
+              <span class="hidden lg:inline">Distribution Management System</span>
             </RouterLink>
           </div>
         </div>
-
         <!-- Navigation links for non-admin users -->
-        <div v-if="!roleBind() && authStore.logged" class="flex text-white sm:ml-6 sm:block">
+        <div
+          v-if="!roleBind() && authStore.logged"
+          class="flex-1 flex text-white justify-center ml-24 sm:ml-6 sm:block"
+        >
           <NavComp />
         </div>
 
         <!-- User profile -->
-        <div v-if="authStore.logged" class="right-0 absolute grid grid-cols-4 mt-2 gap-1">
+        <div
+          v-if="authStore.logged"
+          class="right-0 absolute grid grid-cols-4 col-span-2 mt-2 gap-1"
+        >
           <h1
-            class="relative col-span-3 mt-3 text-right text-md sm:text-base md:text-lg font-medium text-white"
+            class="relative col-span-3 text-right px-1 py-2 text-md sm:text-base md:text-lg font-medium text-white"
           >
-            Hello {{ user ? user.username : 'User' }}, Welcome!
+            <span class="hidden sm:inline">Hello {{ user ? user.username : 'User' }},</span>
+            Welcome!
           </h1>
           <RouterLink
             to="/profile"
-            title="Goes to your Profile"
-            class="rounded-md px-3 py-2 relative"
+            class="relative block h-10 w-10 overflow-hidden rounded-full border-2 items-center justify-self-center border-white"
           >
             <img
               :src="
                 profileImagePreview ||
                 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'
               "
-              class="absolute top-0 w-12 h-12 rounded-full object-cover"
+              class="h-full w-full object-cover"
+              alt="Profile"
             />
           </RouterLink>
         </div>

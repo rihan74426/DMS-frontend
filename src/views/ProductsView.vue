@@ -38,14 +38,16 @@
           <h2 class="text-x font-bold flex justify-center p-1">{{ product.name }}</h2>
           <p class="line-clamp-3 hover:line-clamp-none text-justify">{{ product.description }}</p>
           <p class="p-2">ID: {{ product.hashtagSerial }}</p>
-          <div class="grid grid-cols-3 items-center gap-2">
+          <div class="grid grid-cols-3 items-center gap-0">
             <div class="col-span-2">
               <p class="p-2">Group: {{ product.group }}</p>
               <p class="p-2">Pack Size: {{ product.packSize }}</p>
               <p class="p-2">Available: {{ product.quantityInStore }}</p>
               <p class="p-2">Supplied: {{ product.quantitySupplied }}</p>
             </div>
-            <h1 class="font-bold text-lg">MRP:- ৳{{ product.price }}</h1>
+            <h1 class="font-bold text-center text-lg">
+              MRP:- <span>&#2547;</span>{{ product.price }}
+            </h1>
           </div>
           <div>
             <strong>Additional info:</strong>
@@ -76,7 +78,7 @@
             class="m-5 flex absolute justify-center text-center bottom-5 ml-16 right-5"
           >
             <button
-              class="bg-blue-500 text-white p-5 sm:px-2 sm:py-1 rounded text-center"
+              class="bg-blue-500 text-white p-1 sm:px-2 sm:py-1 rounded text-center"
               @click="orderNow(product)"
             >
               Order Now!

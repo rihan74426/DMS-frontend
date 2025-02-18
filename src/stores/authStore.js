@@ -17,6 +17,12 @@ export const useAuthStore = defineStore('auth', {
     userUpdated: false
   }),
   actions: {
+    priceFormat(price) {
+      return Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: 'BDT'
+      }).format(price)
+    },
     async login(credentials) {
       try {
         const { data } = await axios.post(
@@ -34,6 +40,7 @@ export const useAuthStore = defineStore('auth', {
         console.log('Login failed: ', error)
       }
     },
+
     logout() {
       this.user = null
       this.token = null

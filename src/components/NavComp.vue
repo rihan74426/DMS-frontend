@@ -12,7 +12,7 @@
       <component :is="item.icon" class="h-6 w-6" />
 
       <!-- Show label on medium and larger screens, hide on small screens -->
-      <span class="transition-opacity duration-200 mt-1 hidden md:block">
+      <span class="transition-opacity duration-200 md:w-max mt-1 hidden md:block">
         {{ item.name }}
       </span>
     </router-link>
