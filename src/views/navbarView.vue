@@ -109,10 +109,9 @@ const roleBind = () => {
         </div>
 
         <!-- Title for larger screens -->
-        <div class="mt-2 hidden col-span-1 md:col-span-2 sm:ml-6 md:block">
-          <div class="flex place-content-center relative">
+        <div class="mt-2 hidden col-span-1 absolute lg:relative md:col-span-2 sm:ml-6 md:block">
+          <div class="flex place-content-center">
             <RouterLink to="/" class="w-full rounded-md px-3 py-2 text-lg font-bold text-white">
-              <span class="hidden md:inline lg:hidden">DMS</span>
               <span class="hidden lg:inline">Distribution Management System</span>
             </RouterLink>
           </div>
@@ -120,7 +119,7 @@ const roleBind = () => {
         <!-- Navigation links for non-admin users -->
         <div
           v-if="!roleBind() && authStore.logged"
-          class="flex-1 flex text-white justify-center ml-24 sm:ml-6 sm:block"
+          class="flex-1 flex text-white justify-center md:justify-start md:col-span-2 lg:ml-5 ml-24 sm:ml-20 md:block"
         >
           <NavComp />
         </div>

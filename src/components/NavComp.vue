@@ -5,7 +5,7 @@
       v-for="item in navItems"
       :key="item.path"
       :to="item.path"
-      class="flex flex-col items-center font-semibold justify-center p-2 transition-colors duration-200 rounded-lg group hover:bg-white/10"
+      class="flex flex-col sm:ml-5 items-center font-semibold justify-center p-2 transition-colors duration-200 rounded-lg group hover:bg-white/10"
       :class="{ 'bg-white/20': isActive(item.path) }"
     >
       <!-- Display icon for each nav item -->
