@@ -1,5 +1,5 @@
 <template>
-  <div class="container min-h-screen p-4 sm:ml-16">
+  <div class="container min-h-screen p-4 md:ml-16">
     <div
       class="place-content-center flex flex-wrap"
       :class="roleBind() ? 'sm:pl-30 mt-20' : 'pt-20'"
@@ -22,9 +22,12 @@
         />
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-4" :class="{ 'sm:ml-48': roleBind() }">
+      <div
+        class="grid gap-2 md:gap-4 lg:grid-cols-4 sm:grid-cols-3"
+        :class="{ 'sm:ml-48 ': roleBind() }"
+      >
         <div
-          class="bg-white border border-black shadow-md p-6 rounded-lg transform transition-all hover:scale-105 duration-800"
+          class="bg-white border border-black shadow-md p-2 md:p-6 rounded-lg transform transition-all hover:scale-105 duration-800"
           v-for="product in products"
           :key="product._id"
         >
@@ -75,10 +78,10 @@
           </div>
           <div
             v-else-if="authStore.logged"
-            class="m-5 flex absolute justify-center text-center bottom-5 ml-16 right-5"
+            class="m-5 flex absolute justify-center text-center bottom-5 right-1 md:bottom-5 ml-16 md:right-5"
           >
             <button
-              class="bg-blue-500 text-white p-1 sm:px-2 sm:py-1 rounded text-center"
+              class="bg-blue-500 text-white p-1 md:px-2 sm:py-1 rounded text-center"
               @click="orderNow(product)"
             >
               Order Now!

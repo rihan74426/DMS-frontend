@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="min-h-screen mx-auto p-4 pt-20 md:pt-12 lg:pt-20 ml-0 md:ml-20 lg:ml-60 pl-2 md:pl-6 lg:pl-10"
-  >
+  <div class="min-h-screen mx-auto p-4 pt-20 md:pt-12 lg:pt-20 ml-0 md:ml-60 pl-2 md:pl-6 lg:pl-10">
     <h1
       class="text-2xl md:text-3xl lg:text-4xl font-bold text-white text-center mb-4 md:mb-5 lg:mb-6"
     >
@@ -108,7 +106,7 @@
               </button>
             </div>
           </div>
-          <table class="min-w-full bg-white mt-4 border border-gray-300">
+          <table class="min-w-full overflow-x-auto bg-white mt-4 border border-gray-300">
             <thead class="bg-gray-100">
               <tr>
                 <th class="py-2 px-2 text-center">Product</th>

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'sm:ml-60': roleBind() }">
+  <div class="min-h-screen flex flex-wrap place-content-center" :class="{ 'md:ml-60': roleBind() }">
     <div class="mt-10 min-w-full">
       <h1 class="text-4xl text-center text-white font-bold m-10">
         {{ authStore.logged ? 'Dashboard' : 'Landing Page' }}
@@ -9,28 +9,28 @@
           Welcome to -> <strong>Distribution Management System</strong>
         </h1>
       </div>
-      <div v-if="roleBind()" class="p-4 flex flex-wrap w-full">
-        <div class="w-full md:w-1/4 p-4">
+      <div v-if="roleBind()" class="p-4 grid sm:grid-cols-2 md:grid-cols-3 flex-wrap w-full">
+        <div class="w-full p-4">
           <router-link to="/companies">
             <DashboardCard title="Total Companies" :count="data.totalCompanies" />
           </router-link>
         </div>
-        <div class="w-full md:w-1/4 p-4">
+        <div class="w-full p-4">
           <router-link to="/transactions">
             <DashboardCard title="Total Transactions" :count="data.totalTransactions" />
           </router-link>
         </div>
-        <div class="w-full md:w-1/4 p-4">
+        <div class="w-full p-4">
           <router-link to="/products">
             <DashboardCard title="Total Products" :count="data.totalProducts" />
           </router-link>
         </div>
-        <div class="w-full md:w-1/4 p-4">
+        <div class="w-full p-4">
           <router-link to="/users">
             <DashboardCard title="Total Users" :count="data.totalUsers" />
           </router-link>
         </div>
-        <div class="w-full md:w-1/4 p-4">
+        <div class="w-full p-4">
           <router-link to="/orders">
             <DashboardCard title="Total Orders" :count="data.orders" />
           </router-link>

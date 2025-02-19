@@ -82,7 +82,7 @@ const roleBind = () => {
     <SideBar
       ref="sidebarRef"
       :isOpen="isSidebarOpen"
-      class="hidden sm:block"
+      class="hidden md:block"
       @closeSidebar="isSidebarOpen = false"
     />
   </div>
@@ -98,7 +98,7 @@ const roleBind = () => {
     <div ref="Navbar" class="relative min-w-full px-2 sm:px-6 lg:px-8">
       <div class="grid grid-cols-3 sm:grid-cols-6 relative h-16 justify-between">
         <!-- Toggle button for smaller screens (admin only) -->
-        <div v-if="roleBind()" class="sm:hidden flex items-center">
+        <div v-if="roleBind()" class="md:hidden flex items-center">
           <button
             @click="toggleSidebar"
             class="text-white focus :outline-none px-3 py-2 rounded-md"
@@ -112,6 +112,7 @@ const roleBind = () => {
         <div class="mt-2 hidden col-span-1 absolute lg:relative md:col-span-2 sm:ml-6 md:block">
           <div class="flex place-content-center">
             <RouterLink to="/" class="w-full rounded-md px-3 py-2 text-lg font-bold text-white">
+              <span v-if="roleBind()" class="hidden sm:inline lg:hidden">DMS</span>
               <span class="hidden lg:inline">Distribution Management System</span>
             </RouterLink>
           </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white shadow-md p-4 rounded-lg grid grid-cols-6 gap-2 flex items-center">
+  <div class="bg-white shadow-md p-4 rounded-lg grid grid-cols-6 gap-2 items-center">
     <div class="col-span-5">
       <h2 class="text-xl font-bold">{{ myProps.title }}</h2>
       <p class="text-3xl">{{ myProps.count }}</p>
